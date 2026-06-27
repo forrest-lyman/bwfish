@@ -7,7 +7,7 @@ regionIds:
   - atlantic
   - gulf
   - southeast-us
-summary: Tactics for sight‑casting to cobia holding on or following rays, turtles and other living structure: approach, cast geometry, presentation timing, conversion when fish follow but don’t commit.
+summary: "Tactics for sight‑casting to cobia holding on or following rays, turtles and other living structure: approach, cast geometry, presentation timing, conversion when fish follow but don’t commit."
 log:
   - generatedAt: "2026-05-29T19:06:19.709Z"
     agent: "tecnique.agent.md"

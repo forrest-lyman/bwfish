@@ -7,7 +7,7 @@ fishIds:
   - lingcod
   - pacific-halibut
   - rockfish
-summary: Short runs from Monterey Harbor to the Submarine Canyon: steep canyon walls, banks and ledges that hold spring–fall bluefin and albacore, plus rockfish, lingcod and halibut.
+summary: "Short runs from Monterey Harbor to the Submarine Canyon: steep canyon walls, banks and ledges that hold spring–fall bluefin and albacore, plus rockfish, lingcod and halibut."
 position:
   lat: 36.6002
   lon: -121.8947

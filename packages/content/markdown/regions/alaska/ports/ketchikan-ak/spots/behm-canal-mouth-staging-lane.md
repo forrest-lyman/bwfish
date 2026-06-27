@@ -8,7 +8,7 @@ portIds:
 fishIds:
   - pacific-halibut
   - salmon
-summary: Behm Canal's narrow mouth by Revillagigedo: kelp fringe and mid-channel seam create a spring king staging lane, coho in summer; short halibut grabs on moderate floods—watch ferries and fog.
+summary: "Behm Canal's narrow mouth by Revillagigedo: kelp fringe and mid-channel seam create a spring king staging lane, coho in summer; short halibut grabs on moderate floods—watch ferries and fog."
 position:
   lat: 55.3422
   lon: -131.7661

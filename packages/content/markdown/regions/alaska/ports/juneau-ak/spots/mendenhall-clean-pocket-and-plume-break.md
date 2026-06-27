@@ -8,7 +8,7 @@ portIds:
 fishIds:
   - pacific-halibut
   - salmon
-summary: Where Mendenhall Glacier’s milty plume peels into Stephens Passage: a tight down‑current pocket that stacks kings, sockeye and coho in short windows and yields neat halibut drifts when the color break
+summary: "Where Mendenhall Glacier’s milty plume peels into Stephens Passage: a tight down‑current pocket that stacks kings, sockeye and coho in short windows and yields neat halibut drifts when the color break"
 position:
   lat: 58.3019
   lon: -134.4197

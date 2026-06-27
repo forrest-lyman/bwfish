@@ -5,7 +5,7 @@ spotType: ledge
 regionId: midatlantic
 portIds:
   - ocean-city-md
-summary: Outer Assateague shelf ledge 6-12 miles east of Ocean City: lee eddy and downstream seam concentrate menhaden, summer-fall bluefin/yellowfin and mako/porbeagle show; spring brings striped bass and big
+summary: "Outer Assateague shelf ledge 6-12 miles east of Ocean City: lee eddy and downstream seam concentrate menhaden, summer-fall bluefin/yellowfin and mako/porbeagle show; spring brings striped bass and big"
 position:
   lat: 38.3365
   lon: -74.9649

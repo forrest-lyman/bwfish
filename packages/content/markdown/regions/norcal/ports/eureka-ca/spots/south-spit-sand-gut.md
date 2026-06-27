@@ -7,7 +7,7 @@ portIds:
   - eureka-ca
 fishIds:
   - pacific-halibut
-summary: Short run from Eureka's South Spit: Sand Gut channel and adjacent halibut flats—sand/mud gutters, small downhill drops and rock fingers. Prime halibut water; rockfish and lingcod on tide shifts.
+summary: "Short run from Eureka's South Spit: Sand Gut channel and adjacent halibut flats—sand/mud gutters, small downhill drops and rock fingers. Prime halibut water; rockfish and lingcod on tide shifts."
 position:
   lat: 40.8021
   lon: -124.1637

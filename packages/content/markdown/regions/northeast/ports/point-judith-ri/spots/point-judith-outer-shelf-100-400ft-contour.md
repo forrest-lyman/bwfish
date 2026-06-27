@@ -8,7 +8,7 @@ portIds:
 fishIds:
   - albacore-tuna
   - bluefin-tuna
-summary: Outer-shelf off Point Judith (100–400 ft): gravel ridges, downhill seams and thermal fringe concentrate bait. Spring–fall tuna zone for bluefin, yellowfin, bigeye; also bluefish, bonito and false albc
+summary: "Outer-shelf off Point Judith (100–400 ft): gravel ridges, downhill seams and thermal fringe concentrate bait. Spring–fall tuna zone for bluefin, yellowfin, bigeye; also bluefish, bonito and false albc"
 position:
   lat: 41.3632
   lon: -71.3584

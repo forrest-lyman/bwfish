@@ -3,7 +3,7 @@ id: topwater-and-slow-surface-presentations-for-cobia
 title: Topwater & Slow‑Surface Presentations for Aggressive Cobia
 fishIds:
   - cobia
-summary: When cobia are visible or aggressive near the surface: selection and use of poppers, stickbaits and slow retrieves to convert follows into explosive surface strikes—timing, range and convert drills.
+summary: "When cobia are visible or aggressive near the surface: selection and use of poppers, stickbaits and slow retrieves to convert follows into explosive surface strikes—timing, range and convert drills."
 log:
   - generatedAt: "2026-05-29T19:06:11.032Z"
     agent: "tecnique.agent.md"

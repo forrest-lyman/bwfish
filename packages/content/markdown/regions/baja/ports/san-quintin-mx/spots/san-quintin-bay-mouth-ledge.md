@@ -5,7 +5,7 @@ spotType: ledge
 regionId: baja
 portIds:
   - san-quintin-mx
-summary: Bay-mouth ledge at San Quintin: the downramp decision point where tide/current set inshore vs outside runs; kelp-rock seams pin sardine bait, concentrating yellowtail and halibut.
+summary: "Bay-mouth ledge at San Quintin: the downramp decision point where tide/current set inshore vs outside runs; kelp-rock seams pin sardine bait, concentrating yellowtail and halibut."
 position:
   lat: 30.4833
   lon: -116.07

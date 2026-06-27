@@ -8,7 +8,7 @@ portIds:
 fishIds:
   - pacific-halibut
   - salmon
-summary: The Grays Harbor bar and outbound sand‑tongue: Westport's gate — it controls halibut sand‑tongue drifts, early salmon staging on plume/clarity edges, and the safety timing for any shelf run.
+summary: "The Grays Harbor bar and outbound sand‑tongue: Westport's gate — it controls halibut sand‑tongue drifts, early salmon staging on plume/clarity edges, and the safety timing for any shelf run."
 position:
   lat: 46.8901
   lon: -124.1041

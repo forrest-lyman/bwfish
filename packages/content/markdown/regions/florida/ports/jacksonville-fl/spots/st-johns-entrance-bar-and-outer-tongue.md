@@ -5,7 +5,7 @@ spotType: area
 regionId: florida
 portIds:
   - jacksonville-fl
-summary: Outer tongue and bar at St. Johns mouth (Jacksonville Inlet): sand/shell ridges, patchy hardbottom and channel rips pack bait. Falling-ebb windows for kings, summer cobia, occasional blackfin.
+summary: "Outer tongue and bar at St. Johns mouth (Jacksonville Inlet): sand/shell ridges, patchy hardbottom and channel rips pack bait. Falling-ebb windows for kings, summer cobia, occasional blackfin."
 position:
   lat: 30.3322
   lon: -81.6557

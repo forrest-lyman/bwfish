@@ -6,7 +6,7 @@ fishIds:
 regionIds:
   - baja
   - socal
-summary: Composing and adjusting a trolling spread to read and trigger marlin: where to put lures and teasers, how to change speed and flank spacing as fish show, how to use cross‑overs and follow presentations, and when to compress or widen the spread based on birds, tuna, and temperature structure.
+summary: "Composing and adjusting a trolling spread to read and trigger marlin: where to put lures and teasers, how to change speed and flank spacing as fish show, how to use cross‑overs and follow presentations, and when to compress or widen the spread based on birds, tuna, and temperature structure."
 log:
   - generatedAt: "2026-05-29T19:15:32.034Z"
     agent: "tecnique.agent.md"

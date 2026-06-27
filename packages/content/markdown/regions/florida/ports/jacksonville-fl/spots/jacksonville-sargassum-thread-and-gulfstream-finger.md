@@ -10,7 +10,7 @@ fishIds:
   - marlin
   - sailfish
   - wahoo
-summary: Off Jacksonville: a narrow sargassum ribbon and warm Gulf Stream finger outside the St. Johns plume—floating mats and birds concentrate bait; spring–fall mahi, wahoo, yellowfin, sail and blackfin.
+summary: "Off Jacksonville: a narrow sargassum ribbon and warm Gulf Stream finger outside the St. Johns plume—floating mats and birds concentrate bait; spring–fall mahi, wahoo, yellowfin, sail and blackfin."
 position:
   lat: 30.3322
   lon: -81.5357

@@ -7,7 +7,7 @@ portIds:
   - montauk-ny
 fishIds:
   - swordfish
-summary: Montauk canyon‑head gate: long‑run night drift for swordfish under daytime bluefin marks. Fish follow warm surface pockets and squid pushes; requires tight mark creation, drift control and precise nav
+summary: "Montauk canyon‑head gate: long‑run night drift for swordfish under daytime bluefin marks. Fish follow warm surface pockets and squid pushes; requires tight mark creation, drift control and precise nav"
 position:
   lat: 41.0359
   lon: -71.8345

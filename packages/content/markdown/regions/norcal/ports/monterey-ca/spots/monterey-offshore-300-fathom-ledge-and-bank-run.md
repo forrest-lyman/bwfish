@@ -7,7 +7,7 @@ portIds:
   - monterey-ca
 fishIds:
   - albacore-tuna
-summary: 300-fathom contour off Monterey: bank run that concentrates squid and anchovy; short runs from Monterey produce bluefin and albacore during warm-water current breaks.
+summary: "300-fathom contour off Monterey: bank run that concentrates squid and anchovy; short runs from Monterey produce bluefin and albacore during warm-water current breaks."
 position:
   lat: 36.6002
   lon: -122.0147

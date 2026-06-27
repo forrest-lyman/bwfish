@@ -8,7 +8,7 @@ portIds:
 fishIds:
   - bluefin-tuna
   - striped-bass
-summary: Two Lights headland: steep downhill ledge where tidal peel and lee pockets concentrate herring and sandlance—prime for trolling, live bait drifts and shelf pushes for tuna and stripers.
+summary: "Two Lights headland: steep downhill ledge where tidal peel and lee pockets concentrate herring and sandlance—prime for trolling, live bait drifts and shelf pushes for tuna and stripers."
 position:
   lat: 43.6591
   lon: -70.1368

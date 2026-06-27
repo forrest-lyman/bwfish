@@ -8,7 +8,7 @@ portIds:
 fishIds:
   - marlin
   - wahoo
-summary: First-mile off South Pass (Venice): ledge fans and canyon fingers create downhill seams and blue-water bait stacks. Fast yellowfin, blackfin, wahoo and king-mackerel strikes; best spring-fall.
+summary: "First-mile off South Pass (Venice): ledge fans and canyon fingers create downhill seams and blue-water bait stacks. Fast yellowfin, blackfin, wahoo and king-mackerel strikes; best spring-fall."
 position:
   lat: 29.2772
   lon: -89.2373

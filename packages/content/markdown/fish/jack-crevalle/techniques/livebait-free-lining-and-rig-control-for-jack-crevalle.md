@@ -3,7 +3,7 @@ id: livebait-free-lining-and-rig-control-for-jack-crevalle
 title: Livebait — Free‑Lining, Kite & Rig Control for Jack Crevalle
 fishIds:
   - jack-crevalle
-summary: Practical live‑bait work for jacks: when to free‑line vs rig, using kites or light‑dredge placements over pushes, leader choices for aggressive jaws, depth control in current, and converting pressured schools with staged live‑bait presentations.
+summary: "Practical live‑bait work for jacks: when to free‑line vs rig, using kites or light‑dredge placements over pushes, leader choices for aggressive jaws, depth control in current, and converting pressured schools with staged live‑bait presentations."
 regionIds:
   - gulf
   - baja

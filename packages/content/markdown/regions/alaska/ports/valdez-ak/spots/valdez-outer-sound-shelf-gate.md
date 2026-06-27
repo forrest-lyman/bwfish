@@ -5,7 +5,7 @@ spotType: contour
 regionId: alaska
 portIds:
   - valdez-ak
-summary: Outer-shelf contour banks off Valdez form a gate: long run and tidal sills need timed transits; steep banks hold big halibut on downhill drifts, spring kings, plus lingcod and rockfish.
+summary: "Outer-shelf contour banks off Valdez form a gate: long run and tidal sills need timed transits; steep banks hold big halibut on downhill drifts, spring kings, plus lingcod and rockfish."
 position:
   lat: 61.1308
   lon: -146.4683

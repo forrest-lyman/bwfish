@@ -3,7 +3,7 @@ id: night-deep-drop-and-squid-strings-for-swordfish
 title: Night Drop — Deep‑Drop Drifts & Squid‑String Presentations for Swordfish
 fishIds:
   - swordfish
-summary: Operational guide to using night deep‑drop drifts with squid‑strings and tiered presentations: how to stage the drift, place and manage lights, stage leaders and assists, control drift speed and convert sonar marks into controlled vertical drops.
+summary: "Operational guide to using night deep‑drop drifts with squid‑strings and tiered presentations: how to stage the drift, place and manage lights, stage leaders and assists, control drift speed and convert sonar marks into controlled vertical drops."
 regionIds:
   - atlantic
 log:

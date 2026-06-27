@@ -9,7 +9,7 @@ fishIds:
   - roosterfish
   - wahoo
   - yellowfin-tuna
-summary: Punta de Mita point: rocky reef fringe and canyon drop-offs form tight bait lines; short runs from shore produce yellowfin and marlin spring-summer, dorado/wahoo midsummer-fall; roosterfish inshore.
+summary: "Punta de Mita point: rocky reef fringe and canyon drop-offs form tight bait lines; short runs from shore produce yellowfin and marlin spring-summer, dorado/wahoo midsummer-fall; roosterfish inshore."
 position:
   lat: 20.7736
   lon: -105.5278

@@ -3,7 +3,7 @@ id: anchor-over-and-deep-drop-structure-for-amberjack
 title: Anchor‑Over & Deep‑Drop Structure for Amberjack
 fishIds:
   - amberjack
-summary: Operational tactics for anchoring over deep wrecks and rigs to present baits and jigs to amberjack: safe anchor placement, drop‑rig staging, line management to avoid snags, and fight tactics to keep a hooked fish off the structure.
+summary: "Operational tactics for anchoring over deep wrecks and rigs to present baits and jigs to amberjack: safe anchor placement, drop‑rig staging, line management to avoid snags, and fight tactics to keep a hooked fish off the structure."
 log:
   - generatedAt: "2026-05-29T18:55:06.861Z"
     agent: "tecnique.agent.md"

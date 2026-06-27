@@ -8,7 +8,7 @@ portIds:
 fishIds:
   - cobia
   - king-mackerel
-summary: Ebb-tongue off Hatteras Harbor: shallow bar and shoal ledges concentrate menhaden on ebb tides; prime spring–summer cobia and passing kings, with snapper and tog in channel cuts — short, boatable run.
+summary: "Ebb-tongue off Hatteras Harbor: shallow bar and shoal ledges concentrate menhaden on ebb tides; prime spring–summer cobia and passing kings, with snapper and tog in channel cuts — short, boatable run."
 position:
   lat: 35.2232
   lon: -75.6902

@@ -5,7 +5,7 @@ spotType: corridor
 regionId: alaska
 portIds:
   - sitka-ak
-summary: Silver Bay mouth seam off Sitka: plume-stained water meeting clean Sound creates a narrow staging lane—early-summer kings, coho and chum push through; short halibut grabs on falling-tide color break.
+summary: "Silver Bay mouth seam off Sitka: plume-stained water meeting clean Sound creates a narrow staging lane—early-summer kings, coho and chum push through; short halibut grabs on falling-tide color break."
 position:
   lat: 57.0531
   lon: -135.45

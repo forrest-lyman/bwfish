@@ -11,7 +11,7 @@ fishIds:
   - snapper
   - wahoo
   - yellowtail
-summary: Sand Key lighthouse ledge & channel neck off Key West: nearshore ledge and downhill seam pin tidal bait; top targets yellowtail, lane snapper, grouper, hogfish; blackfin/mahi/wahoo hit the blue-edge.
+summary: "Sand Key lighthouse ledge & channel neck off Key West: nearshore ledge and downhill seam pin tidal bait; top targets yellowtail, lane snapper, grouper, hogfish; blackfin/mahi/wahoo hit the blue-edge."
 position:
   lat: 24.4351
   lon: -81.7826

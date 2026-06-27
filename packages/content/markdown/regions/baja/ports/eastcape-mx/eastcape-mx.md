@@ -12,7 +12,7 @@ fishIds:
   - wahoo
   - yellowfin-tuna
   - yellowtail
-summary: East Cape's rocky reef edge: short runs to ledges that hold yellowtail, amberjack and roosterfish; seasonally run offshore for dorado, yellowfin and wahoo. Best in favorable wind/current windows.
+summary: "East Cape's rocky reef edge: short runs to ledges that hold yellowtail, amberjack and roosterfish; seasonally run offshore for dorado, yellowfin and wahoo. Best in favorable wind/current windows."
 position:
   lat: 23.0583
   lon: -109.6917

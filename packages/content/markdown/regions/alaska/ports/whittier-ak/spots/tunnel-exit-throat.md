@@ -8,7 +8,7 @@ portIds:
 fishIds:
   - pacific-halibut
   - salmon
-summary: Whittier's Anton Anderson tunnel exit: a constricted Passage Canal neck with powerful shear lines and lee pockets - peak ebb/flood windows stage Chinook and offer short halibut drifts.
+summary: "Whittier's Anton Anderson tunnel exit: a constricted Passage Canal neck with powerful shear lines and lee pockets - peak ebb/flood windows stage Chinook and offer short halibut drifts."
 position:
   lat: 60.7731
   lon: -148.8047

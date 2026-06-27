@@ -13,7 +13,7 @@ fishIds:
   - swordfish
   - wahoo
   - yellowfin-tuna
-summary: Quick Gulf-Stream runs from Port Canaveral jetties to shelf ledges: summer mahi, blackfin and wahoo on temp breaks; wrecks hold amberjack, grouper, snapper; cobia/kings near inlet.
+summary: "Quick Gulf-Stream runs from Port Canaveral jetties to shelf ledges: summer mahi, blackfin and wahoo on temp breaks; wrecks hold amberjack, grouper, snapper; cobia/kings near inlet."
 position:
   lat: 28.4089
   lon: -80.5887

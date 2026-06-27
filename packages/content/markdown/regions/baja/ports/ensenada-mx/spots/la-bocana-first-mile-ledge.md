@@ -7,7 +7,7 @@ portIds:
   - ensenada-mx
 fishIds:
   - yellowtail
-summary: Short run outside La Bocana: shallow rocky ledges and narrow kelp necks where tidal exchange and harbor outflow pin bait—prime summer yellowtail on mid-ebb to early flood, quick hook-ups.
+summary: "Short run outside La Bocana: shallow rocky ledges and narrow kelp necks where tidal exchange and harbor outflow pin bait—prime summer yellowtail on mid-ebb to early flood, quick hook-ups."
 position:
   lat: 31.8667
   lon: -116.7367

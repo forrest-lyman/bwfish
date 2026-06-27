@@ -7,7 +7,7 @@ portIds:
   - venice-la
 fishIds:
   - king-mackerel
-summary: Venice bar outer tongue and sand rip: a decision point where channel tongue, plume and rip funnel bait into steep outer breaks—prime warm-season yellowfin, mahi, billfish and king mackerel.
+summary: "Venice bar outer tongue and sand rip: a decision point where channel tongue, plume and rip funnel bait into steep outer breaks—prime warm-season yellowfin, mahi, billfish and king mackerel."
 position:
   lat: 29.2772
   lon: -89.3573

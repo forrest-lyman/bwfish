@@ -8,7 +8,7 @@ portIds:
 fishIds:
   - albacore-tuna
   - salmon
-summary: Outer-shelf run off Bodega Head: long troll lanes along a narrow warm-water fringe- summer albacore blitzes with bird/slick markers; occasional kings on temp breaks; long, fuel-aware runs.
+summary: "Outer-shelf run off Bodega Head: long troll lanes along a narrow warm-water fringe- summer albacore blitzes with bird/slick markers; occasional kings on temp breaks; long, fuel-aware runs."
 position:
   lat: 38.3332
   lon: -123.1681

@@ -10,7 +10,7 @@ fishIds:
   - pacific-halibut
   - rockfish
   - salmon
-summary: Short run from Seward to Lowell Point's sand fingers and tidal cut: sand bars and a narrow channel pin bait. Nearby halibut drifts, seasonal king & coho staging; rockfish and lingcod near rocks.
+summary: "Short run from Seward to Lowell Point's sand fingers and tidal cut: sand bars and a narrow channel pin bait. Nearby halibut drifts, seasonal king & coho staging; rockfish and lingcod near rocks."
 position:
   lat: 60.1042
   lon: -149.4432

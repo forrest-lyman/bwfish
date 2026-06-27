@@ -10,7 +10,7 @@ fishIds:
   - lingcod
   - pacific-halibut
   - rockfish
-summary: Monterey jetty mouth into the Submarine Canyon: short runs for halibut, rockfish and lingcod on reef/rip; canyon shoulders in summer hold albacore and yellowfin
+summary: "Monterey jetty mouth into the Submarine Canyon: short runs for halibut, rockfish and lingcod on reef/rip; canyon shoulders in summer hold albacore and yellowfin"
 position:
   lat: 36.6002
   lon: -122.0147

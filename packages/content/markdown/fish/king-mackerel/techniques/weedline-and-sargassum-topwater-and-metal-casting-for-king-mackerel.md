@@ -7,7 +7,7 @@ regionIds:
   - florida
   - outerbanks
   - port/destin-fl
-summary: Exploiting weedlines and Sargassum mats for kings by matching the strike window: start aggressive (topwater/fast metals) while fish are feeding at or near the edge, then convert to denser metals, blades, or live/strip baits when the bite retreats below the surface.
+summary: "Exploiting weedlines and Sargassum mats for kings by matching the strike window: start aggressive (topwater/fast metals) while fish are feeding at or near the edge, then convert to denser metals, blades, or live/strip baits when the bite retreats below the surface."
 log:
   - generatedAt: "2026-05-29T19:10:49.587Z"
     agent: "tecnique.agent.md"

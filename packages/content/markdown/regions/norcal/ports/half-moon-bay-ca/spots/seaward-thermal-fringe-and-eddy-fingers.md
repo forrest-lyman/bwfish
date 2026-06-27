@@ -9,7 +9,7 @@ fishIds:
   - albacore-tuna
   - mahi-mahi
   - yellowtail
-summary: Shelf-edge canyon mouths and pinnacles off Half Moon Bay form a short-run tuna road: transient eddy fingers shove bait in—late‑summer/fall albacore lines, occasional bluefin, bonito, yellowtail, dorad
+summary: "Shelf-edge canyon mouths and pinnacles off Half Moon Bay form a short-run tuna road: transient eddy fingers shove bait in—late‑summer/fall albacore lines, occasional bluefin, bonito, yellowtail, dorad"
 position:
   lat: 37.4636
   lon: -122.5486

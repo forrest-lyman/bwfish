@@ -10,7 +10,7 @@ fishIds:
   - roosterfish
   - wahoo
   - yellowfin-tuna
-summary: Punta de Mita tip: tight lee funnel and steep ledge to ~60–300f that corrals weed, bait and birds. Summer/fall hotspot for yellowfin, dorado, wahoo and billfish; best by kite, short uphill trolls or t
+summary: "Punta de Mita tip: tight lee funnel and steep ledge to ~60–300f that corrals weed, bait and birds. Summer/fall hotspot for yellowfin, dorado, wahoo and billfish; best by kite, short uphill trolls or t"
 position:
   lat: 20.7736
   lon: -105.6478

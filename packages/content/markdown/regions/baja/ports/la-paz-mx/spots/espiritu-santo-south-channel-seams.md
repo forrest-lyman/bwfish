@@ -8,7 +8,7 @@ portIds:
 fishIds:
   - amberjack
   - yellowtail
-summary: South Channel off Isla Espíritu Santo: pinnacles and steep ledge faces where tidal funnels push bait into downhill seams; summer yellowtail schools and resident amberjack, accessible from La Paz.
+summary: "South Channel off Isla Espíritu Santo: pinnacles and steep ledge faces where tidal funnels push bait into downhill seams; summer yellowtail schools and resident amberjack, accessible from La Paz."
 position:
   lat: 24.1426
   lon: -110.4303

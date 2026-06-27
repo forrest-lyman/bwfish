@@ -5,7 +5,7 @@ fishIds:
   - tautog
 regionIds:
   - northeast
-summary: Short-range, structure-focused tactics for jetties, piers and wreck edges: using controlled swings and small lifts to seat crab baits into tight pockets, manage pressure, and convert fish around scours and pilings.
+summary: "Short-range, structure-focused tactics for jetties, piers and wreck edges: using controlled swings and small lifts to seat crab baits into tight pockets, manage pressure, and convert fish around scours and pilings."
 log:
   - generatedAt: "2026-05-29T19:39:05.314Z"
     agent: "tecnique.agent.md"

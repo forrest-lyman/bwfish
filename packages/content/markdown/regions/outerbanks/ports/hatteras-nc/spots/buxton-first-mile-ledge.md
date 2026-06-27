@@ -9,7 +9,7 @@ fishIds:
   - cobia
   - grouper
   - king-mackerel
-summary: First‑mile ledge off Buxton inlet: shallow shelf, sand‑pocket gutters and short dropoffs. Ebb/peak tides concentrate bait—cobia and kings in summer; vertical grouper/sea‑bass work on strong current.
+summary: "First‑mile ledge off Buxton inlet: shallow shelf, sand‑pocket gutters and short dropoffs. Ebb/peak tides concentrate bait—cobia and kings in summer; vertical grouper/sea‑bass work on strong current."
 position:
   lat: 35.2232
   lon: -75.5702

@@ -3,7 +3,7 @@ id: boat-positioning-pressure-management-and-conversion-tactics-for-jack-crevall
 title: Boat Positioning, Pressure Management & Conversion Tactics for Jack Crevalle
 fishIds:
   - jack-crevalle
-summary: Non‑tackle operational guide for working jack crevalle: approach angles, staging ahead of a moving school, spacing casts between anglers, resetting pressured groups, and choosing the right conversion sequence (topwater → metal → livebait).
+summary: "Non‑tackle operational guide for working jack crevalle: approach angles, staging ahead of a moving school, spacing casts between anglers, resetting pressured groups, and choosing the right conversion sequence (topwater → metal → livebait)."
 regionIds:
   - baja
 log:

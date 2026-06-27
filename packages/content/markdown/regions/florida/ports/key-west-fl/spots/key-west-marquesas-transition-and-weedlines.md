@@ -10,7 +10,7 @@ fishIds:
   - marlin
   - sailfish
   - wahoo
-summary: Open-shelf Marquesas corridor west of Key West: floating Sargassum weedlines and warm Current filaments collect flying fish—short, explosive mahi, wahoo and blackfin tuna lanes, occasional sailfish/蓝马
+summary: "Open-shelf Marquesas corridor west of Key West: floating Sargassum weedlines and warm Current filaments collect flying fish—short, explosive mahi, wahoo and blackfin tuna lanes, occasional sailfish/蓝马"
 position:
   lat: 24.4351
   lon: -81.7826

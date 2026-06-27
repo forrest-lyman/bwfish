@@ -5,7 +5,7 @@ spotType: reef
 regionId: alaska
 portIds:
   - ketchikan-ak
-summary: Small pinnacles and kelp fingers off Saxman Dockline in Tongass Narrows: fish tight to pilings and rock seams for rockfish, lingcod and short halibut drifts—best on tidal slack between ferry runs.
+summary: "Small pinnacles and kelp fingers off Saxman Dockline in Tongass Narrows: fish tight to pilings and rock seams for rockfish, lingcod and short halibut drifts—best on tidal slack between ferry runs."
 position:
   lat: 55.3422
   lon: -131.7661

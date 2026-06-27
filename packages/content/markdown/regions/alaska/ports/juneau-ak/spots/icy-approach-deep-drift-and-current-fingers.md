@@ -8,7 +8,7 @@ portIds:
 fishIds:
   - pacific-halibut
   - salmon
-summary: Juneau-side approach into Icy Strait: steep drop-offs and narrow current fingers focus bait into downhill seams—prime for deep halibut drifts and broad salmon lanes; requires fuel and weather margins.
+summary: "Juneau-side approach into Icy Strait: steep drop-offs and narrow current fingers focus bait into downhill seams—prime for deep halibut drifts and broad salmon lanes; requires fuel and weather margins."
 position:
   lat: 58.3019
   lon: -134.5397

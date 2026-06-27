@@ -10,7 +10,7 @@ fishIds:
   - striped-bass
   - tautog
   - yellowfin-tuna
-summary: Rudee Inlet access to wrecks and shelf-canyon marks: spring/fall striped bass and summer bluefish inshore; summer tuna and white marlin on Gulf Stream canyon runs; tilefish and black sea bass deep.
+summary: "Rudee Inlet access to wrecks and shelf-canyon marks: spring/fall striped bass and summer bluefish inshore; summer tuna and white marlin on Gulf Stream canyon runs; tilefish and black sea bass deep."
 position:
   lat: 36.8529
   lon: -75.978

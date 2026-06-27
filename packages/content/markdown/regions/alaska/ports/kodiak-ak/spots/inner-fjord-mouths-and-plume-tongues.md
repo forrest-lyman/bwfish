@@ -5,7 +5,7 @@ spotType: area
 regionId: alaska
 portIds:
   - kodiak-ak
-summary: Kodiak inner-bay throatlines and muddy plume tongues: short runs to headland edges where bait funnels into tight lanes - prime spring king windows, late-summer coho pushes and nearby halibut.
+summary: "Kodiak inner-bay throatlines and muddy plume tongues: short runs to headland edges where bait funnels into tight lanes - prime spring king windows, late-summer coho pushes and nearby halibut."
 position:
   lat: 57.79
   lon: -152.4072

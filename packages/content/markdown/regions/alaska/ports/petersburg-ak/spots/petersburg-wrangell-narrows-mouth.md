@@ -5,7 +5,7 @@ spotType: area
 regionId: alaska
 portIds:
   - petersburg-ak
-summary: Near Petersburg: kelp fingers and point seams at Wrangell Narrows' mouth—tidal jets cram kings, pinks and coho into tight drifts; rockfish and lingcod lurk the kelp edges on flood/ebb.
+summary: "Near Petersburg: kelp fingers and point seams at Wrangell Narrows' mouth—tidal jets cram kings, pinks and coho into tight drifts; rockfish and lingcod lurk the kelp edges on flood/ebb."
 position:
   lat: 56.812
   lon: -132.9553

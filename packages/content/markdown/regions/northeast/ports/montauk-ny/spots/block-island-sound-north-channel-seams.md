@@ -7,7 +7,7 @@ portIds:
   - montauk-ny
 fishIds:
   - bluefin-tuna
-summary: Montauk North Channel: funnel seams and downhill bait roads in Block Island Sound that condense school bluefin; peak for surface blitzes and high‑speed trolling from Montauk launches.
+summary: "Montauk North Channel: funnel seams and downhill bait roads in Block Island Sound that condense school bluefin; peak for surface blitzes and high‑speed trolling from Montauk launches."
 position:
   lat: 41.0359
   lon: -71.8345

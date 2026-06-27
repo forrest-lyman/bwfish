@@ -7,7 +7,7 @@ fishIds:
   - pacific-halibut
   - rockfish
   - salmon
-summary: Homer Spit on Kachemak Bay: immediate kelp/rock reefs or long runs to the Kenai shelf. Spring-summer kings, silvers and sockeye; year-round halibut, rockfish and lingcod. Tides and fog shape windows.
+summary: "Homer Spit on Kachemak Bay: immediate kelp/rock reefs or long runs to the Kenai shelf. Spring-summer kings, silvers and sockeye; year-round halibut, rockfish and lingcod. Tides and fog shape windows."
 position:
   lat: 59.6425
   lon: -151.5483

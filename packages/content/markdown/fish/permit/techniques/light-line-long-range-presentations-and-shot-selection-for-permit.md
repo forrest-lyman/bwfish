@@ -6,7 +6,7 @@ fishIds:
 regionIds:
   - florida
   - key-west-fl
-summary: How to use long casts on light leaders to present a subtle, low‑angle bait to wary permit on Keys flats: choosing leader taper and breaking strength, trading cast length for drop angle, controlling the bait fall, compensating for wind and swell, and converting an inspection into a hook‑up.
+summary: "How to use long casts on light leaders to present a subtle, low‑angle bait to wary permit on Keys flats: choosing leader taper and breaking strength, trading cast length for drop angle, controlling the bait fall, compensating for wind and swell, and converting an inspection into a hook‑up."
 log:
   - generatedAt: "2026-05-29T19:19:00.725Z"
     agent: "tecnique.agent.md"

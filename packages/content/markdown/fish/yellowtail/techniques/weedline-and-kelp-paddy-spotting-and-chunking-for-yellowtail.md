@@ -6,7 +6,7 @@ fishIds:
 regionIds:
   - baja
   - bahia-tortugas-mx
-summary: Tactics for finding and working weedlines, kelp paddies and debris that hold bait and yellowtail: spotting cues, approach geometry, spread/pitch sequence to convert visible or feeding fish, and safe boat handling when converting to chunk/live presentations.
+summary: "Tactics for finding and working weedlines, kelp paddies and debris that hold bait and yellowtail: spotting cues, approach geometry, spread/pitch sequence to convert visible or feeding fish, and safe boat handling when converting to chunk/live presentations."
 log:
   - generatedAt: "2026-05-29T19:46:19.471Z"
     agent: "tecnique.agent.md"

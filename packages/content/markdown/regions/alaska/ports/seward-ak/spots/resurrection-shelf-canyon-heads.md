@@ -9,7 +9,7 @@ fishIds:
   - lingcod
   - pacific-halibut
   - rockfish
-summary: Deep canyon heads off Resurrection Shelf: long Seward runs for jumbo halibut; steep drop-offs hold rockfish and lingcod. Best spring–summer drifts on tide seams; mind fuel.
+summary: "Deep canyon heads off Resurrection Shelf: long Seward runs for jumbo halibut; steep drop-offs hold rockfish and lingcod. Best spring–summer drifts on tide seams; mind fuel."
 position:
   lat: 60.1042
   lon: -149.5632

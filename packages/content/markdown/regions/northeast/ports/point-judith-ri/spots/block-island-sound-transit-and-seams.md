@@ -7,7 +7,7 @@ portIds:
   - point-judith-ri
 fishIds:
   - albacore-tuna
-summary: Point Judith transit corridor in Block Island Sound: tidal peels, shelf contours and thermal seams make short bait roads and rips that stage bluefish, false albacore, bonito and mackerel in summer.
+summary: "Point Judith transit corridor in Block Island Sound: tidal peels, shelf contours and thermal seams make short bait roads and rips that stage bluefish, false albacore, bonito and mackerel in summer."
 position:
   lat: 41.3632
   lon: -71.3584

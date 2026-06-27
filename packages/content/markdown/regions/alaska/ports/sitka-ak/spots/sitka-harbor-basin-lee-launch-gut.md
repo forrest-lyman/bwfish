@@ -8,7 +8,7 @@ portIds:
 fishIds:
   - pacific-halibut
   - rockfish
-summary: Inner Sitka Harbor corridor: the Launch Gut throat funnels current past Basin Lee kelp and rock fingers; short, controllable halibut drifts and vertical rockfish/lingcod bites on flood/ebb slacks.
+summary: "Inner Sitka Harbor corridor: the Launch Gut throat funnels current past Basin Lee kelp and rock fingers; short, controllable halibut drifts and vertical rockfish/lingcod bites on flood/ebb slacks."
 position:
   lat: 57.0531
   lon: -135.33

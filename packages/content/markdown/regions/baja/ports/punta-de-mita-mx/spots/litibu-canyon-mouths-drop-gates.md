@@ -9,7 +9,7 @@ fishIds:
   - mahi-mahi
   - marlin
   - yellowfin-tuna
-summary: SE Punta de Mita canyon mouths: short drop-gates where downhill temp/current seams pin bait for quick uphill trolls, kite or chunk bites; prime for dorado, yellowfin, wahoo and marlin on warm pushes.
+summary: "SE Punta de Mita canyon mouths: short drop-gates where downhill temp/current seams pin bait for quick uphill trolls, kite or chunk bites; prime for dorado, yellowfin, wahoo and marlin on warm pushes."
 position:
   lat: 20.7736
   lon: -105.6478

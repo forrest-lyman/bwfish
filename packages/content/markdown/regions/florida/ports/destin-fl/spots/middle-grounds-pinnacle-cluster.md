@@ -10,7 +10,7 @@ fishIds:
   - grouper
   - mahi-mahi
   - wahoo
-summary: Mid‑shelf pinnacles 30–80 mi off Destin: scattered heads and pockets that concentrate bait on thermal edges/eddies; tidy troll lanes and short chunk/live windows for mahi, yellowfin/blackfin, wahoo; j
+summary: "Mid‑shelf pinnacles 30–80 mi off Destin: scattered heads and pockets that concentrate bait on thermal edges/eddies; tidy troll lanes and short chunk/live windows for mahi, yellowfin/blackfin, wahoo; j"
 position:
   lat: 30.3935
   lon: -86.3758

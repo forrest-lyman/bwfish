@@ -7,7 +7,7 @@ regionIds:
   - socal
   - baja
   - port/ensenada-mx
-summary: Operational rules for placing the boat on kelp, banks and island edges: reading uphill current fingers, choosing anchor versus drift, spacing to manage fleet pressure, first‑pass discipline, reposition triggers, and a conversion sequence when yellowtail change depth or mood.
+summary: "Operational rules for placing the boat on kelp, banks and island edges: reading uphill current fingers, choosing anchor versus drift, spacing to manage fleet pressure, first‑pass discipline, reposition triggers, and a conversion sequence when yellowtail change depth or mood."
 log:
   - generatedAt: "2026-05-29T19:46:22.215Z"
     agent: "tecnique.agent.md"

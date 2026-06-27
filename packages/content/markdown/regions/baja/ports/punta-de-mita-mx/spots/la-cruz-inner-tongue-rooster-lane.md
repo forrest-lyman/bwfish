@@ -7,7 +7,7 @@ portIds:
   - punta-de-mita-mx
 fishIds:
   - roosterfish
-summary: Shallow lee corridor between La Cruz and Punta de Mita: slough-mouth tongue and sand/mud lanes concentrate mullet, sardine and pilchard; incoming tides fire roosterfish and big jack crevalle.
+summary: "Shallow lee corridor between La Cruz and Punta de Mita: slough-mouth tongue and sand/mud lanes concentrate mullet, sardine and pilchard; incoming tides fire roosterfish and big jack crevalle."
 position:
   lat: 20.7736
   lon: -105.5278

@@ -5,7 +5,7 @@ spotType: ledge
 regionId: baja
 portIds:
   - ensenada-mx
-summary: Isla Todos Santos north ledge: kelp fringe and canyon mouth form a lee seam for persistent yellowtail; when the offshore outflow lines up, shift to chunks or live bait for passing bluefin.
+summary: "Isla Todos Santos north ledge: kelp fringe and canyon mouth form a lee seam for persistent yellowtail; when the offshore outflow lines up, shift to chunks or live bait for passing bluefin."
 position:
   lat: 31.8667
   lon: -116.7367

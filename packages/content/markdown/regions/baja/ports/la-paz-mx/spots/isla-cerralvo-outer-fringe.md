@@ -8,7 +8,7 @@ portIds:
 fishIds:
   - mahi-mahi
   - marlin
-summary: Outer flank break off Isla Cerralvo: steep blue-water thermocline edges, warm patches and weedlines that concentrate bait—prime summer lanes for dorado, yellowfin and migrating marlin; La Paz access.
+summary: "Outer flank break off Isla Cerralvo: steep blue-water thermocline edges, warm patches and weedlines that concentrate bait—prime summer lanes for dorado, yellowfin and migrating marlin; La Paz access."
 position:
   lat: 24.1426
   lon: -110.4303

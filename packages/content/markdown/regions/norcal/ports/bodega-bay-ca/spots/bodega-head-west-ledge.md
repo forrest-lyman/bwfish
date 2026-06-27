@@ -10,7 +10,7 @@ fishIds:
   - pacific-halibut
   - rockfish
   - salmon
-summary: Point Lee west ledge off Bodega Head: kelp-margin rock fingers and short downhill drifts. Summer anchovy/sardine schools draw halibut and migrating salmon; tight water holds rockfish and lingcod.
+summary: "Point Lee west ledge off Bodega Head: kelp-margin rock fingers and short downhill drifts. Summer anchovy/sardine schools draw halibut and migrating salmon; tight water holds rockfish and lingcod."
 position:
   lat: 38.3332
   lon: -123.1681

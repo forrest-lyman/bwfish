@@ -10,7 +10,7 @@ fishIds:
   - mahi-mahi
   - roosterfish
   - yellowtail
-summary: Off East Cape: steep rocky point into a downhill ledge where tidal seams pin bait against the face—short-run trolling or jigging hotspot for yellowtail and amberjack.
+summary: "Off East Cape: steep rocky point into a downhill ledge where tidal seams pin bait against the face—short-run trolling or jigging hotspot for yellowtail and amberjack."
 position:
   lat: 23.0583
   lon: -109.8117

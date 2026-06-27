@@ -13,7 +13,7 @@ fishIds:
   - snapper
   - spotted-seatrout
   - yellowfin-tuna
-summary: Short runs from Orange Beach to Perdido Pass and reefs: structure holds snapper, grouper and amberjack; bay flats give speckled trout, redfish and flounder; SE winds push spanish, king and mahi.
+summary: "Short runs from Orange Beach to Perdido Pass and reefs: structure holds snapper, grouper and amberjack; bay flats give speckled trout, redfish and flounder; SE winds push spanish, king and mahi."
 position:
   lat: 30.2949
   lon: -87.5736

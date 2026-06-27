@@ -1,7 +1,7 @@
 ---
 id: baja
 title: Baja
-summary: Off Baja's banks and beaches: roosterfish in surf, yellowtail on kelp/rock edges, summer dorado and yellowfin with bait slicks, marlin and wahoo on current breaks, grouper on deep structure.
+summary: "Off Baja's banks and beaches: roosterfish in surf, yellowtail on kelp/rock edges, summer dorado and yellowfin with bait slicks, marlin and wahoo on current breaks, grouper on deep structure."
 position:
   lat: 26.3202
   lon: -111.0722

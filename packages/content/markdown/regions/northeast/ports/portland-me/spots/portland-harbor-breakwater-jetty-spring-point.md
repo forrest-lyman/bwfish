@@ -8,7 +8,7 @@ portIds:
 fishIds:
   - striped-bass
   - tautog
-summary: Breakwater and Spring Point flats: sand fingers, jetty seams and ledges; short, shore-access tidal windows stage striped bass, tautog and black sea bass along the jetty and flats.
+summary: "Breakwater and Spring Point flats: sand fingers, jetty seams and ledges; short, shore-access tidal windows stage striped bass, tautog and black sea bass along the jetty and flats."
 position:
   lat: 43.6591
   lon: -70.2568

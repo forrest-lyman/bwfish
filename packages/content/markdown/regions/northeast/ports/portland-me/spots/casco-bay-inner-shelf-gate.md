@@ -7,7 +7,7 @@ portIds:
   - portland-me
 fishIds:
   - bluefin-tuna
-summary: First mile off Portland's inner ledges: a steep shelf step where summer thermocline and downhill currents stack mackerel, herring and sand-lance, attracting pollock, bluefish and occasional bluefin.
+summary: "First mile off Portland's inner ledges: a steep shelf step where summer thermocline and downhill currents stack mackerel, herring and sand-lance, attracting pollock, bluefish and occasional bluefin."
 position:
   lat: 43.6591
   lon: -70.1368

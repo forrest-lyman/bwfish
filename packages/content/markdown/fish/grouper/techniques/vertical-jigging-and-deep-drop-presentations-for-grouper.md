@@ -7,7 +7,7 @@ regionIds:
   - gulf-of-mexico
   - southeast-us
   - caribbean
-summary: Two complementary bottom‑oriented presentations: vertical jigging to provoke mid‑column, structure‑holding grouper off ledges and wrecks; deep‑drop presentations to present baits precisely on deep holes, walls, and hard‑bottom patches where groupers sit tight to cover.
+summary: "Two complementary bottom‑oriented presentations: vertical jigging to provoke mid‑column, structure‑holding grouper off ledges and wrecks; deep‑drop presentations to present baits precisely on deep holes, walls, and hard‑bottom patches where groupers sit tight to cover."
 log:
   - generatedAt: "2026-05-29T19:07:40.232Z"
     agent: "tecnique.agent.md"

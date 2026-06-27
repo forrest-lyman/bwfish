@@ -14,7 +14,7 @@ fishIds:
   - tarpon
   - wahoo
   - yellowfin-tuna
-summary: Miami: short runs to shelf-edge wrecks, reefs and outer-edge currents; snapper/grouper on structure, winter-spring sailfish; summer mahi and tuna — troll, kite, livebait.
+summary: "Miami: short runs to shelf-edge wrecks, reefs and outer-edge currents; snapper/grouper on structure, winter-spring sailfish; summer mahi and tuna — troll, kite, livebait."
 position:
   lat: 25.7617
   lon: -80.1918

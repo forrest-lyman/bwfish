@@ -8,7 +8,7 @@ portIds:
 fishIds:
   - albacore-tuna
   - bluefin-tuna
-summary: Outer-shelf gate corridor off the Farallones: narrow thermal edge and eddy filaments concentrate bait, summer albacore troll lane, with occasional warm-pulse bluefin, mako and thresher shows.
+summary: "Outer-shelf gate corridor off the Farallones: narrow thermal edge and eddy filaments concentrate bait, summer albacore troll lane, with occasional warm-pulse bluefin, mako and thresher shows."
 position:
   lat: 37.808
   lon: -122.5377

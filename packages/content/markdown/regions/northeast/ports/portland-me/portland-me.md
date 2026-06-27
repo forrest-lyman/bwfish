@@ -6,7 +6,7 @@ fishIds:
   - bluefin-tuna
   - striped-bass
   - tautog
-summary: Quick runs from Portland to Casco Bay ledges and western Gulf hard-bottom: summer bluefin and mackerel schools, spring herring spawns, fall striped bass, with tautog and groundfish year-round.
+summary: "Quick runs from Portland to Casco Bay ledges and western Gulf hard-bottom: summer bluefin and mackerel schools, spring herring spawns, fall striped bass, with tautog and groundfish year-round."
 position:
   lat: 43.6591
   lon: -70.2568

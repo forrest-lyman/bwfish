@@ -10,7 +10,7 @@ fishIds:
   - pacific-halibut
   - rockfish
   - salmon
-summary: Hinchinbrook Entrance saddle: a fast, steep current throat where exchange concentrates bait and birds; short slack-to-ebb windows produce tight king, sockeye/coho runs and halibut/rockfish drifts.
+summary: "Hinchinbrook Entrance saddle: a fast, steep current throat where exchange concentrates bait and birds; short slack-to-ebb windows produce tight king, sockeye/coho runs and halibut/rockfish drifts."
 position:
   lat: 60.5428
   lon: -145.8719

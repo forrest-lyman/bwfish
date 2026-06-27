@@ -9,7 +9,7 @@ fishIds:
   - jack-crevalle
   - roosterfish
   - snapper
-summary: Loreto harbor tongue and lee pocket: first-mile tidal-jet folds that concentrate bait, fast casts for roosterfish and jack crevalle on pushing tides; quick bottom drops score red snapper.
+summary: "Loreto harbor tongue and lee pocket: first-mile tidal-jet folds that concentrate bait, fast casts for roosterfish and jack crevalle on pushing tides; quick bottom drops score red snapper."
 position:
   lat: 26.0128
   lon: -111.3486

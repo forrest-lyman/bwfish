@@ -8,7 +8,7 @@ portIds:
 fishIds:
   - lingcod
   - rockfish
-summary: North Kruzof ledge: kelp-edge boulder fingers and micro-ledge pockets that pin sand-lance and herring; prime for short drifts holding lingcod and mixed rockfish on mid-to-soft tides. Short run fromSit
+summary: "North Kruzof ledge: kelp-edge boulder fingers and micro-ledge pockets that pin sand-lance and herring; prime for short drifts holding lingcod and mixed rockfish on mid-to-soft tides. Short run fromSit"
 position:
   lat: 57.0531
   lon: -135.45

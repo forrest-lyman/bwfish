@@ -8,7 +8,7 @@ portIds:
 fishIds:
   - lingcod
   - rockfish
-summary: South side of Bodega Head: steep reef band, scattered kelp paddies and isolated boulder humps; short drifts on tide changes concentrate bait—prime vertical rockfish and lingcod water from Bodega Bay.
+summary: "South side of Bodega Head: steep reef band, scattered kelp paddies and isolated boulder humps; short drifts on tide changes concentrate bait—prime vertical rockfish and lingcod water from Bodega Bay."
 position:
   lat: 38.3332
   lon: -123.1681

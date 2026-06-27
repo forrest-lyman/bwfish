@@ -7,7 +7,7 @@ fishIds:
   - pacific-halibut
   - rockfish
   - salmon
-summary: Resurrection Bay at Seward: sheltered marina, quick access to kelp/reef ledges and outer-shelf halibut; tide-pin bait lines, glacial silt, kings, coho, rockfish, lingcod.
+summary: "Resurrection Bay at Seward: sheltered marina, quick access to kelp/reef ledges and outer-shelf halibut; tide-pin bait lines, glacial silt, kings, coho, rockfish, lingcod."
 position:
   lat: 60.1042
   lon: -149.4432

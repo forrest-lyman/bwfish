@@ -11,7 +11,7 @@ fishIds:
   - mahi-mahi
   - snapper
   - wahoo
-summary: Near-shelf pinnacle cluster north of Cabo; short run from Cabo. Currents and color breaks pile bait: prime for yellowfin, dorado, wahoo and sailfish; structure holds amberjack, snapper and grouper.
+summary: "Near-shelf pinnacle cluster north of Cabo; short run from Cabo. Currents and color breaks pile bait: prime for yellowfin, dorado, wahoo and sailfish; structure holds amberjack, snapper and grouper."
 position:
   lat: 22.8905
   lon: -110.0367

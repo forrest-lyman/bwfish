@@ -6,7 +6,7 @@ fishIds:
 regionIds:
   - florida
   - gulf
-summary: Operational tactics for sight‑fishing trout on clear, shallow flats: quiet approaches, spacing and timing between anglers, how to prioritize the first cast, resetting spooked fish, and using a staged conversion sequence when trout are pressure‑sensitive.
+summary: "Operational tactics for sight‑fishing trout on clear, shallow flats: quiet approaches, spacing and timing between anglers, how to prioritize the first cast, resetting spooked fish, and using a staged conversion sequence when trout are pressure‑sensitive."
 log:
   - generatedAt: "2026-05-29T19:33:25.986Z"
     agent: "tecnique.agent.md"

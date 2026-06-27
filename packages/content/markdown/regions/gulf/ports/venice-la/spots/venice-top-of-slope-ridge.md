@@ -5,7 +5,7 @@ spotType: ledge
 regionId: gulf
 portIds:
   - venice-la
-summary: Outer top-of-slope livebait ridge off Venice: hard ledge roll with downhill seams and Loop Current filaments that stack bait into yellowfin, blackfin, mahi, blue-marlin and king mackerel windows.
+summary: "Outer top-of-slope livebait ridge off Venice: hard ledge roll with downhill seams and Loop Current filaments that stack bait into yellowfin, blackfin, mahi, blue-marlin and king mackerel windows."
 position:
   lat: 29.2772
   lon: -89.2373

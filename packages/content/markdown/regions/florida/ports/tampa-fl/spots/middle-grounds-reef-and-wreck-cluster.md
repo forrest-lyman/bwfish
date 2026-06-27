@@ -5,7 +5,7 @@ spotType: reef
 regionId: florida
 portIds:
   - tampa-fl
-summary: Mid-shelf reef/wreck cluster off Tampa: pinnacles, artificial modules and hulls that trap bait; vertical fish for snapper, grouper and amberjack; warm-season mahi, blackfin & king on weedlines.
+summary: "Mid-shelf reef/wreck cluster off Tampa: pinnacles, artificial modules and hulls that trap bait; vertical fish for snapper, grouper and amberjack; warm-season mahi, blackfin & king on weedlines."
 position:
   lat: 27.9506
   lon: -82.3372

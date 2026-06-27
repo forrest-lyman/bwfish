@@ -5,7 +5,7 @@ spotType: corridor
 regionId: alaska
 portIds:
   - valdez-ak
-summary: Short Valdez run to the Hinchinbrook exchange saddle: violent tidal funnels and tiny slack windows that stack migrating salmon and shove bait into halibut, rockfish and lingcod holding lines.
+summary: "Short Valdez run to the Hinchinbrook exchange saddle: violent tidal funnels and tiny slack windows that stack migrating salmon and shove bait into halibut, rockfish and lingcod holding lines."
 position:
   lat: 61.1308
   lon: -146.4683

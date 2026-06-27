@@ -10,7 +10,7 @@ fishIds:
   - grouper
   - snapper
   - yellowtail
-summary: La Paz bay mouth tongue: rocky-sand fingers and tidal funnels stack bait along island faces — short live‑bait runs and slow drifts on incoming tides for yellowtail, amberjack, snapper.
+summary: "La Paz bay mouth tongue: rocky-sand fingers and tidal funnels stack bait along island faces — short live‑bait runs and slow drifts on incoming tides for yellowtail, amberjack, snapper."
 position:
   lat: 24.1426
   lon: -110.4303

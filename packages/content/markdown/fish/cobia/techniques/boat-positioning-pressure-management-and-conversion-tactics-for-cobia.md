@@ -3,7 +3,7 @@ id: boat-positioning-pressure-management-and-conversion-tactics-for-cobia
 title: Boat Positioning, Pressure Management & Conversion Tactics for Cobia
 fishIds:
   - cobia
-summary: Non‑tackle operational playbook: reading fish mood, positioning the boat around rays/rafts/wrecks, managing angling pressure, spacing presentations and staging conversion sequences for reluctant cobia.
+summary: "Non‑tackle operational playbook: reading fish mood, positioning the boat around rays/rafts/wrecks, managing angling pressure, spacing presentations and staging conversion sequences for reluctant cobia."
 log:
   - generatedAt: "2026-05-29T19:06:23.007Z"
     agent: "tecnique.agent.md"

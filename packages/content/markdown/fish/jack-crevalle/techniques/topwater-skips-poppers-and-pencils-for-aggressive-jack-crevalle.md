@@ -3,7 +3,7 @@ id: topwater-skips-poppers-and-pencils-for-aggressive-jack-crevalle
 title: Topwater — Skips, Poppers & Pencil Conversions for Aggressive Jack Crevalle
 fishIds:
   - jack-crevalle
-summary: Focused top‑water playbook for short‑range explosive strikes: lure choices, skip‑casts into tight pockets, retrieve bursts vs steady pulses, range management, and converting follows into hookups without over‑pressuring the school.
+summary: "Focused top‑water playbook for short‑range explosive strikes: lure choices, skip‑casts into tight pockets, retrieve bursts vs steady pulses, range management, and converting follows into hookups without over‑pressuring the school."
 log:
   - generatedAt: "2026-05-29T19:09:13.795Z"
     agent: "tecnique.agent.md"

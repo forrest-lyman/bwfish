@@ -5,7 +5,7 @@ spotType: area
 regionId: norcal
 portIds:
   - monterey-ca
-summary: Minutes from Monterey harbor: Point Pinos kelp necks, lone rock pile and a tight sand‑gut at the entrance. Tide pulses compress bait along edges — prime short‑drift water for rockfish, lingcod, halib.
+summary: "Minutes from Monterey harbor: Point Pinos kelp necks, lone rock pile and a tight sand‑gut at the entrance. Tide pulses compress bait along edges — prime short‑drift water for rockfish, lingcod, halib."
 position:
   lat: 36.6002
   lon: -121.8947

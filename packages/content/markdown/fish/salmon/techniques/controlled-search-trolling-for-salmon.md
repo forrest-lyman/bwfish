@@ -3,7 +3,7 @@ id: controlled-search-trolling-for-salmon
 title: Controlled‑Search Trolling — Spoons, Plugs & Lane Repeats for Salmon
 fishIds:
   - salmon
-summary: A deliberate, depth‑focused trolling method that converts search patterns into repeatable lanes: use sonar‑directed depth work, controlled downrigger and planer angles, flasher/lead conversions, and short‑lane repeats to find and hold migrating salmon where bait, tide and temperature overlap.
+summary: "A deliberate, depth‑focused trolling method that converts search patterns into repeatable lanes: use sonar‑directed depth work, controlled downrigger and planer angles, flasher/lead conversions, and short‑lane repeats to find and hold migrating salmon where bait, tide and temperature overlap."
 log:
   - generatedAt: "2026-05-29T19:27:06.606Z"
     agent: "tecnique.agent.md"

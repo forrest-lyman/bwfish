@@ -10,7 +10,7 @@ fishIds:
   - pacific-halibut
   - rockfish
   - salmon
-summary: Short run from Sitka: a tight tidal cut with kelp-backed rock fingers that corrals herring and sand-lance on tide changes—staging Chinook/Coho; vertical rockfish/lingcod and quick halibut drifts.
+summary: "Short run from Sitka: a tight tidal cut with kelp-backed rock fingers that corrals herring and sand-lance on tide changes—staging Chinook/Coho; vertical rockfish/lingcod and quick halibut drifts."
 position:
   lat: 57.0531
   lon: -135.45

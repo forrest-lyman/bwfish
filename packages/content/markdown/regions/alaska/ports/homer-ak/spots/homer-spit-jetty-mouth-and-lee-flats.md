@@ -9,7 +9,7 @@ fishIds:
   - lingcod
   - pacific-halibut
   - rockfish
-summary: Homer Spit jetty mouth and lee flats: sand-and-rock fingers, scour channels and near-jetty seams—quick halibut drifts and vertical rockfish/lingcod on mid tides.
+summary: "Homer Spit jetty mouth and lee flats: sand-and-rock fingers, scour channels and near-jetty seams—quick halibut drifts and vertical rockfish/lingcod on mid tides."
 position:
   lat: 59.6425
   lon: -151.5483

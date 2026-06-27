@@ -5,7 +5,7 @@ spotType: area
 regionId: norcal
 portIds:
   - morro-bay-ca
-summary: First-mile sand-gut corridor off Morro Bay's south spit: scoured flats and a narrow outbound throat where Pacific halibut stage on the ebb; short, controlled drifts and slack-bar launches advised.
+summary: "First-mile sand-gut corridor off Morro Bay's south spit: scoured flats and a narrow outbound throat where Pacific halibut stage on the ebb; short, controlled drifts and slack-bar launches advised."
 position:
   lat: 35.3658
   lon: -120.8499

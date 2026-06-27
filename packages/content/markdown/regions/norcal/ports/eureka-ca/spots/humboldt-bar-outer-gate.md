@@ -5,7 +5,7 @@ spotType: bar
 regionId: norcal
 portIds:
   - eureka-ca
-summary: Humboldt Bay outer gate: shifting sandbars and breaking surf at the mouth shape the first mile of salmon runs and halibut drifts; tide, swell and bar state control access.
+summary: "Humboldt Bay outer gate: shifting sandbars and breaking surf at the mouth shape the first mile of salmon runs and halibut drifts; tide, swell and bar state control access."
 position:
   lat: 40.8021
   lon: -124.1637

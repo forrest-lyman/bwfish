@@ -5,7 +5,7 @@ spotType: corridor
 regionId: outerbanks
 portIds:
   - hatteras-nc
-summary: Shoal-to-shelf seam off Diamond Shoals: rip and first drop make a weedline/bait corridor. Prime summer/fall strike zone for yellowfin, mahi, wahoo and marlin when Gulf Stream kinks shoreward.
+summary: "Shoal-to-shelf seam off Diamond Shoals: rip and first drop make a weedline/bait corridor. Prime summer/fall strike zone for yellowfin, mahi, wahoo and marlin when Gulf Stream kinks shoreward."
 position:
   lat: 35.2232
   lon: -75.5702

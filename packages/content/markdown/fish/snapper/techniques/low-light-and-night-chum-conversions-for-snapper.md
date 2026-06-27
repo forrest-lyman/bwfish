@@ -6,7 +6,7 @@ fishIds:
 regionIds:
   - baja
   - florida
-summary: Approaches for exploiting dusk, night and low‑light windows when snapper feed more aggressively: timed chum, light placement, scent management, and staged conversions to larger baits or live presentations while minimizing daytime pressure effects.
+summary: "Approaches for exploiting dusk, night and low‑light windows when snapper feed more aggressively: timed chum, light placement, scent management, and staged conversions to larger baits or live presentations while minimizing daytime pressure effects."
 log:
   - generatedAt: "2026-05-29T19:30:12.597Z"
     agent: "tecnique.agent.md"

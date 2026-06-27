@@ -9,7 +9,7 @@ fishIds:
   - cobia
   - grouper
   - snapper
-summary: Sound-edge ledge off West Biloxi: alternating hardbottom and sunk artificial reefs along the pass throat. Short runs from Biloxi; reliable red snapper and grouper, seasonal cobia on spring–summer tide
+summary: "Sound-edge ledge off West Biloxi: alternating hardbottom and sunk artificial reefs along the pass throat. Short runs from Biloxi; reliable red snapper and grouper, seasonal cobia on spring–summer tide"
 position:
   lat: 30.396
   lon: -88.7653

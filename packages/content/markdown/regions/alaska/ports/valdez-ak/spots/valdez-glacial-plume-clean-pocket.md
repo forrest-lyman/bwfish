@@ -8,7 +8,7 @@ portIds:
 fishIds:
   - pacific-halibut
   - salmon
-summary: Clean-Pocket break at the Valdez Arm plume: tight bait seams and bird-lines produce short king windows on flood tides; tidy halibut drifts along the color line. Quick run from Valdez.
+summary: "Clean-Pocket break at the Valdez Arm plume: tight bait seams and bird-lines produce short king windows on flood tides; tidy halibut drifts along the color line. Quick run from Valdez."
 position:
   lat: 61.1308
   lon: -146.3483

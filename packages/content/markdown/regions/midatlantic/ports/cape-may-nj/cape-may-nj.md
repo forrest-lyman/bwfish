@@ -7,7 +7,7 @@ fishIds:
   - striped-bass
   - tautog
   - yellowfin-tuna
-summary: Jetty and inlet at Delaware Bay mouth: short runs to shelf break and scattered wrecks. Spring/fall striped bass and bluefish inside; winter tautog on wrecks; summer tunas and pelagics offshore.
+summary: "Jetty and inlet at Delaware Bay mouth: short runs to shelf break and scattered wrecks. Spring/fall striped bass and bluefish inside; winter tautog on wrecks; summer tunas and pelagics offshore."
 position:
   lat: 38.9351
   lon: -74.906

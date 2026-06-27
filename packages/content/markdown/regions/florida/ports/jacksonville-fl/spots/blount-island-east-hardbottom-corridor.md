@@ -9,7 +9,7 @@ fishIds:
   - cobia
   - king-mackerel
   - snapper
-summary: East of Blount Island: a short-run hardbottom and ledge corridor off St. Johns Inlet. Bar-dependent access; tide-swept edges hold kings and cobia, while warm-season blackfin, mahi and mixed snapper巡
+summary: "East of Blount Island: a short-run hardbottom and ledge corridor off St. Johns Inlet. Bar-dependent access; tide-swept edges hold kings and cobia, while warm-season blackfin, mahi and mixed snapper巡"
 position:
   lat: 30.3322
   lon: -81.5357

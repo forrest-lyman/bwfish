@@ -8,7 +8,7 @@ portIds:
 fishIds:
   - pacific-halibut
   - salmon
-summary: Pillar Point inner flats and channel cuts: Half Moon Bay run to flood/ebb-driven drifts over sand scours; target pacific halibut with Chinook and Coho staging along tidal cuts when the bar's open.
+summary: "Pillar Point inner flats and channel cuts: Half Moon Bay run to flood/ebb-driven drifts over sand scours; target pacific halibut with Chinook and Coho staging along tidal cuts when the bar's open."
 position:
   lat: 37.4636
   lon: -122.4286

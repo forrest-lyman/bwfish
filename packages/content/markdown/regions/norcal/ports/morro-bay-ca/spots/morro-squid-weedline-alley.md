@@ -8,7 +8,7 @@ portIds:
 fishIds:
   - lingcod
   - rockfish
-summary: Weedline Alley off Morro Bay: minutes from the harbor where seasonal squid pushes and anchovy/sardine lines on floating debris concentrate—prime squid jigging and vertical rockfish/lingcod on ledges.
+summary: "Weedline Alley off Morro Bay: minutes from the harbor where seasonal squid pushes and anchovy/sardine lines on floating debris concentrate—prime squid jigging and vertical rockfish/lingcod on ledges."
 position:
   lat: 35.3658
   lon: -120.9699

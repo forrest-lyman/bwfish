@@ -8,7 +8,7 @@ portIds:
 fishIds:
   - mahi-mahi
   - wahoo
-summary: 6–18 nm ESE of Los Barriles: narrow sargassum weedline corridor where canyon-driven blue-water pushes and birds concentrate bait — prime summer mahi and wahoo water.
+summary: "6–18 nm ESE of Los Barriles: narrow sargassum weedline corridor where canyon-driven blue-water pushes and birds concentrate bait — prime summer mahi and wahoo water."
 position:
   lat: 23.6833
   lon: -109.82

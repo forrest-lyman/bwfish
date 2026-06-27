@@ -8,7 +8,7 @@ portIds:
 fishIds:
   - lingcod
   - rockfish
-summary: Lee-side hardbottom off Table Bluff: a narrow current neck and downhill ledge that pins bait on tide changes. Short Eureka run for vertical jigging, tight drifts for rockfish, lingcod & halibut.
+summary: "Lee-side hardbottom off Table Bluff: a narrow current neck and downhill ledge that pins bait on tide changes. Short Eureka run for vertical jigging, tight drifts for rockfish, lingcod & halibut."
 position:
   lat: 40.8021
   lon: -124.2837

@@ -10,7 +10,7 @@ fishIds:
   - marlin
   - wahoo
   - yellowfin-tuna
-summary: Cabo Ridge's narrow thermal seam 8-25 nm WSW of Cabo: a linear ridge/edge where warm blue meets cool upwelling - fast, short yellowfin, mahi and wahoo lanes when the temperature edge pins bait.
+summary: "Cabo Ridge's narrow thermal seam 8-25 nm WSW of Cabo: a linear ridge/edge where warm blue meets cool upwelling - fast, short yellowfin, mahi and wahoo lanes when the temperature edge pins bait."
 position:
   lat: 22.8905
   lon: -110.0367

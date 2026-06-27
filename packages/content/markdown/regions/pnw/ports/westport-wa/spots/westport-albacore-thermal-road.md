@@ -7,7 +7,7 @@ portIds:
   - westport-wa
 fishIds:
   - albacore-tuna
-summary: Practical offshore search road from Grays Harbor: narrow thermal fingers and shelf‑edge seams that push albacore and blue‑water salmon into range when the plume and upwelling cooperate.
+summary: "Practical offshore search road from Grays Harbor: narrow thermal fingers and shelf‑edge seams that push albacore and blue‑water salmon into range when the plume and upwelling cooperate."
 position:
   lat: 46.8901
   lon: -124.2241
