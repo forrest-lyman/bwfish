@@ -4,6 +4,7 @@
   "scripts": {
     "start": "pnpm --filter web start",
     "build": "pnpm -r build",
-    "dev": "pnpm --filter web dev"
+    "dev": "pnpm --filter web dev",
+    "tasks": "npx tsx scripts/run-tasks.ts"
   }
 }
