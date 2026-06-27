@@ -1,0 +1,9 @@
+{
+  "name": "bwfish-web",
+  "private": true,
+  "scripts": {
+    "start": "pnpm --filter web start",
+    "build": "pnpm -r build",
+    "dev": "pnpm --filter web dev"
+  }
+}
