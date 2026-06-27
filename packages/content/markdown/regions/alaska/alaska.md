@@ -1,6 +1,7 @@
 ---
 id: alaska
 title: Alaska
+order: 1
 summary: Alaska's extreme tides and long summer daylight drive late‑spring to midsummer king and silver runs; big‑headland shelf drifts for halibut, nearshore kelp/rock for rockfish and lingcod.
 position:
   lat: 58.2365

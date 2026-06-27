@@ -1,6 +1,7 @@
 ---
 id: socal
 title: Southern California
+order: 4
 summary: Operational fishing intelligence for reading Southern California islands, banks, kelp, offshore tuna water, fleet pressure, and seasonal transitions.
 position:
   lat: 33.4951

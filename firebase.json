@@ -5,6 +5,17 @@
     "rules": "firestore.rules",
     "indexes": "firestore.indexes.json"
   },
+  "auth": {
+    "providers": {
+      "emailPassword": true,
+      "googleSignIn": {
+        "oAuthBrandDisplayName": "bwfish",
+        "supportEmail": "support@bwfish.com",
+        "authorizedRedirectUris": ["http://localhost"]
+      }
+    },
+    "authorizedDomains": ["localhost"]
+  },
   "hosting": {
     "public": "packages/web/dist/web",
     "ignore": [

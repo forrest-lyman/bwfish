@@ -1,0 +1,72 @@
+<header class="toolbar">
+	<div class="toolbar-start">
+		<button class="nav-toggle" type="button" (click)="toggleNav()" aria-label="Toggle navigation">
+			<span></span>
+			<span></span>
+			<span></span>
+		</button>
+
+		<nav class="breadcrumbs">
+			@for (crumb of crumbs(); track crumb.path; let last = $last) {
+				@if (!last && crumb.path) {
+					<a [routerLink]="crumb.path">{{ crumb.label }}</a>
+					<span class="sep">›</span>
+				} @else {
+					<span class="current">{{ crumb.label }}</span>
+				}
+			}
+		</nav>
+	</div>
+
+	<div class="user-menu">
+		@if (auth.user()) {
+			<button class="avatar" (click)="toggleMenu()">
+				@if (userService.profile()?.photoUrl) {
+					<img
+						[src]="userService.profile()!.photoUrl!"
+						[alt]="userService.profile()?.displayName ?? auth.user()?.email ?? ''"
+					/>
+				} @else {
+					<span class="initials">{{ initials() }}</span>
+				}
+			</button>
+			@if (menuOpen()) {
+				<div class="dropdown">
+					<div class="user-info">
+						<strong>{{ userService.profile()?.displayName ?? auth.user()?.displayName ?? auth.user()?.email }}</strong>
+						@if (userService.profile()?.displayName ?? auth.user()?.displayName) {
+							<span>{{ auth.user()?.email }}</span>
+						}
+					</div>
+					<hr />
+					<a routerLink="/profile" (click)="closeMenu()">Profile</a>
+					<a routerLink="/settings" (click)="closeMenu()">Settings</a>
+					<button (click)="signOut()">Sign out</button>
+				</div>
+			}
+		} @else {
+			<button class="sign-in-btn" (click)="showSignIn.set(true)">Sign in</button>
+		}
+	</div>
+</header>
+
+@if (showSignIn()) {
+	<div class="auth-backdrop" (click)="showSignIn.set(false)">
+		<div class="auth-dialog" (click)="$event.stopPropagation()">
+			<h2>Sign in</h2>
+			@if (authError()) {
+				<p class="auth-error">{{ authError() }}</p>
+			}
+			<button class="google-btn" (click)="signInGoogle()">
+				Continue with Google
+			</button>
+			<div class="divider"><span>or</span></div>
+			<input #emailInput type="email" placeholder="Email" />
+			<input #passInput type="password" placeholder="Password" />
+			<div class="auth-actions">
+				<button class="primary" (click)="signInEmail(emailInput.value, passInput.value)">Sign in</button>
+				<button class="secondary" (click)="signUpEmail(emailInput.value, passInput.value)">Create account</button>
+			</div>
+		</div>
+	</div>
+}

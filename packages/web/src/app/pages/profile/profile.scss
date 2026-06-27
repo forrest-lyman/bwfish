@@ -1,0 +1,189 @@
+.profile-page {
+	max-width: 720px;
+	font-family: var(--font-ui);
+}
+
+.profile-header {
+	display: flex;
+	align-items: center;
+	gap: 20px;
+	margin-bottom: 28px;
+
+	h1 {
+		margin: 0 0 6px;
+		font-size: 2rem;
+		font-weight: 500;
+		font-family: var(--font-content);
+	}
+
+	p {
+		margin: 0;
+		color: #555;
+		font-size: 1rem;
+	}
+}
+
+.avatar-shell {
+	width: 72px;
+	height: 72px;
+	border-radius: 50%;
+	overflow: hidden;
+	background: #ececec;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	color: #555;
+	font-size: 1.4rem;
+	font-weight: 600;
+	flex-shrink: 0;
+
+	img {
+		width: 100%;
+		height: 100%;
+		object-fit: cover;
+	}
+}
+
+.profile-card {
+	border: 1px solid #e5e5e5;
+	border-radius: 16px;
+	background: #fff;
+	padding: 24px;
+	display: grid;
+	gap: 18px;
+}
+
+.field {
+	display: grid;
+	gap: 6px;
+
+	label {
+		display: flex;
+		align-items: baseline;
+		gap: 8px;
+		font-size: 0.72rem;
+		text-transform: uppercase;
+		letter-spacing: 0.08em;
+		color: #888;
+		font-weight: 600;
+	}
+
+	input[type='text'],
+	input[type='url'],
+	input[type='email'],
+	select {
+		width: 100%;
+		padding: 10px 12px;
+		border: 1px solid #ddd;
+		border-radius: 10px;
+		font: inherit;
+		font-size: 0.95rem;
+		color: #222;
+		background: #fff;
+
+		&:focus {
+			outline: 2px solid rgba(26, 115, 232, 0.25);
+			border-color: #1a73e8;
+		}
+
+		&:disabled {
+			background: #f7f7f7;
+			color: #666;
+		}
+	}
+}
+
+.field-badge {
+	font-size: 0.65rem;
+	font-weight: 500;
+	letter-spacing: 0.04em;
+	text-transform: lowercase;
+	color: #aaa;
+
+	&.required {
+		color: #888;
+	}
+
+	&.private {
+		color: #999;
+	}
+}
+
+.home-port-fields {
+	display: grid;
+	grid-template-columns: 1fr 1fr;
+	gap: 10px;
+}
+
+.avatar-upload {
+	display: grid;
+	gap: 8px;
+
+	input[type='file'] {
+		display: none;
+	}
+}
+
+.avatar-upload-button {
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	width: fit-content;
+	padding: 8px 14px;
+	border: 1px solid #ddd;
+	border-radius: 999px;
+	background: #fafafa;
+	font-size: 0.85rem;
+	font-weight: 500;
+	color: #333;
+	cursor: pointer;
+
+	&:hover {
+		background: #f2f2f2;
+	}
+}
+
+.field-hint {
+	font-size: 0.8rem;
+	color: #888;
+}
+
+.form-message {
+	margin: 0;
+	font-size: 0.9rem;
+
+	&.error {
+		color: #b00020;
+	}
+
+	&.success {
+		color: #1a7f37;
+	}
+}
+
+.form-actions {
+	display: flex;
+	justify-content: flex-start;
+
+	button {
+		padding: 10px 18px;
+		border: none;
+		border-radius: 999px;
+		background: #1a73e8;
+		color: #fff;
+		font: inherit;
+		font-size: 0.9rem;
+		font-weight: 500;
+		cursor: pointer;
+
+		&:disabled {
+			opacity: 0.6;
+			cursor: default;
+		}
+	}
+}
+
+.empty-state {
+	margin: 0;
+	color: #666;
+}

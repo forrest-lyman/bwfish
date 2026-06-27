@@ -1,6 +1,7 @@
 ---
 id: florida
 title: Florida
+order: 7
 summary: Skiff-access flats and mangrove creeks hold bonefish, permit, tarpon and redfish; nearshore reefs for snapper/grouper; Gulf-Stream edge off passes brings seasonal mahi, wahoo and sailfish.
 position:
   lat: 27.4743

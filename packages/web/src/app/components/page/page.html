@@ -1,0 +1,30 @@
+@if (item(); as current) {
+	<div class="layout">
+		<article class="page-layout">
+			<header>
+				<h1>{{ current.title }}</h1>
+				<p class="summary">{{ current.summary }}</p>
+				<app-feed [title]="current.title" [collection]="current.collection" [refId]="current.id" />
+			</header>
+			@if (body()) {
+				<div class="body" [innerHTML]="body()"></div>
+			} @else if (loading()) {
+				<div class="loading">Loading...</div>
+			}
+		</article>
+		<aside class="sidebar">
+			@for (group of related(); track group.label) {
+				<div class="sidebar-group">
+					<span class="sidebar-label">{{ group.label }}</span>
+					<ul>
+						@for (child of group.items; track child.id) {
+							<li><a [routerLink]="child.link">{{ child.title }}</a></li>
+						}
+					</ul>
+				</div>
+			}
+		</aside>
+	</div>
+} @else {
+	<div class="loading">Loading...</div>
+}

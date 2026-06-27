@@ -1,6 +1,7 @@
 ---
 id: midatlantic
 title: Mid-Atlantic
+order: 9
 summary: Offshore canyon edges 30-80 nm out concentrate summer tuna, mahi and deep-dropping swordfish/bigeye on current breaks; inshore wrecks, reefs and estuary necks hold striped bass, bluefish, black sea b
 position:
   lat: 35.8558

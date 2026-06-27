@@ -1,6 +1,7 @@
 ---
 id: pnw
 title: Pacific Northwest
+order: 2
 summary: "PNW headlands, kelp corridors and outer-shelf canyons: short runs for rockfish/lingcod, shelf drifts for halibut, and late-summer albacore/tuna on Columbia plumes and warm eddies; weather windows."
 position:
   lat: 45.2117

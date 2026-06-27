@@ -1,6 +1,7 @@
 ---
 id: outerbanks
 title: Outer Banks
+order: 8
 summary: Outer Banks inlets and shoals funnel spring-summer bait toward the Gulf Stream; close water yields drum, bluefish and spanish mackerel; late-summer edges produce cobia, mahi, tuna and billfish.
 position:
   lat: 35.2595

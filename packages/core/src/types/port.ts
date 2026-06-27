@@ -5,6 +5,7 @@ export interface Port {
   title: string;
   summary: string;
   regionId: string;
+  displayOrder: number;
   fishIds: string[];
   position: Position;
   zoom: number;

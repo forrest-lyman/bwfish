@@ -1,6 +1,7 @@
 ---
 id: northeast
 title: Northeast
+order: 10
 summary: "Shelf canyons, wrecks and banks: striped bass/bluefish inshore spring–summer rips; tuna on canyon edges mid‑summer; fluke, sea bass, tautog on wrecks; cod/haddock deep fall–winter. High pressure."
 position:
   lat: 42.3475

@@ -2,7 +2,8 @@ import { readdirSync, renameSync, mkdirSync } from "fs";
 import { join, extname } from "path";
 import { spawnSync } from "child_process";
 
-const TASKS_DIR = new URL("../tasks", import.meta.url).pathname;
+const CONTENT_DIR = new URL("../packages/content", import.meta.url).pathname;
+const TASKS_DIR = join(CONTENT_DIR, "tasks");
 const DONE_DIR = join(TASKS_DIR, "done");
 
 mkdirSync(DONE_DIR, { recursive: true });
@@ -20,7 +21,7 @@ for (const task of tasks) {
   const taskPath = join(TASKS_DIR, task.name);
   console.log(`\nRunning task: ${task.name}`);
 
-  const result = spawnSync("npx", ["tsx", taskPath], { stdio: "inherit" });
+  const result = spawnSync("npx", ["tsx", taskPath], { stdio: "inherit", cwd: CONTENT_DIR });
 
   if (result.status !== 0) {
     console.error(`Task failed: ${task.name} (exit code ${result.status})`);

@@ -1,0 +1,26 @@
+<div class="feed-card">
+  <form class="feed-form" [formGroup]="feedForm" (ngSubmit)="submit()">
+    <input formControlName="text" type="text" [placeholder]="prompt()" />
+    <button type="submit" class="submit-btn" [disabled]="feedForm.invalid || submitting()" aria-label="Send question">
+      @if (submitting()) {
+        <span class="submit-label">...</span>
+      } @else {
+        <svg lucideSendHorizontal class="send-icon" aria-hidden="true"></svg>
+      }
+    </button>
+  </form>
+
+  @if (error()) {
+    <p class="feed-error">{{ error() }}</p>
+  }
+
+  @if (feedEntries().length) {
+    <div class="feed-entries">
+      @for (entry of feedEntries(); track entry.id) {
+        <div class="feed-entry">
+          <p>{{ entry.text }}</p>
+        </div>
+      }
+    </div>
+  }
+</div>

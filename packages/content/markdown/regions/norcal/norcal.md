@@ -1,6 +1,7 @@
 ---
 id: norcal
 title: Northern California
+order: 3
 summary: Shelf canyons, headland upwelling and kelp necks off NorCal concentrate bait in spring-summer; bay launches to offshore runs—chinook lanes, rockfish & lingcod, halibut flats, late summer albacore.
 position:
   lat: 38.5608

@@ -1,0 +1,50 @@
+<nav class="nav-region">
+	@if (nav.error()) {
+		<p class="nav-error">{{ nav.error() }}</p>
+	} @else if (!nav.loaded()) {
+		<p class="nav-loading">Loading...</p>
+	}
+
+	@for (node of nav.nodes(); track node.region.id) {
+		<div class="region" [class.expanded]="node.expanded">
+			<button
+				class="region-toggle"
+				[class.expanded]="node.expanded"
+				(click)="nav.toggle(node.region.id)"
+			>
+				<span class="region-title">{{ node.region.title }}</span>
+				<svg
+					lucideChevronRight
+					class="chevron"
+					[class.expanded]="node.expanded"
+					aria-hidden="true"
+				></svg>
+			</button>
+
+			@if (node.expanded) {
+				<a
+					class="nav-page-link"
+					[routerLink]="['/', node.region.id]"
+					routerLinkActive="active"
+					[routerLinkActiveOptions]="{ exact: true }"
+				>
+					Overview
+				</a>
+
+				<p class="section-label">Ports</p>
+
+				<ul class="ports">
+					@for (port of node.ports; track port.id) {
+						<li>
+							<a
+								class="nav-page-link"
+								[routerLink]="['/', node.region.id, port.id]"
+								routerLinkActive="active"
+							>{{ port.title }}</a>
+						</li>
+					}
+				</ul>
+			}
+		</div>
+	}
+</nav>

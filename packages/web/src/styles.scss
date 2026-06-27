@@ -1,1 +1,25 @@
-/* You can add global styles to this file, and also import other style files */
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Source+Serif+4:opsz,wght@8..60,400;8..60,500;8..60,600&display=swap');
+
+:root {
+  --font-ui: "Inter", sans-serif;
+  --font-content: "Source Serif 4", serif;
+  --surface-1: #f6f6f6;
+  --surface-2: #f8f8f8;
+  --surface-3: #fafafa;
+  --surface-4: #fcfcfc;
+  --surface-5: #fdfdfd;
+  --border-color: #d9d9d9;
+}
+
+*, *::before, *::after {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  font-family: var(--font-ui);
+  font-size: 14px;
+  color: #111;
+  background: #fff;
+  -webkit-font-smoothing: antialiased;
+}

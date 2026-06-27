@@ -2,6 +2,118 @@ rules_version = '2';
 
 service cloud.firestore {
   match /databases/{database}/documents {
+
+    function isOptionalString(field, maxLen) {
+      return !(field in request.resource.data)
+        || (request.resource.data[field] is string
+          && request.resource.data[field].size() <= maxLen);
+    }
+
+    function allowedUserProfileKeys() {
+      return ['uid', 'displayName', 'photoUrl', 'boat', 'homePort', 'website', 'location'];
+    }
+
+    function hasAllowedUserProfileKeys() {
+      return request.resource.data.keys().hasOnly(allowedUserProfileKeys());
+    }
+
+    function isOptionalHomePort() {
+      return !('homePort' in request.resource.data)
+        || (request.resource.data.homePort is map
+          && request.resource.data.homePort.keys().hasOnly(['regionId', 'portId'])
+          && request.resource.data.homePort.regionId is string
+          && request.resource.data.homePort.regionId.size() > 0
+          && request.resource.data.homePort.regionId.size() <= 64
+          && request.resource.data.homePort.portId is string
+          && request.resource.data.homePort.portId.size() > 0
+          && request.resource.data.homePort.portId.size() <= 64);
+    }
+
+    function isValidUserProfile(userId) {
+      let data = request.resource.data;
+      return hasAllowedUserProfileKeys()
+        && data.keys().hasAll(['uid', 'displayName'])
+        && data.uid == userId
+        && data.displayName is string
+        && data.displayName.size() > 0
+        && data.displayName.size() <= 100
+        && isOptionalString('photoUrl', 2048)
+        && isOptionalString('boat', 120)
+        && isOptionalString('location', 120)
+        && isOptionalHomePort()
+        && isOptionalString('website', 2048);
+    }
+
+    function isValidUserProfileUpdate(userId) {
+      return request.auth.uid == userId
+        && resource.data.uid == userId
+        && request.resource.data.uid == userId
+        && hasAllowedUserProfileKeys()
+        && request.resource.data.displayName is string
+        && request.resource.data.displayName.size() > 0
+        && request.resource.data.displayName.size() <= 100
+        && isOptionalString('photoUrl', 2048)
+        && isOptionalString('boat', 120)
+        && isOptionalString('location', 120)
+        && isOptionalHomePort()
+        && isOptionalString('website', 2048)
+        && request.resource.data.diff(resource.data).affectedKeys()
+          .hasOnly(['displayName', 'photoUrl', 'boat', 'homePort', 'website', 'location']);
+    }
+
+    match /regions/{id} {
+      allow read: if true;
+      allow write: if false;
+    }
+
+    match /ports/{id} {
+      allow read: if true;
+      allow write: if false;
+    }
+
+    match /spots/{id} {
+      allow read: if true;
+      allow write: if false;
+    }
+
+    match /fish/{id} {
+      allow read: if true;
+      allow write: if false;
+    }
+
+    match /techniques/{id} {
+      allow read: if true;
+      allow write: if false;
+    }
+
+    match /pages/{id} {
+      allow read: if true;
+      allow write: if false;
+    }
+
+    match /feed/{entryId} {
+      allow read: if request.auth != null;
+      allow create: if request.auth != null
+        && request.auth.uid == request.resource.data.createdBy
+        && request.resource.data.keys().hasAll(['type','text','collection','refId','createdBy','createdAt','lastModified']);
+      allow update: if request.auth != null
+        && request.auth.uid == resource.data.createdBy
+        && request.auth.uid == request.resource.data.createdBy;
+      allow delete: if false;
+    }
+
+    match /users/{userId} {
+      allow read: if true;
+      allow create: if request.auth != null
+        && request.auth.uid == userId
+        && isValidUserProfile(userId);
+      allow update: if request.auth != null
+        && request.auth.uid == userId
+        && isValidUserProfileUpdate(userId);
+      allow delete: if false;
+    }
+
+    // deny everything else
     match /{document=**} {
       allow read, write: if false;
     }

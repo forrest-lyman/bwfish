@@ -1,6 +1,7 @@
 ---
 id: gulf
 title: Gulf States
+order: 6
 summary: Rigs, shell-patch shelves, passes and marsh drains from TX to FL; launch-friendly ramps. Spring redfish/trout in marshes, summer tarpon/cobia on rigs, fall tuna offshore.
 position:
   lat: 28.2539

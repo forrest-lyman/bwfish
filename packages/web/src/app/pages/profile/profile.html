@@ -1,0 +1,111 @@
+<app-layout scope="user">
+	<section class="profile-page">
+		<header class="profile-header">
+			<div class="avatar-shell">
+				@if (avatarPreview()) {
+					<img [src]="avatarPreview()!" [alt]="form.controls.displayName.value || 'Profile'" />
+				} @else {
+					<span>{{ initials() }}</span>
+				}
+			</div>
+			<div>
+				<h1>Profile</h1>
+				<p>Manage your account and public angler profile.</p>
+			</div>
+		</header>
+
+		@if (auth.user()) {
+			<form class="profile-card" [formGroup]="form" (ngSubmit)="save()">
+				<div class="field">
+					<label for="avatar">
+						Avatar
+						<span class="field-badge">optional</span>
+					</label>
+					<div class="avatar-upload">
+						<input
+							id="avatar"
+							type="file"
+							accept="image/*"
+							(change)="onAvatarSelected($event)"
+						/>
+						<label for="avatar" class="avatar-upload-button">Choose image</label>
+						<span class="field-hint">JPG, PNG, or WebP up to 5 MB.</span>
+					</div>
+				</div>
+
+				<div class="field">
+					<label for="displayName">
+						Display name
+						<span class="field-badge required">required</span>
+					</label>
+					<input id="displayName" type="text" formControlName="displayName" autocomplete="name" />
+				</div>
+
+				<div class="field">
+					<label for="email">
+						Email
+						<span class="field-badge private">private</span>
+					</label>
+					<input id="email" type="email" [value]="auth.user()?.email ?? ''" disabled />
+				</div>
+
+				<div class="field">
+					<label for="boat">
+						Boat
+						<span class="field-badge">optional</span>
+					</label>
+					<input id="boat" type="text" formControlName="boat" autocomplete="off" />
+				</div>
+
+				<div class="field">
+					<label for="homePortRegion">
+						Home port
+						<span class="field-badge">optional</span>
+					</label>
+					<div class="home-port-fields">
+						<select id="homePortRegion" formControlName="regionId">
+							<option value="">Select region</option>
+							@for (region of regions(); track region.id) {
+								<option [value]="region.id">{{ region.title }}</option>
+							}
+						</select>
+						<select id="homePortPort" formControlName="portId">
+							<option value="">Select port</option>
+							@for (port of ports(); track port.id) {
+								<option [value]="port.id">{{ port.title }}</option>
+							}
+						</select>
+					</div>
+				</div>
+
+				<div class="field">
+					<label for="website">
+						Website
+						<span class="field-badge">optional</span>
+					</label>
+					<input id="website" type="url" formControlName="website" autocomplete="url" placeholder="https://" />
+				</div>
+
+				@if (error()) {
+					<p class="form-message error">{{ error() }}</p>
+				} @else if (saved()) {
+					<p class="form-message success">Profile saved.</p>
+				}
+
+				<div class="form-actions">
+					<button type="submit" [disabled]="form.invalid || saving()">
+						{{ saving() ? 'Saving…' : 'Save profile' }}
+					</button>
+				</div>
+			</form>
+		} @else if (auth.ready()) {
+			<div class="profile-card">
+				<p class="empty-state">You are not signed in.</p>
+			</div>
+		} @else {
+			<div class="profile-card">
+				<p class="empty-state">Loading profile…</p>
+			</div>
+		}
+	</section>
+</app-layout>

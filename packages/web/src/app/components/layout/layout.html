@@ -1,0 +1,11 @@
+<div class="app-shell">
+	@if (navOpen()) {
+		<app-nav [scope]="scope()" />
+	}
+	<div class="app-body">
+		<app-toolbar (navToggle)="toggleNav()" />
+		<main class="main-content">
+			<ng-content />
+		</main>
+	</div>
+</div>
