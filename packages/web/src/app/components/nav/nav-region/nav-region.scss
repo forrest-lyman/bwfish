@@ -21,9 +21,9 @@
 	--nav-section-indent: 1rem;
 	--nav-port-indent: 2rem;
 	--nav-row-height: 32px;
-	--nav-accent: #1a73e8;
-	--nav-hover-bg: rgba(0, 0, 0, 0.035);
-	--nav-active-bg: rgba(26, 115, 232, 0.05);
+	--nav-accent: #4d9fff;
+	--nav-hover-bg: rgba(255, 255, 255, 0.06);
+	--nav-active-bg: rgba(77, 159, 255, 0.12);
 }
 
 .region {
@@ -49,7 +49,7 @@
 	font-size: 0.8rem;
 	text-transform: uppercase;
 	letter-spacing: 0.04em;
-	color: #767676;
+	color: var(--text-muted);
 	text-align: left;
 	transition: color 0.15s ease, background-color 0.15s ease;
 
@@ -58,13 +58,16 @@
 	}
 
 	&.expanded {
-		color: #2a2a2a;
+		color: var(--text-secondary);
 	}
 }
 
 .region-title {
 	flex: 1;
 	min-width: 0;
+	overflow: hidden;
+	text-overflow: ellipsis;
+	white-space: nowrap;
 }
 
 .chevron {
@@ -72,17 +75,17 @@
 	width: 0.875rem;
 	height: 0.875rem;
 	flex-shrink: 0;
-	color: #9a9a9a;
+	color: var(--text-faint);
 	transition: transform 0.2s ease, color 0.15s ease;
 
 	&.expanded {
 		transform: rotate(90deg);
-		color: #666;
+		color: var(--text-muted);
 	}
 }
 
 .region-toggle.expanded .chevron {
-	color: #666;
+	color: var(--text-muted);
 }
 
 .section-label {
@@ -93,7 +96,7 @@
 	line-height: 1.2;
 	text-transform: uppercase;
 	letter-spacing: 0.06em;
-	color: #aaa;
+	color: var(--text-faint);
 }
 
 .nav-page-link {
@@ -102,13 +105,16 @@
 	min-height: var(--nav-row-height);
 	padding: 0 12px 0 calc(var(--nav-section-indent) - 3px);
 	font-size: 0.8rem;
-	color: #555;
+	color: var(--text-secondary);
 	text-decoration: none;
 	border-left: 3px solid transparent;
+	overflow: hidden;
+	text-overflow: ellipsis;
+	white-space: nowrap;
 
 	&:hover:not(.active) {
 		background: var(--nav-hover-bg);
-		color: #333;
+		color: var(--text-primary);
 	}
 
 	&.active {

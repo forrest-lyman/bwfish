@@ -1,0 +1,61 @@
+<div class="feed-entry">
+  <div class="feed-avatar">
+    @if (item().photoUrl) {
+      <img [src]="item().photoUrl" [alt]="item().displayName" />
+    } @else {
+      <span class="initials">{{ item().initials }}</span>
+    }
+  </div>
+  <div class="feed-body">
+    <div class="feed-meta">
+      <span class="feed-author">{{ item().displayName }}</span>
+      <time [dateTime]="item().entry.createdAt">{{ formatDate(item().entry.createdAt) }}</time>
+    </div>
+    @if (editing()) {
+      <textarea class="feed-edit-input" [formControl]="editForm" rows="3"></textarea>
+      <div class="feed-actions">
+        <button type="button" class="action-btn" [disabled]="managing()" (click)="cancelEdit()">Cancel</button>
+        <button
+          type="button"
+          class="action-btn"
+          [disabled]="managing() || editForm.invalid"
+          (click)="saveEdit()"
+        >
+          Save
+        </button>
+      </div>
+    } @else {
+      <p class="feed-text">{{ item().entry.text }}</p>
+      @if (canManage()) {
+        <div class="feed-actions">
+          <button type="button" class="action-btn" [disabled]="managing()" (click)="startEdit()">Edit</button>
+          <span class="action-sep">|</span>
+          <button type="button" class="action-btn" [disabled]="managing()" (click)="delete.emit()">Delete</button>
+        </div>
+      }
+    }
+  </div>
+  <div class="feed-votes">
+    <button
+      type="button"
+      class="vote-btn"
+      [class.active]="item().userVote === 1"
+      [disabled]="voting() || managing() || editing()"
+      (click)="vote.emit('up')"
+      aria-label="Upvote"
+    >
+      <svg lucideChevronUp class="vote-icon" aria-hidden="true"></svg>
+    </button>
+    <span class="vote-score">{{ item().score }}</span>
+    <button
+      type="button"
+      class="vote-btn"
+      [class.active]="item().userVote === -1"
+      [disabled]="voting() || managing() || editing()"
+      (click)="vote.emit('down')"
+      aria-label="Downvote"
+    >
+      <svg lucideChevronDown class="vote-icon" aria-hidden="true"></svg>
+    </button>
+  </div>
+</div>

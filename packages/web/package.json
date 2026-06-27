@@ -31,8 +31,10 @@
     "@angular/router": "^20.2.0",
     "@bwfish/core": "workspace:*",
     "@lucide/angular": "^1.21.0",
+    "@monaco-editor/loader": "^1.7.0",
     "firebase": "^12.15.0",
     "marked": "^18.0.5",
+    "monaco-editor": "^0.55.1",
     "rxjs": "~7.8.0",
     "tslib": "^2.3.0",
     "zone.js": "~0.15.0"

@@ -1,112 +1,324 @@
+:host {
+	display: block;
+	margin: -24px 0 0 -24px;
+}
+
 .layout {
-	display: flex;
-	gap: 48px;
-	align-items: flex-start;
+	--chat-width: clamp(320px, 28vw, 480px);
+	display: block;
+	min-height: calc(100vh - 48px);
+	padding: 24px 0 24px 24px;
+	padding-right: calc(var(--chat-width) + 72px);
+	background: var(--surface-5);
 }
 
 .page-layout {
-	flex: 1;
-	min-width: 0;
-	font-family: var(--font-ui);
+	max-width: 720px;
+	margin-inline: auto;
+	padding: 0 0 56px;
+	background: var(--paper-1);
+	font-family: var(--font-content);
+	color: var(--paper-text);
+	overflow: hidden;
 }
 
-.sidebar {
-	width: 240px;
+.encyclopedia {
+	max-width: 720px;
+	width: 100%;
+	margin-inline: auto;
+	min-width: 0;
+}
+
+.encyclopedia-header {
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+	gap: 16px;
+	margin-bottom: 12px;
+}
+
+.encyclopedia-actions {
+	display: flex;
+	align-items: center;
+	gap: 8px;
 	flex-shrink: 0;
+	font-family: var(--font-ui);
+	font-size: 0.8rem;
+}
+
+.action-btn {
+	padding: 0;
+	border: none;
+	background: none;
+	color: var(--primary);
+	font: inherit;
+	font-weight: 600;
+	cursor: pointer;
+
+	&:hover:not(:disabled) {
+		color: #7ab8ff;
+	}
+
+	&.active {
+		color: #7ab8ff;
+	}
+
+	&:disabled {
+		opacity: 0.5;
+		cursor: default;
+	}
+}
+
+.action-sep {
+	color: var(--text-faint);
+}
+
+.edit-error {
+	margin: 0 0 12px;
+	font-family: var(--font-ui);
+	font-size: 0.8rem;
+	color: #f87171;
+}
+
+.page-editor {
+	max-width: 720px;
+	width: 100%;
+	margin-inline: auto;
 	display: flex;
 	flex-direction: column;
-	gap: 24px;
-	padding-top: 4px;
-	font-family: var(--font-ui);
-}
+	min-width: 0;
+	background: #1a1a1a;
+	border: 1px solid var(--border-color);
+	border-radius: 6px;
+	overflow: hidden;
 
-.sidebar-group {
-	span.sidebar-label {
+	app-markdown-editor {
 		display: block;
-		font-size: 0.68rem;
-		font-weight: 600;
-		text-transform: uppercase;
-		letter-spacing: 0.07em;
-		color: #aaa;
-		margin-bottom: 8px;
+		min-height: calc(100vh - 320px);
 	}
 
-	ul {
-		list-style: none;
-		margin: 0;
-		padding: 0;
+	.edit-preview {
+		min-height: calc(100vh - 320px);
+		padding: 24px 48px;
+		overflow-y: auto;
+		background: var(--paper-1);
+		font-family: var(--font-content);
+		font-size: 0.9375rem;
+		line-height: 1.8;
+		color: var(--paper-text);
+
+		> h1:first-child {
+			display: none;
+		}
+
+		h2 {
+			font-size: 1.1rem;
+			font-weight: 600;
+			margin: 2.25rem 0 0.6rem;
+			color: var(--paper-heading);
+		}
+
+		h3 {
+			font-size: 0.9375rem;
+			font-weight: 600;
+			margin: 1.75rem 0 0.5rem;
+			color: var(--paper-heading);
+		}
+
+		p {
+			margin: 0 0 1.1rem;
+		}
+
+		ul,
+		ol {
+			margin: 0 0 1.1rem;
+			padding-left: 1.5rem;
+		}
+	}
+
+	.edit-composer {
 		display: flex;
 		flex-direction: column;
-		gap: 4px;
+		gap: 12px;
+		min-width: 0;
+		padding: 16px;
+		background: var(--surface-4);
+		border-top: 1px solid var(--border-color);
 	}
 
-	li a {
-		font-size: 0.82rem;
-		color: #444;
-		text-decoration: none;
+	.edit-message {
 		display: block;
-		line-height: 1.4;
+		box-sizing: border-box;
+		width: 100%;
+		max-width: 100%;
+		min-width: 0;
+		min-height: 72px;
+		margin: 0;
+		padding: 10px 12px;
+		border: 1px solid var(--border-color);
+		border-radius: 6px;
+		background: var(--surface-3);
+		color: var(--text-primary);
+		font-family: var(--font-ui);
+		font-size: 0.875rem;
+		line-height: 1.5;
+		resize: vertical;
 
-		&:hover {
-			color: #000;
+		&:focus {
+			outline: none;
+			border-color: var(--primary);
+		}
+
+		&::placeholder {
+			color: var(--text-faint);
+		}
+	}
+
+	.edit-composer-actions {
+		display: flex;
+		align-items: center;
+		gap: 16px;
+	}
+
+	.submit-btn {
+		padding: 8px 16px;
+		border: none;
+		border-radius: 6px;
+		background: var(--primary);
+		color: #fff;
+		font-family: var(--font-ui);
+		font-size: 0.875rem;
+		font-weight: 600;
+		cursor: pointer;
+
+		&:hover:not(:disabled) {
+			background: #7ab8ff;
+		}
+
+		&:disabled {
+			opacity: 0.5;
+			cursor: default;
+		}
+	}
+
+	.cancel-btn {
+		padding: 0;
+		border: none;
+		background: none;
+		color: var(--text-secondary);
+		font-family: var(--font-ui);
+		font-size: 0.875rem;
+		cursor: pointer;
+
+		&:hover:not(:disabled) {
+			color: var(--text-primary);
+		}
+
+		&:disabled {
+			opacity: 0.5;
+			cursor: default;
 		}
 	}
 }
 
-header {
-	margin-bottom: 32px;
+.sidebar {
+	position: fixed;
+	top: 48px;
+	right: 0;
+	width: var(--chat-width);
+	height: calc(100vh - 48px);
+	display: flex;
+	flex-direction: column;
+	padding: 1rem;
+	background: var(--surface-4);
+	font-family: var(--font-ui);
+	border-left: 1px solid rgba(255, 255, 255, 0.08);
+	overflow: hidden;
+	z-index: 10;
+
+	app-feed {
+		flex: 1;
+		min-height: 0;
+		display: flex;
+		flex-direction: column;
+	}
+}
+
+.page-header {
+	margin: 0;
+	padding: 40px 48px 28px;
+	background: var(--paper-1);
+	border-bottom: 1px solid var(--paper-border);
 
 	h1 {
-		margin: 0 0 8px;
-		font-size: 2rem;
+		margin: 0 0 10px;
+		font-size: 1.75rem;
 		font-weight: 500;
-		line-height: 1.2;
+		line-height: 1.25;
+		font-family: var(--font-content);
+		color: var(--paper-heading);
+		letter-spacing: -0.01em;
+	}
+
+	.summary {
+		margin: 0;
+		font-size: 1rem;
+		color: var(--paper-muted);
+		line-height: 1.7;
 		font-family: var(--font-content);
 	}
 }
 
-.summary {
+.related-section {
 	margin: 0;
-	font-size: 1.1rem;
-	color: #444;
-	line-height: 1.65;
-	font-family: var(--font-content);
+	padding: 14px 48px 0;
+	background: var(--paper-3);
+	overflow: hidden;
 }
 
 .loading {
-	color: #999;
+	color: var(--paper-muted);
 	font-size: 0.9rem;
+	font-family: var(--font-content);
+	padding: 0 48px;
 }
 
 .body {
+	padding: 24px 48px 0;
 	font-family: var(--font-content);
-	font-size: 1rem;
+	font-size: 0.9375rem;
 	line-height: 1.8;
-	color: #222;
+	color: var(--paper-text);
+
+	> h1:first-child {
+		display: none;
+	}
 
 	h2 {
-		font-size: 1.2rem;
+		font-size: 1.1rem;
 		font-weight: 600;
-		margin: 2rem 0 0.5rem;
+		margin: 2.25rem 0 0.6rem;
+		color: var(--paper-heading);
 	}
 
 	h3 {
-		font-size: 1rem;
+		font-size: 0.9375rem;
 		font-weight: 600;
-		margin: 1.5rem 0 0.5rem;
+		margin: 1.75rem 0 0.5rem;
+		color: var(--paper-heading);
 	}
 
 	p {
-		margin: 0 0 1rem;
+		margin: 0 0 1.1rem;
 	}
 
 	ul,
 	ol {
-		margin: 0 0 1rem;
+		margin: 0 0 1.1rem;
 		padding-left: 1.5rem;
 	}
 
 	li {
-		margin-bottom: 0.25rem;
+		margin-bottom: 0.35rem;
 	}
 }

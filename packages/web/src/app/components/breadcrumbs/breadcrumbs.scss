@@ -1,0 +1,27 @@
+.breadcrumbs {
+	display: flex;
+	align-items: center;
+	gap: 6px;
+	font-size: 0.8rem;
+	font-family: var(--font-ui);
+
+	a {
+		color: var(--text-secondary);
+		text-decoration: none;
+		text-transform: capitalize;
+
+		&:hover {
+			color: var(--text-primary);
+		}
+	}
+
+	.sep {
+		color: var(--text-faint);
+	}
+
+	.current {
+		color: var(--text-primary);
+		font-weight: 500;
+		text-transform: capitalize;
+	}
+}

@@ -1,8 +1,21 @@
 :host {
-	display: block;
+	display: flex;
+	flex-direction: column;
+	width: 240px;
+	min-width: 240px;
+	max-width: 240px;
+	flex-shrink: 0;
 	height: 100%;
 	min-height: 0;
-	overflow-y: auto;
+	overflow: hidden;
 	background: var(--surface-1);
-	border-right: 1px solid #b8b8b8;
+	border-right: 1px solid var(--border-color);
+
+	> app-nav-region,
+	> app-nav-user {
+		flex: 1;
+		min-height: 0;
+		overflow-y: auto;
+	}
 }
+

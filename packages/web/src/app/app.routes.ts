@@ -14,6 +14,10 @@ export const routes: Routes = [
     loadComponent: () => import('./pages/settings/settings').then(m => m.Settings),
   },
   {
+    path: 'activity',
+    loadComponent: () => import('./pages/activity/activity').then(m => m.Activity),
+  },
+  {
     path: 'fish/:id',
     loadComponent: () => import('./pages/fish/fish').then(m => m.Fish),
   },

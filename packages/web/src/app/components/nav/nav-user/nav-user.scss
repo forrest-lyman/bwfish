@@ -1,19 +1,40 @@
 :host {
 	display: block;
+	width: 100%;
 }
 
-.nav-user-placeholder {
-	padding: 16px;
-	color: #555;
+.nav-user {
+	padding: 8px 0 12px;
+	line-height: 1.35;
+	--nav-item-indent: 1rem;
+	--nav-row-height: 32px;
+	--nav-accent: #4d9fff;
+	--nav-hover-bg: rgba(255, 255, 255, 0.06);
+	--nav-active-bg: rgba(77, 159, 255, 0.12);
+}
 
-	h2 {
-		margin: 0 0 8px;
-		font-size: 0.95rem;
-		color: #222;
+.nav-page-link {
+	display: flex;
+	align-items: center;
+	min-height: var(--nav-row-height);
+	padding: 0 12px 0 calc(var(--nav-item-indent) - 3px);
+	font-size: 0.8rem;
+	color: var(--text-secondary);
+	text-decoration: none;
+	border-left: 3px solid transparent;
+	overflow: hidden;
+	text-overflow: ellipsis;
+	white-space: nowrap;
+
+	&:hover:not(.active) {
+		background: var(--nav-hover-bg);
+		color: var(--text-primary);
 	}
 
-	p {
-		margin: 0;
-		font-size: 0.85rem;
+	&.active {
+		color: var(--nav-accent);
+		font-weight: 500;
+		background: var(--nav-active-bg);
+		border-left-color: var(--nav-accent);
 	}
 }

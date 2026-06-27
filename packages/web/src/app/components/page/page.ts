@@ -1,8 +1,13 @@
-import { Component, effect, inject, input, signal } from '@angular/core';
-import { RouterLink } from '@angular/router';
+import { Component, effect, inject, input, signal, viewChild } from '@angular/core';
+import { FormControl, ReactiveFormsModule, Validators } from '@angular/forms';
 import { marked } from 'marked';
 import type { Collection } from '@bwfish/core';
+import { Breadcrumbs } from '../breadcrumbs/breadcrumbs';
 import { Feed } from '../feed/feed';
+import { MarkdownEditor } from '../markdown-editor/markdown-editor';
+import { RelatedContent, type RelatedSection } from '../related-content/related-content';
+import { AuthService } from '../../services/auth.service';
+import { FeedService } from '../../services/feed.service';
 import { FishService } from '../../services/fish.service';
 import { PageService } from '../../services/page.service';
 import { PortService } from '../../services/port.service';
@@ -21,22 +26,20 @@ export interface ContentPageItem {
   portIds?: string[];
 }
 
-interface RelatedGroup {
-  label: string;
-  items: { id: string; title: string; link: string[] }[];
-}
-
 @Component({
   selector: 'app-page',
   standalone: true,
-  imports: [RouterLink, Feed],
+  imports: [Breadcrumbs, Feed, MarkdownEditor, ReactiveFormsModule, RelatedContent],
   templateUrl: './page.html',
   styleUrl: './page.scss',
 })
 export class Page {
   item = input<ContentPageItem | null>(null);
 
+  auth = inject(AuthService);
+  private feedService = inject(FeedService);
   private pageService = inject(PageService);
+  private feed = viewChild<Feed>('feed');
   private portService = inject(PortService);
   private spotService = inject(SpotService);
   private fishService = inject(FishService);
@@ -44,8 +47,19 @@ export class Page {
   private regionService = inject(RegionService);
 
   body = signal('');
+  sourceBody = signal('');
   loading = signal(false);
-  related = signal<RelatedGroup[]>([]);
+  editing = signal(false);
+  editView = signal<'editor' | 'preview'>('editor');
+  previewHtml = signal('');
+  submitting = signal(false);
+  editError = signal<string | null>(null);
+  related = signal<RelatedSection[]>([]);
+  editForm = new FormControl('', { nonNullable: true });
+  submitExplanationForm = new FormControl('', {
+    nonNullable: true,
+    validators: [Validators.required, Validators.minLength(3)],
+  });
 
   constructor() {
     effect(() => {
@@ -54,18 +68,80 @@ export class Page {
     });
   }
 
+  startEdit() {
+    this.editError.set(null);
+    this.editView.set('editor');
+    this.previewHtml.set('');
+    this.submitExplanationForm.reset();
+    this.editForm.setValue(this.sourceBody());
+    this.editing.set(true);
+  }
+
+  cancelEdit() {
+    this.editError.set(null);
+    this.editView.set('editor');
+    this.previewHtml.set('');
+    this.submitExplanationForm.reset();
+    this.editing.set(false);
+  }
+
+  setEditView(view: 'editor' | 'preview') {
+    this.editView.set(view);
+    if (view === 'preview') {
+      void this.updatePreview();
+    }
+  }
+
+  async confirmSubmit() {
+    const item = this.item();
+    if (!item || this.submitting() || this.submitExplanationForm.invalid) return;
+
+    this.submitting.set(true);
+    this.editError.set(null);
+
+    try {
+      const source = this.editForm.value;
+      const explanation = this.submitExplanationForm.value.trim();
+      await this.feedService.push('correction', explanation, item.collection, item.id, {
+        text: source,
+      });
+      this.editing.set(false);
+      this.editView.set('editor');
+      this.previewHtml.set('');
+      this.submitExplanationForm.reset();
+      await this.feed()?.reload();
+    } catch (err: unknown) {
+      this.editError.set(err instanceof Error ? err.message : 'Failed to submit changes');
+    } finally {
+      this.submitting.set(false);
+    }
+  }
+
+  private async updatePreview() {
+    const source = this.editForm.value;
+    this.previewHtml.set(source ? await marked(this.stripLeadingH1(source)) : '');
+  }
+
   private async load(item: ContentPageItem | null) {
     if (!item) {
       this.body.set('');
+      this.sourceBody.set('');
       this.related.set([]);
       this.loading.set(false);
+      this.editing.set(false);
+      this.editView.set('editor');
+      this.editError.set(null);
       return;
     }
 
     const { id, collection } = item;
     this.body.set('');
+    this.sourceBody.set('');
     this.related.set([]);
     this.loading.set(true);
+    this.editing.set(false);
+    this.editView.set('editor');
+    this.editError.set(null);
 
     const [page] = await Promise.all([
       this.pageService.getPage(collection, id),
@@ -74,13 +150,17 @@ export class Page {
 
     this.loading.set(false);
 
-    if (page?.body) {
-      this.body.set(await marked(page.body));
-    }
+    const source = page?.body ?? '';
+    this.sourceBody.set(source);
+    this.body.set(source ? await marked(this.stripLeadingH1(source)) : '');
+  }
+
+  private stripLeadingH1(markdown: string): string {
+    return markdown.replace(/^\s*#\s+.+\n?/, '');
   }
 
   private async loadRelated(item: ContentPageItem) {
-    const groups: RelatedGroup[] = [];
+    const groups: RelatedSection[] = [];
 
     if (item.collection === 'regions') {
       const [ports, fish] = await Promise.all([
@@ -91,7 +171,12 @@ export class Page {
       if (ports.length) {
         groups.push({
           label: 'Ports',
-          items: ports.map(port => ({ id: port.id, title: port.title, link: ['/', item.id, port.id] })),
+          items: ports.map(port => ({
+            id: port.id,
+            title: port.title,
+            summary: port.summary,
+            link: ['/', item.id, port.id],
+          })),
         });
       }
 
@@ -99,7 +184,12 @@ export class Page {
       if (validFish.length) {
         groups.push({
           label: 'Fish',
-          items: validFish.map(entry => ({ id: entry.id, title: entry.title, link: ['/fish', entry.id] })),
+          items: validFish.map(entry => ({
+            id: entry.id,
+            title: entry.title,
+            summary: entry.summary,
+            link: ['/fish', entry.id],
+          })),
         });
       }
     }
@@ -113,7 +203,12 @@ export class Page {
       if (spots.length) {
         groups.push({
           label: 'Spots',
-          items: spots.map(spot => ({ id: spot.id, title: spot.title, link: ['/', item.regionId ?? '', item.id, spot.id] })),
+          items: spots.map(spot => ({
+            id: spot.id,
+            title: spot.title,
+            summary: spot.summary,
+            link: ['/', item.regionId ?? '', item.id, spot.id],
+          })),
         });
       }
 
@@ -121,7 +216,12 @@ export class Page {
       if (validFish.length) {
         groups.push({
           label: 'Fish',
-          items: validFish.map(entry => ({ id: entry.id, title: entry.title, link: ['/fish', entry.id] })),
+          items: validFish.map(entry => ({
+            id: entry.id,
+            title: entry.title,
+            summary: entry.summary,
+            link: ['/fish', entry.id],
+          })),
         });
       }
     }
@@ -136,14 +236,24 @@ export class Page {
       if (validRegions.length) {
         groups.push({
           label: 'Regions',
-          items: validRegions.map(entry => ({ id: entry.id, title: entry.title, link: ['/', entry.id] })),
+          items: validRegions.map(entry => ({
+            id: entry.id,
+            title: entry.title,
+            summary: entry.summary,
+            link: ['/', entry.id],
+          })),
         });
       }
 
       if (techniques.length) {
         groups.push({
           label: 'Techniques',
-          items: techniques.map(entry => ({ id: entry.id, title: entry.title, link: ['/techniques', entry.id] })),
+          items: techniques.map(entry => ({
+            id: entry.id,
+            title: entry.title,
+            summary: entry.summary,
+            link: ['/techniques', entry.id],
+          })),
         });
       }
     }
@@ -158,7 +268,7 @@ export class Page {
       if (region) {
         groups.push({
           label: 'Region',
-          items: [{ id: region.id, title: region.title, link: ['/', region.id] }],
+          items: [{ id: region.id, title: region.title, summary: region.summary, link: ['/', region.id] }],
         });
       }
 
@@ -166,7 +276,12 @@ export class Page {
       if (validPorts.length) {
         groups.push({
           label: 'Ports',
-          items: validPorts.map(entry => ({ id: entry.id, title: entry.title, link: ['/', entry.regionId, entry.id] })),
+          items: validPorts.map(entry => ({
+            id: entry.id,
+            title: entry.title,
+            summary: entry.summary,
+            link: ['/', entry.regionId, entry.id],
+          })),
         });
       }
 
@@ -174,7 +289,12 @@ export class Page {
       if (validFish.length) {
         groups.push({
           label: 'Fish',
-          items: validFish.map(entry => ({ id: entry.id, title: entry.title, link: ['/fish', entry.id] })),
+          items: validFish.map(entry => ({
+            id: entry.id,
+            title: entry.title,
+            summary: entry.summary,
+            link: ['/fish', entry.id],
+          })),
         });
       }
     }
@@ -189,7 +309,12 @@ export class Page {
       if (validRegions.length) {
         groups.push({
           label: 'Regions',
-          items: validRegions.map(entry => ({ id: entry.id, title: entry.title, link: ['/', entry.id] })),
+          items: validRegions.map(entry => ({
+            id: entry.id,
+            title: entry.title,
+            summary: entry.summary,
+            link: ['/', entry.id],
+          })),
         });
       }
 
@@ -197,12 +322,16 @@ export class Page {
       if (validFish.length) {
         groups.push({
           label: 'Fish',
-          items: validFish.map(entry => ({ id: entry.id, title: entry.title, link: ['/fish', entry.id] })),
+          items: validFish.map(entry => ({
+            id: entry.id,
+            title: entry.title,
+            summary: entry.summary,
+            link: ['/fish', entry.id],
+          })),
         });
       }
     }
 
     this.related.set(groups);
   }
-
 }

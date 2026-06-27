@@ -27,9 +27,38 @@ const REGION_ORDER = [
   "northeast",
 ] as const;
 
-const PACIFIC = new Set(["alaska", "pnw", "norcal", "socal", "baja"]);
+const PACIFIC = new Set(["pnw", "norcal", "socal"]);
 const GULF = new Set(["gulf"]);
 const ATLANTIC = new Set(["florida", "outerbanks", "midatlantic", "northeast"]);
+
+/** Coast-following order; latitude alone misorders the panhandle and gulf ports. */
+const PORT_ORDER: Partial<Record<string, string[]>> = {
+  alaska: [
+    "juneau-ak",
+    "sitka-ak",
+    "petersburg-ak",
+    "ketchikan-ak",
+    "kodiak-ak",
+    "cordova-ak",
+    "valdez-ak",
+    "whittier-ak",
+    "seward-ak",
+    "homer-ak",
+  ],
+  baja: [
+    "ensenada-mx",
+    "san-quintin-mx",
+    "bahia-de-los-angeles-mx",
+    "mag-bay-mx",
+    "bahia-tortugas-mx",
+    "loreto-mx",
+    "la-paz-mx",
+    "los-barriles-mx",
+    "eastcape-mx",
+    "cabo-san-lucas-mx",
+    "punta-de-mita-mx",
+  ],
+};
 
 interface PortDoc {
   id: string;
@@ -38,16 +67,18 @@ interface PortDoc {
 }
 
 function sortPorts(regionId: string, ports: PortDoc[]): PortDoc[] {
+  const explicit = PORT_ORDER[regionId];
+  if (explicit) {
+    const byId = new Map(ports.map((p) => [p.id, p]));
+    const ordered = explicit.map((id) => byId.get(id)).filter((p): p is PortDoc => p != null);
+    const remaining = ports.filter((p) => !explicit.includes(p.id)).sort((a, b) => a.id.localeCompare(b.id));
+    return [...ordered, ...remaining];
+  }
+
   return [...ports].sort((a, b) => {
-    if (PACIFIC.has(regionId)) {
-      return b.position.lat - a.position.lat;
-    }
-    if (GULF.has(regionId)) {
-      return a.position.lon - b.position.lon;
-    }
-    if (ATLANTIC.has(regionId)) {
-      return a.position.lat - b.position.lat;
-    }
+    if (PACIFIC.has(regionId)) return b.position.lat - a.position.lat;
+    if (GULF.has(regionId)) return a.position.lon - b.position.lon;
+    if (ATLANTIC.has(regionId)) return a.position.lat - b.position.lat;
     return a.id.localeCompare(b.id);
   });
 }
@@ -55,15 +86,16 @@ function sortPorts(regionId: string, ports: PortDoc[]): PortDoc[] {
 const MARKDOWN = new URL("../markdown", import.meta.url).pathname;
 const regionFiles = globSync("regions/*/*.md", { cwd: MARKDOWN });
 
-const regionDisplayOrder = new Map<string, number>();
+const regionUpdates = new Map<string, { order: number; displayOrder: number }>();
 for (const rel of regionFiles) {
   const { data } = matter(readFileSync(resolve(MARKDOWN, rel), "utf-8"));
   const id = data.id as string;
   const index = REGION_ORDER.indexOf(id as (typeof REGION_ORDER)[number]);
-  if (index === -1) {
-    throw new Error(`Unknown region: ${id}`);
-  }
-  regionDisplayOrder.set(id, index + 1);
+  if (index === -1) throw new Error(`Unknown region: ${id}`);
+  regionUpdates.set(id, {
+    order: (data.order as number) ?? index + 1,
+    displayOrder: index + 1,
+  });
 }
 
 const portFiles = globSync("regions/*/ports/*/*.md", { cwd: MARKDOWN });
@@ -103,19 +135,19 @@ async function commitIfNeeded(force = false) {
   count = 0;
 }
 
-for (const [id, displayOrder] of regionDisplayOrder) {
-  batch.update(db.collection("regions").doc(id), { displayOrder });
+for (const [id, fields] of regionUpdates) {
+  batch.set(db.collection("regions").doc(id), fields, { merge: true });
   count++;
   await commitIfNeeded();
-  console.log(`region ${id}: displayOrder=${displayOrder}`);
+  console.log(`region ${id}: order=${fields.order} displayOrder=${fields.displayOrder}`);
 }
 
 for (const [id, displayOrder] of portDisplayOrder) {
-  batch.update(db.collection("ports").doc(id), { displayOrder });
+  batch.set(db.collection("ports").doc(id), { displayOrder }, { merge: true });
   count++;
   await commitIfNeeded();
   console.log(`port ${id}: displayOrder=${displayOrder}`);
 }
 
 await commitIfNeeded(true);
-console.log(`Done. Updated ${regionDisplayOrder.size} regions and ${portDisplayOrder.size} ports.`);
+console.log(`Done. Updated ${regionUpdates.size} regions and ${portDisplayOrder.size} ports.`);

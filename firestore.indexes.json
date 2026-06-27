@@ -90,6 +90,22 @@
       ]
     },
     {
+      "collectionGroup": "feed",
+      "queryScope": "COLLECTION",
+      "fields": [
+        { "fieldPath": "createdBy", "order": "ASCENDING" },
+        { "fieldPath": "createdAt", "order": "DESCENDING" }
+      ]
+    },
+    {
+      "collectionGroup": "feed_votes",
+      "queryScope": "COLLECTION",
+      "fields": [
+        { "fieldPath": "userId", "order": "ASCENDING" },
+        { "fieldPath": "entryId", "order": "ASCENDING" }
+      ]
+    },
+    {
       "collectionGroup": "ports",
       "queryScope": "COLLECTION",
       "fields": [

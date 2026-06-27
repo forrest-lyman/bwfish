@@ -1,19 +1,19 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { provideRouter } from '@angular/router';
 
-import { NavUser } from './nav-user';
+import { RelatedContent } from './related-content';
 
-describe('NavUser', () => {
-  let component: NavUser;
-  let fixture: ComponentFixture<NavUser>;
+describe('RelatedContent', () => {
+  let component: RelatedContent;
+  let fixture: ComponentFixture<RelatedContent>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [NavUser],
+      imports: [RelatedContent],
       providers: [provideRouter([])],
     }).compileComponents();
 
-    fixture = TestBed.createComponent(NavUser);
+    fixture = TestBed.createComponent(RelatedContent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

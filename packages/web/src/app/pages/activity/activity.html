@@ -1,0 +1,71 @@
+<app-layout scope="user">
+	<section class="activity-page">
+		<header class="activity-header">
+			<h1>Activity</h1>
+			<p>Your questions, tips, and corrections across the site.</p>
+		</header>
+
+		@if (auth.user()) {
+			<div class="activity-card">
+				<div class="filters">
+					<div class="filter-group">
+						<span class="filter-label">Date range</span>
+						<div class="filter-options">
+							<button type="button" [class.active]="dateFilter() === 'all'" (click)="setDateFilter('all')">All time</button>
+							<button type="button" [class.active]="dateFilter() === '7d'" (click)="setDateFilter('7d')">Last 7 days</button>
+							<button type="button" [class.active]="dateFilter() === '30d'" (click)="setDateFilter('30d')">Last 30 days</button>
+							<button type="button" [class.active]="dateFilter() === '90d'" (click)="setDateFilter('90d')">Last 90 days</button>
+							<button type="button" [class.active]="dateFilter() === 'custom'" (click)="setDateFilter('custom')">Custom</button>
+						</div>
+					</div>
+
+					@if (dateFilter() === 'custom') {
+						<div class="custom-range">
+							<label>
+								<span>From</span>
+								<input type="date" [value]="customFrom()" (change)="onCustomFromChange($event)" />
+							</label>
+							<label>
+								<span>To</span>
+								<input type="date" [value]="customTo()" (change)="onCustomToChange($event)" />
+							</label>
+						</div>
+					}
+				</div>
+
+				@if (loading()) {
+					<p class="empty-state">Loading activity…</p>
+				} @else if (error()) {
+					<p class="form-message error">{{ error() }}</p>
+				} @else if (items().length === 0) {
+					<p class="empty-state">No activity in this date range.</p>
+				} @else {
+					<ul class="activity-list">
+						@for (item of items(); track item.entry.id) {
+							<li class="activity-item">
+								<div class="activity-meta">
+									<span class="activity-type">{{ typeLabel(item.entry.type) }}</span>
+									<time [dateTime]="item.entry.createdAt">{{ formatDate(item.entry.createdAt) }}</time>
+								</div>
+								<p class="activity-text">{{ item.entry.text }}</p>
+								@if (item.link) {
+									<a class="activity-context" [routerLink]="item.link">{{ item.contextLabel }}</a>
+								} @else {
+									<span class="activity-context muted">{{ item.contextLabel }}</span>
+								}
+							</li>
+						}
+					</ul>
+				}
+			</div>
+		} @else if (auth.ready()) {
+			<div class="activity-card">
+				<p class="empty-state">Sign in to view your activity.</p>
+			</div>
+		} @else {
+			<div class="activity-card">
+				<p class="empty-state">Loading…</p>
+			</div>
+		}
+	</section>
+</app-layout>

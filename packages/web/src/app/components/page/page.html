@@ -1,28 +1,93 @@
 @if (item(); as current) {
 	<div class="layout">
-		<article class="page-layout">
-			<header>
-				<h1>{{ current.title }}</h1>
-				<p class="summary">{{ current.summary }}</p>
-				<app-feed [title]="current.title" [collection]="current.collection" [refId]="current.id" />
-			</header>
-			@if (body()) {
-				<div class="body" [innerHTML]="body()"></div>
-			} @else if (loading()) {
-				<div class="loading">Loading...</div>
-			}
-		</article>
-		<aside class="sidebar">
-			@for (group of related(); track group.label) {
-				<div class="sidebar-group">
-					<span class="sidebar-label">{{ group.label }}</span>
-					<ul>
-						@for (child of group.items; track child.id) {
-							<li><a [routerLink]="child.link">{{ child.title }}</a></li>
+		<div class="encyclopedia">
+			<div class="encyclopedia-header">
+				<app-breadcrumbs />
+				@if (auth.user() && !loading()) {
+					<div class="encyclopedia-actions">
+						@if (editing()) {
+							<button
+								type="button"
+								class="action-btn"
+								[class.active]="editView() === 'editor'"
+								(click)="setEditView('editor')"
+							>
+								Editor
+							</button>
+							<span class="action-sep">|</span>
+							<button
+								type="button"
+								class="action-btn"
+								[class.active]="editView() === 'preview'"
+								(click)="setEditView('preview')"
+							>
+								Preview
+							</button>
+						} @else {
+							<button type="button" class="action-btn" (click)="startEdit()">Edit</button>
 						}
-					</ul>
+					</div>
+				}
+			</div>
+			@if (editing()) {
+				<div class="page-editor">
+					@if (editError()) {
+						<p class="edit-error">{{ editError() }}</p>
+					}
+					@if (editView() === 'editor') {
+						<app-markdown-editor [formControl]="editForm" />
+					} @else {
+						<div class="edit-preview" [innerHTML]="previewHtml()"></div>
+					}
+					<div class="edit-composer">
+						<textarea
+							class="edit-message"
+							[formControl]="submitExplanationForm"
+							rows="3"
+							placeholder="Describe your changes"
+						></textarea>
+						<div class="edit-composer-actions">
+							<button
+								type="button"
+								class="submit-btn"
+								[disabled]="submitting() || submitExplanationForm.invalid"
+								(click)="confirmSubmit()"
+							>
+								{{ submitting() ? 'Submitting…' : 'Submit' }}
+							</button>
+							<button type="button" class="cancel-btn" [disabled]="submitting()" (click)="cancelEdit()">
+								Cancel
+							</button>
+						</div>
+					</div>
 				</div>
+			} @else {
+				<article class="page-layout">
+					<header class="page-header">
+						<h1>{{ current.title }}</h1>
+						<p class="summary">{{ current.summary }}</p>
+					</header>
+					@if (related().length) {
+						<div class="related-section">
+							<app-related-content [sections]="related()" />
+						</div>
+					}
+					@if (body()) {
+						<div class="body" [innerHTML]="body()"></div>
+					} @else if (loading()) {
+						<div class="loading">Loading...</div>
+					}
+				</article>
 			}
+		</div>
+		<aside class="sidebar">
+			<app-feed
+				#feed
+				layout="sidebar"
+				[title]="current.title"
+				[collection]="current.collection"
+				[refId]="current.id"
+			/>
 		</aside>
 	</div>
 } @else {

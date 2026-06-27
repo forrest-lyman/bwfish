@@ -35,7 +35,7 @@
 		width: 14px;
 		height: 1px;
 		margin: 0 auto;
-		background: #555;
+		background: var(--text-secondary);
 	}
 
 	&:hover {
@@ -43,31 +43,21 @@
 	}
 }
 
-.breadcrumbs {
-	display: flex;
-	align-items: center;
-	gap: 6px;
-	font-size: 0.8rem;
+.brand {
+	font-size: 1rem;
+	font-weight: 900;
+	letter-spacing: 0.04em;
+	text-decoration: none;
+	font-family: var(--font-ui);
+	line-height: 1;
+}
 
-	a {
-		color: #555;
-		text-decoration: none;
-		text-transform: capitalize;
+.brand-bw {
+	color: var(--primary);
+}
 
-		&:hover {
-			color: #000;
-		}
-	}
-
-	.sep {
-		color: #bbb;
-	}
-
-	.current {
-		color: #111;
-		font-weight: 500;
-		text-transform: capitalize;
-	}
+.brand-fish {
+	color: #fff;
 }
 
 .user-menu {
@@ -78,15 +68,16 @@
 
 .sign-in-btn {
 	padding: 6px 14px;
-	border: 1px solid #ddd;
+	border: 1px solid var(--border-color);
 	border-radius: 6px;
-	background: #fff;
+	background: var(--surface-3);
+	color: var(--text-primary);
 	font-family: var(--font-ui);
 	font-size: 0.8rem;
 	cursor: pointer;
 
 	&:hover {
-		background: #f5f5f5;
+		background: var(--surface-4);
 	}
 }
 
@@ -95,7 +86,7 @@
 	height: 32px;
 	border-radius: 50%;
 	border: none;
-	background: #e0e0e0;
+	background: var(--surface-3);
 	cursor: pointer;
 	overflow: hidden;
 	padding: 0;
@@ -113,7 +104,7 @@
 		font-size: 0.75rem;
 		font-weight: 600;
 		font-family: var(--font-ui);
-		color: #555;
+		color: var(--text-secondary);
 	}
 }
 
@@ -122,11 +113,12 @@
 	top: calc(100% + 8px);
 	right: 0;
 	min-width: 200px;
-	background: #fff;
-	border: 1px solid #e0e0e0;
+	background: var(--surface-3);
+	border: 1px solid var(--border-color);
 	border-radius: 8px;
-	box-shadow: 0 4px 16px rgba(0, 0, 0, 0.1);
+	box-shadow: 0 8px 24px rgba(0, 0, 0, 0.35);
 	z-index: 100;
+	color: var(--text-primary);
 
 	.user-info {
 		padding: 12px 14px;
@@ -136,18 +128,19 @@
 
 		strong {
 			font-size: 0.85rem;
+			color: var(--text-primary);
 		}
 
 		span {
 			font-size: 0.75rem;
-			color: #888;
+			color: var(--text-muted);
 		}
 	}
 
 	hr {
 		margin: 0;
 		border: none;
-		border-top: 1px solid #eee;
+		border-top: 1px solid var(--border-color);
 	}
 
 	button,
@@ -161,11 +154,11 @@
 		font-size: 0.85rem;
 		font-family: var(--font-ui);
 		cursor: pointer;
-		color: inherit;
+		color: var(--text-primary);
 		text-decoration: none;
 
 		&:hover {
-			background: #f5f5f5;
+			background: rgba(255, 255, 255, 0.06);
 		}
 	}
 

@@ -1,13 +1,7 @@
 import { Component, inject, output, signal } from '@angular/core';
-import { NavigationEnd, Router, RouterLink } from '@angular/router';
-import { filter } from 'rxjs/operators';
+import { RouterLink } from '@angular/router';
 import { AuthService } from '../../services/auth.service';
 import { UserService } from '../../services/user.service';
-
-interface Crumb {
-  label: string;
-  path: string | null;
-}
 
 @Component({
   selector: 'app-toolbar',
@@ -19,38 +13,10 @@ export class Toolbar {
   navToggle = output<void>();
   auth = inject(AuthService);
   userService = inject(UserService);
-  private router = inject(Router);
 
-  crumbs = signal<Crumb[]>([]);
   menuOpen = signal(false);
   showSignIn = signal(false);
   authError = signal<string | null>(null);
-
-  constructor() {
-    this.router.events
-      .pipe(filter(e => e instanceof NavigationEnd))
-      .subscribe(() => this.buildCrumbs());
-    this.buildCrumbs();
-  }
-
-  private buildCrumbs() {
-    const segments = this.router.url.replace(/^\//, '').split('/').filter(Boolean);
-    if (segments.length === 0) {
-      this.crumbs.set([{ label: 'Home', path: null }]);
-      return;
-    }
-
-    const crumbs: Crumb[] = [{ label: 'Home', path: '/' }];
-    let path = '';
-    for (let i = 0; i < segments.length; i++) {
-      path += '/' + segments[i];
-      crumbs.push({
-        label: segments[i].replace(/-/g, ' '),
-        path: i < segments.length - 1 ? path : null,
-      });
-    }
-    this.crumbs.set(crumbs);
-  }
 
   initials() {
     const name =

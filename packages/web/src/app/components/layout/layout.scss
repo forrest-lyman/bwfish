@@ -9,10 +9,15 @@
 	display: flex;
 	flex-direction: column;
 	overflow: hidden;
+	background: var(--surface-5);
 }
 
 .main-content {
 	flex: 1;
 	overflow-y: auto;
-	padding: 24px;
+	padding: 24px 0 24px 24px;
+
+	> :not(.layout) {
+		padding-right: 24px;
+	}
 }

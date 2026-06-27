@@ -1,13 +1,21 @@
-<div class="feed-card">
+<div class="feed-card" [class.sidebar]="layout() === 'sidebar'">
   <form class="feed-form" [formGroup]="feedForm" (ngSubmit)="submit()">
-    <input formControlName="text" type="text" [placeholder]="prompt()" />
-    <button type="submit" class="submit-btn" [disabled]="feedForm.invalid || submitting()" aria-label="Send question">
-      @if (submitting()) {
-        <span class="submit-label">...</span>
-      } @else {
-        <svg lucideSendHorizontal class="send-icon" aria-hidden="true"></svg>
-      }
-    </button>
+    <div class="feed-composer">
+      <textarea
+        #textInput
+        formControlName="text"
+        rows="1"
+        [placeholder]="prompt()"
+        (input)="resizeTextarea(textInput)"
+      ></textarea>
+      <button type="submit" class="submit-btn" [disabled]="feedForm.invalid || submitting()" aria-label="Send question">
+        @if (submitting()) {
+          <span class="submit-label">...</span>
+        } @else {
+          <svg lucideSendHorizontal class="send-icon" aria-hidden="true"></svg>
+        }
+      </button>
+    </div>
   </form>
 
   @if (error()) {
@@ -16,10 +24,16 @@
 
   @if (feedEntries().length) {
     <div class="feed-entries">
-      @for (entry of feedEntries(); track entry.id) {
-        <div class="feed-entry">
-          <p>{{ entry.text }}</p>
-        </div>
+      @for (item of feedEntries(); track item.entry.id) {
+        <app-feed-entry
+          [item]="item"
+          [currentUserId]="auth.user()?.uid ?? null"
+          [voting]="votingEntryId() === item.entry.id"
+          [managing]="managingEntryId() === item.entry.id"
+          (vote)="vote(item, $event)"
+          (edit)="editEntry(item, $event)"
+          (delete)="deleteEntry(item)"
+        />
       }
     </div>
   }

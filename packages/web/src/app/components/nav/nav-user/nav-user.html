@@ -1,4 +1,26 @@
-<section class="nav-user-placeholder">
-	<h2>User Nav</h2>
-	<p>User-scoped navigation is not implemented yet.</p>
-</section>
+<nav class="nav-user">
+	<a
+		class="nav-page-link"
+		routerLink="/profile"
+		routerLinkActive="active"
+		[routerLinkActiveOptions]="{ exact: true }"
+	>
+		Profile
+	</a>
+	<a
+		class="nav-page-link"
+		routerLink="/activity"
+		routerLinkActive="active"
+		[routerLinkActiveOptions]="{ exact: true }"
+	>
+		Activity
+	</a>
+	<a
+		class="nav-page-link"
+		routerLink="/settings"
+		routerLinkActive="active"
+		[routerLinkActiveOptions]="{ exact: true }"
+	>
+		Settings
+	</a>
+</nav>

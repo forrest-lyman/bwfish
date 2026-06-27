@@ -2,6 +2,15 @@ import type { Collection } from "./page.js";
 
 export type FeedEntryType = "question" | "tip" | "correction";
 
+export type FeedVoteValue = 1 | -1;
+
+export interface FeedVote {
+  entryId: string;
+  userId: string;
+  value: FeedVoteValue;
+  createdAt: string;
+}
+
 export interface FeedEntry {
   id?: string;
   type: FeedEntryType;
@@ -11,4 +20,6 @@ export interface FeedEntry {
   createdBy: string;
   createdAt: string;
   lastModified: string;
+  score?: number;
+  payload?: unknown;
 }

@@ -61,6 +61,54 @@ service cloud.firestore {
           .hasOnly(['displayName', 'photoUrl', 'boat', 'homePort', 'website', 'location']);
     }
 
+    function feedScore(entry) {
+      return entry.keys().hasAny(['score']) && entry.score is int ? entry.score : 0;
+    }
+
+    function isValidFeedScoreVoteUpdate() {
+      let diff = request.resource.data.diff(resource.data);
+      let scoreDelta = request.resource.data.score - feedScore(resource.data);
+      return diff.affectedKeys().hasOnly(['score'])
+        && request.resource.data.score is int
+        && scoreDelta in [-2, -1, 1, 2];
+    }
+
+    function isValidFeedEntryOwnerUpdate() {
+      let diff = request.resource.data.diff(resource.data);
+      return request.auth.uid == resource.data.createdBy
+        && request.auth.uid == request.resource.data.createdBy
+        && request.resource.data.type == resource.data.type
+        && request.resource.data.collection == resource.data.collection
+        && request.resource.data.refId == resource.data.refId
+        && request.resource.data.createdAt == resource.data.createdAt
+        && request.resource.data.createdBy == resource.data.createdBy
+        && request.resource.data.text is string
+        && request.resource.data.text.size() >= 3
+        && request.resource.data.lastModified is string
+        && diff.affectedKeys().hasOnly(['text', 'lastModified']);
+    }
+
+    function isValidFeedVoteCreate(voteId) {
+      let data = request.resource.data;
+      return voteId == data.entryId + '_' + request.auth.uid
+        && data.keys().hasOnly(['entryId', 'userId', 'value', 'createdAt'])
+        && data.entryId is string
+        && data.userId == request.auth.uid
+        && data.value in [1, -1]
+        && data.createdAt is string
+        && exists(/databases/$(database)/documents/feed/$(data.entryId));
+    }
+
+    function isValidFeedVoteUpdate() {
+      let diff = request.resource.data.diff(resource.data);
+      return request.auth.uid == resource.data.userId
+        && request.resource.data.userId == resource.data.userId
+        && request.resource.data.entryId == resource.data.entryId
+        && request.resource.data.createdAt == resource.data.createdAt
+        && diff.affectedKeys().hasOnly(['value'])
+        && request.resource.data.value in [1, -1];
+    }
+
     match /regions/{id} {
       allow read: if true;
       allow write: if false;
@@ -92,14 +140,27 @@ service cloud.firestore {
     }
 
     match /feed/{entryId} {
-      allow read: if request.auth != null;
+      allow read: if true;
       allow create: if request.auth != null
         && request.auth.uid == request.resource.data.createdBy
         && request.resource.data.keys().hasAll(['type','text','collection','refId','createdBy','createdAt','lastModified']);
       allow update: if request.auth != null
-        && request.auth.uid == resource.data.createdBy
-        && request.auth.uid == request.resource.data.createdBy;
-      allow delete: if false;
+        && (
+          isValidFeedEntryOwnerUpdate()
+          || isValidFeedScoreVoteUpdate()
+        );
+      allow delete: if request.auth != null
+        && request.auth.uid == resource.data.createdBy;
+    }
+
+    match /feed_votes/{voteId} {
+      allow read: if request.auth != null;
+      allow create: if request.auth != null
+        && isValidFeedVoteCreate(voteId);
+      allow update: if request.auth != null
+        && isValidFeedVoteUpdate();
+      allow delete: if request.auth != null
+        && request.auth.uid == resource.data.userId;
     }
 
     match /users/{userId} {

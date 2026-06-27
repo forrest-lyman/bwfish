@@ -1,0 +1,29 @@
+@if (sections().length) {
+	<div class="related-content">
+		<div class="tabs" role="tablist">
+			<span class="tabs-label">Related:</span>
+			@for (section of sections(); track section.label; let i = $index) {
+				<button
+					type="button"
+					role="tab"
+					[class.active]="activeTab() === i"
+					[attr.aria-selected]="activeTab() === i"
+					(click)="selectTab(i)"
+				>
+					{{ section.label }}
+				</button>
+			}
+		</div>
+
+		<ul class="tab-panel" role="tabpanel">
+			@for (item of sections()[activeTab()].items; track item.id) {
+				<li class="related-item">
+					<h3>
+						<a [routerLink]="item.link">{{ item.title }}</a>
+					</h3>
+					<p class="related-summary">{{ item.summary }}</p>
+				</li>
+			}
+		</ul>
+	</div>
+}
