@@ -1,10 +1,14 @@
 import { getOpenAIClient } from './clients/openai';
 import { agents, getAgent, type Agent } from './agents';
+import { moderator } from './agents/managers';
+import type { ModeratorRunResult } from './agents/managers/moderator';
 import type { AgentRunPayload } from './agents/types';
+import { extractAgentUsage, toLogUsage, type LogUsage } from './services/log';
 import { instructions, ORCHESTRATOR_INSTRUCTIONS, ORCHESTRATOR_MODEL } from './orchestrator/prompts';
 
 export { ORCHESTRATOR_INSTRUCTIONS, ORCHESTRATOR_MODEL } from './orchestrator/prompts';
-export type { AgentRunPayload, RefContext } from './agents/types';
+export type { AgentRunPayload, ContributorContext, ContributorEntry, ContributorUser, RefContext } from './agents/types';
+export type { ModeratorRunResult } from './agents/managers/moderator';
 
 const selectAgentsSchema = {
 	type: 'object',
@@ -19,8 +23,13 @@ const selectAgentsSchema = {
 } as const;
 
 export interface OrchestratorRunResult {
+	moderation?: ModeratorRunResult;
 	agentIds: string[];
 	results: Record<string, unknown>;
+	usage: {
+		orchestration: LogUsage[];
+		agents: Record<string, LogUsage[]>;
+	};
 }
 
 function agentCatalog(): { id: string; title: string; use: string }[] {
@@ -31,9 +40,11 @@ function agentCatalog(): { id: string; title: string; use: string }[] {
 	}));
 }
 
-export async function selectAgents(payload: AgentRunPayload): Promise<Agent[]> {
+export async function selectAgents(
+	payload: AgentRunPayload,
+): Promise<{ agents: Agent[]; usage: LogUsage[] }> {
 	if (agents.length === 0) {
-		return [];
+		return { agents: [], usage: [] };
 	}
 
 	const openai = getOpenAIClient();
@@ -57,23 +68,51 @@ export async function selectAgents(payload: AgentRunPayload): Promise<Agent[]> {
 
 	const { agentIds } = JSON.parse(response.output_text) as { agentIds: string[] };
 	const validIds = new Set(agents.map((agent) => agent.id));
+	const usage = toLogUsage(response.usage, ORCHESTRATOR_MODEL);
 
-	return agentIds
-		.filter((id) => validIds.has(id))
-		.map((id) => getAgent(id))
-		.filter((agent): agent is Agent => agent !== undefined);
+	return {
+		agents: agentIds
+			.filter((id) => validIds.has(id))
+			.map((id) => getAgent(id))
+			.filter((agent): agent is Agent => agent !== undefined),
+		usage: usage ? [usage] : [],
+	};
 }
 
 export async function orchestrate(payload: AgentRunPayload): Promise<OrchestratorRunResult> {
-	const selected = await selectAgents(payload);
 	const results: Record<string, unknown> = {};
+	const agentUsage: Record<string, LogUsage[]> = {};
+
+	let moderation: ModeratorRunResult | undefined;
+	if (payload.feedId && payload.userId) {
+		moderation = await moderator.run(payload);
+		results[moderator.id] = moderation;
+
+		if (moderation.level !== 'ok') {
+			return {
+				moderation,
+				agentIds: [],
+				results,
+				usage: { orchestration: [], agents: {} },
+			};
+		}
+	}
+
+	const { agents: selected, usage: orchestrationUsage } = await selectAgents(payload);
 
 	for (const agent of selected) {
-		results[agent.id] = await agent.run(payload);
+		const result = await agent.run(payload);
+		results[agent.id] = result;
+		agentUsage[agent.id] = extractAgentUsage(result);
 	}
 
 	return {
+		moderation,
 		agentIds: selected.map((agent) => agent.id),
 		results,
+		usage: {
+			orchestration: orchestrationUsage,
+			agents: agentUsage,
+		},
 	};
 }

@@ -2,7 +2,7 @@ import type { Collection } from "./page.js";
 
 export type FeedEntryType = "question" | "tip" | "correction" | "answer";
 
-export type FeedEntryStatus = "new" | "pending" | "answered" | "failed";
+export type FeedEntryStatus = "new" | "pending" | "answered" | "failed" | "warning" | "danger";
 
 export type FeedVoteValue = 1 | -1;
 

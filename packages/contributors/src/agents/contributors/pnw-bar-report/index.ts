@@ -1,8 +1,9 @@
 import chalk from 'chalk';
 import ora from 'ora';
-import { cacheFn } from '../../cache';
-import { getOpenAIClient } from '../../clients/openai';
-import type { AgentRunPayload } from '../types';
+import { cacheFn } from '../../../cache';
+import { getOpenAIClient } from '../../../clients/openai';
+import { toLogUsage, type LogUsage } from '../../../services/log';
+import type { AgentRunPayload } from '../../types';
 import {
 	ANSWER_INSTRUCTIONS,
 	ANSWER_MAX_LENGTH,
@@ -35,6 +36,7 @@ export interface BarReportsResult {
 	source: string;
 	fetchedAt: string;
 	reports: BarReport[];
+	usage: LogUsage[];
 }
 
 export interface BarReportRunResult extends BarReportsResult {
@@ -88,7 +90,7 @@ async function loadSource(): Promise<string> {
 	}
 }
 
-async function parseReports(xml: string): Promise<BarReport[]> {
+async function parseReports(xml: string): Promise<{ reports: BarReport[]; usage: LogUsage[] }> {
 	const parseSpinner = ora('Understanding report data').start();
 	const openai = getOpenAIClient();
 
@@ -108,8 +110,9 @@ async function parseReports(xml: string): Promise<BarReport[]> {
 		});
 
 		const { reports } = JSON.parse(response.output_text) as { reports: BarReport[] };
+		const usage = toLogUsage(response.usage, PARSE_MODEL);
 		parseSpinner.succeed('Report data understood');
-		return reports;
+		return { reports, usage: usage ? [usage] : [] };
 	} catch (error) {
 		parseSpinner.fail('Failed to understand report data');
 		throw error;
@@ -119,7 +122,7 @@ async function parseReports(xml: string): Promise<BarReport[]> {
 async function answerQuestion(
 	reports: BarReport[],
 	payload: AgentRunPayload,
-): Promise<string> {
+): Promise<{ answer: string; usage: LogUsage[] }> {
 	const answerSpinner = ora('Answering your question').start();
 	const openai = getOpenAIClient();
 
@@ -129,14 +132,16 @@ async function answerQuestion(
 			instructions: instructions(ANSWER_INSTRUCTIONS),
 			input: JSON.stringify({
 				question: payload.message,
-				context: payload.context,
+				entry: payload.contributor?.entry ?? payload.context,
+				user: payload.contributor?.user ?? null,
 				reports,
 			}),
 		});
 
 		const answer = response.output_text.trim().slice(0, ANSWER_MAX_LENGTH);
+		const usage = toLogUsage(response.usage, ANSWER_MODEL);
 		answerSpinner.succeed('Answer ready');
-		return answer;
+		return { answer, usage: usage ? [usage] : [] };
 	} catch (error) {
 		answerSpinner.fail('Failed to answer question');
 		throw error;
@@ -148,12 +153,13 @@ async function loadProcessedReports(): Promise<BarReportsResult> {
 		REPORTS_CACHE_KEY,
 		async () => {
 			const xml = await loadSource();
-			const reports = await parseReports(xml);
+			const { reports, usage } = await parseReports(xml);
 
 			return {
 				source: ALLBARS_URL,
 				fetchedAt: new Date().toISOString(),
 				reports,
+				usage,
 			};
 		},
 		{ duration: REPORTS_CACHE_DURATION },
@@ -162,13 +168,13 @@ async function loadProcessedReports(): Promise<BarReportsResult> {
 
 export async function run(payload: AgentRunPayload): Promise<BarReportRunResult> {
 	const parsed = await loadProcessedReports();
-
-	const answer = await answerQuestion(parsed.reports, payload);
+	const { answer, usage: answerUsage } = await answerQuestion(parsed.reports, payload);
+	const usage = [...(parsed.usage ?? []), ...answerUsage];
 
 	console.log(chalk.green('\nParsed report data:'));
 	console.log(chalk.green(JSON.stringify(parsed, null, 2)));
 	console.log(chalk.green('\nAnswer:'));
 	console.log(chalk.green(answer));
 
-	return { ...parsed, answer };
+	return { ...parsed, answer, usage };
 }

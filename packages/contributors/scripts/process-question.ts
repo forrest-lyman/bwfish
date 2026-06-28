@@ -135,7 +135,7 @@ async function main(): Promise<void> {
 		const payload = { message: question.text, context };
 
 		const routeSpinner = ora('Selecting agents').start();
-		const selectedAgents = await selectAgents(payload);
+		const { agents: selectedAgents } = await selectAgents(payload);
 		routeSpinner.succeed(
 			selectedAgents.length
 				? `Selected agents: ${selectedAgents.map((agent) => agent.id).join(', ')}`

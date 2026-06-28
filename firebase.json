@@ -17,7 +17,7 @@
     "authorizedDomains": ["localhost"]
   },
   "hosting": {
-    "public": "packages/web/dist/web",
+    "public": "packages/web/dist/bwfish-web/browser",
     "ignore": [
       "firebase.json",
       "**/.*",

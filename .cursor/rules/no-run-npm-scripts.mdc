@@ -1,0 +1,25 @@
+---
+description: Never run npm/pnpm scripts — user runs them manually
+alwaysApply: true
+---
+
+# Do Not Run npm/pnpm Scripts
+
+NEVER execute npm, pnpm, yarn, or bun scripts (e.g. `pnpm process:feed`, `npm run dev`, `pnpm test:agent`).
+
+The user runs these themselves. Running them can trigger expensive side effects (API calls, Firestore writes, long-running pipelines).
+
+## Allowed
+
+- Linting and type-checking tools directly (e.g. `tsc --noEmit`, read_lints)
+- Build commands only when explicitly requested by the user
+
+## When a script is needed
+
+Show the exact command for the user to run. Do not execute it.
+
+Example:
+
+```bash
+pnpm --filter @bwfish/contributors process:feed
+```

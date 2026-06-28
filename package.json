@@ -5,6 +5,7 @@
     "start": "pnpm --filter web start",
     "build": "pnpm -r build",
     "dev": "pnpm --filter web dev",
+    "deploy:web": "pnpm --filter web build && npx -y firebase-tools@latest deploy --only hosting",
     "tasks": "npx tsx scripts/run-tasks.ts"
   }
 }
