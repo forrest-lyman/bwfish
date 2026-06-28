@@ -121,3 +121,16 @@
 	flex-direction: column;
 	gap: 20px;
 }
+
+.feed-thread {
+	display: flex;
+	flex-direction: column;
+	gap: 12px;
+}
+
+.feed-replies {
+	display: flex;
+	flex-direction: column;
+	gap: 12px;
+	padding-left: calc(42px + 14px);
+}

@@ -7,6 +7,10 @@
 	display: flex;
 	align-items: flex-start;
 	gap: 14px;
+
+	&.reply {
+		gap: 0;
+	}
 }
 
 .feed-votes {
@@ -112,6 +116,25 @@
 	color: var(--text-primary);
 }
 
+.feed-agent {
+	display: inline-flex;
+	align-items: center;
+	gap: 5px;
+	font-weight: 600;
+	color: var(--text-primary);
+}
+
+.agent-icon {
+	width: 13px;
+	height: 13px;
+	flex-shrink: 0;
+	fill: none;
+	stroke: var(--primary);
+	stroke-width: 1.75;
+	stroke-linecap: round;
+	stroke-linejoin: round;
+}
+
 .feed-meta time {
 	color: var(--text-muted);
 
@@ -119,6 +142,32 @@
 		content: '·';
 		margin-right: 6px;
 		color: var(--text-faint);
+	}
+}
+
+.feed-meta .feed-actions.inline {
+	margin-top: 0;
+	gap: 4px;
+	font-size: 0.62rem;
+
+	&::before {
+		content: '·';
+		margin-right: 2px;
+		color: var(--text-faint);
+	}
+
+	.action-btn {
+		font-size: inherit;
+		font-weight: 500;
+		color: var(--text-faint);
+
+		&:hover:not(:disabled) {
+			color: var(--primary);
+		}
+	}
+
+	.action-sep {
+		font-size: inherit;
 	}
 }
 

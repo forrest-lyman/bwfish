@@ -77,6 +77,8 @@ export class Activity {
         return 'Tip';
       case 'correction':
         return 'Correction';
+      case 'answer':
+        return 'Answer';
     }
   }
 

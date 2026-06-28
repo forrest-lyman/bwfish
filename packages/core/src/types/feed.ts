@@ -1,6 +1,8 @@
 import type { Collection } from "./page.js";
 
-export type FeedEntryType = "question" | "tip" | "correction";
+export type FeedEntryType = "question" | "tip" | "correction" | "answer";
+
+export type FeedEntryStatus = "new" | "pending" | "answered" | "failed";
 
 export type FeedVoteValue = 1 | -1;
 
@@ -22,4 +24,7 @@ export interface FeedEntry {
   lastModified: string;
   score?: number;
   payload?: unknown;
+  status?: FeedEntryStatus;
+  replyTo?: string;
+  agentId?: string;
 }

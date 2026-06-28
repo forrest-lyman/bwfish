@@ -44,3 +44,6 @@ testem.log
 Thumbs.db
 
 private
+tmp
+
+.pnpm-store

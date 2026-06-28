@@ -1,11 +1,11 @@
 import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Component, effect, ElementRef, inject, input, signal, viewChild } from '@angular/core';
 import { LucideSendHorizontal } from '@lucide/angular';
-import type { Collection } from '@bwfish/core';
+import type { Collection, FeedEntry as FeedEntryRecord } from '@bwfish/core';
 import { AuthService } from '../../services/auth.service';
 import { FeedService } from '../../services/feed.service';
 import { UserService } from '../../services/user.service';
-import { FeedEntry, type FeedEntryView } from '../feed-entry/feed-entry';
+import { FeedEntry, type FeedEntryView, type FeedThread } from '../feed-entry/feed-entry';
 
 @Component({
   selector: 'app-feed',
@@ -24,7 +24,7 @@ export class Feed {
   private feedService = inject(FeedService);
   private userService = inject(UserService);
 
-  feedEntries = signal<FeedEntryView[]>([]);
+  feedThreads = signal<FeedThread[]>([]);
   submitting = signal(false);
   votingEntryId = signal<string | null>(null);
   managingEntryId = signal<string | null>(null);
@@ -35,12 +35,28 @@ export class Feed {
   private textInput = viewChild<ElementRef<HTMLTextAreaElement>>('textInput');
 
   constructor() {
-    effect(() => {
+    effect(onCleanup => {
       const collection = this.collection();
       const refId = this.refId();
       if (!this.auth.ready()) return;
-      this.auth.user();
-      void this.loadEntries(collection, refId);
+      const userId = this.auth.user()?.uid ?? null;
+
+      if (!collection || !refId) {
+        this.feedThreads.set([]);
+        return;
+      }
+
+      this.error.set(null);
+
+      const sub = this.feedService.subscribe(collection, refId).subscribe({
+        next: entries => void this.applyEntries(entries, userId),
+        error: err => {
+          this.feedThreads.set([]);
+          this.error.set(err instanceof Error ? err.message : 'Failed to load questions');
+        },
+      });
+
+      onCleanup(() => sub.unsubscribe());
     });
   }
 
@@ -65,7 +81,6 @@ export class Feed {
     try {
       await this.feedService.push('question', text, collection, refId);
       this.feedForm.reset();
-      await this.loadEntries(collection, refId);
     } catch (err: any) {
       this.error.set(err?.message ?? 'Question submit failed');
     } finally {
@@ -91,13 +106,11 @@ export class Feed {
 
     try {
       const result = await this.feedService.vote(entryId, direction);
-      this.feedEntries.update(entries =>
-        entries.map(entry =>
-          entry.entry.id === entryId
-            ? { ...entry, score: result.score, userVote: result.userVote }
-            : entry
-        )
-      );
+      this.updateEntry(entryId, entry => ({
+        ...entry,
+        score: result.score,
+        userVote: result.userVote,
+      }));
     } catch (err: unknown) {
       this.error.set(err instanceof Error ? err.message : 'Vote failed');
     } finally {
@@ -114,20 +127,14 @@ export class Feed {
 
     try {
       await this.feedService.update(entryId, text);
-      this.feedEntries.update(entries =>
-        entries.map(entry =>
-          entry.entry.id === entryId
-            ? {
-                ...entry,
-                entry: {
-                  ...entry.entry,
-                  text,
-                  lastModified: new Date().toISOString(),
-                },
-              }
-            : entry
-        )
-      );
+      this.updateEntry(entryId, entry => ({
+        ...entry,
+        entry: {
+          ...entry.entry,
+          text,
+          lastModified: new Date().toISOString(),
+        },
+      }));
     } catch (err: unknown) {
       this.error.set(err instanceof Error ? err.message : 'Edit failed');
     } finally {
@@ -146,7 +153,14 @@ export class Feed {
 
     try {
       await this.feedService.remove(entryId);
-      this.feedEntries.update(entries => entries.filter(entry => entry.entry.id !== entryId));
+      this.feedThreads.update(threads =>
+        threads
+          .filter(thread => thread.item.entry.id !== entryId)
+          .map(thread => ({
+            ...thread,
+            replies: thread.replies.filter(reply => reply.entry.id !== entryId),
+          }))
+      );
     } catch (err: unknown) {
       this.error.set(err instanceof Error ? err.message : 'Delete failed');
     } finally {
@@ -154,48 +168,74 @@ export class Feed {
     }
   }
 
-  async reload() {
-    const collection = this.collection();
-    const refId = this.refId();
-    await this.loadEntries(collection, refId);
+  /** Kept for callers; live subscription refreshes the feed automatically. */
+  async reload() {}
+
+  private updateEntry(entryId: string, updater: (entry: FeedEntryView) => FeedEntryView) {
+    this.feedThreads.update(threads =>
+      threads.map(thread => ({
+        item: thread.item.entry.id === entryId ? updater(thread.item) : thread.item,
+        replies: thread.replies.map(reply =>
+          reply.entry.id === entryId ? updater(reply) : reply
+        ),
+      }))
+    );
   }
 
-  private async loadEntries(collection: Collection | null, refId: string | null) {
-    if (!collection || !refId) {
-      this.feedEntries.set([]);
-      return;
+  private async applyEntries(entries: FeedEntryRecord[], userId: string | null) {
+    const entryIds = entries.map(entry => entry.id).filter((id): id is string => !!id);
+    const userIds = [...new Set(entries.map(entry => entry.createdBy))];
+
+    const [users, userVotes] = await Promise.all([
+      Promise.all(userIds.map(userId => this.userService.getById(userId))),
+      this.feedService.pullUserVotes(userId, entryIds).catch(() => new Map()),
+    ]);
+    const userMap = new Map(userIds.map((id, index) => [id, users[index]]));
+
+    const views = entries.map(entry => {
+      const user = userMap.get(entry.createdBy);
+      const displayName = user?.displayName ?? 'Angler';
+
+      return {
+        entry,
+        displayName,
+        photoUrl: user?.photoUrl,
+        initials: this.initialsFrom(displayName),
+        score: entry.score ?? 0,
+        userVote: entry.id ? (userVotes.get(entry.id) ?? null) : null,
+      };
+    });
+
+    this.feedThreads.set(this.buildThreads(views));
+  }
+
+  private buildThreads(entries: FeedEntryView[]): FeedThread[] {
+    const byId = new Map<string, FeedEntryView>();
+    for (const entry of entries) {
+      if (entry.entry.id) {
+        byId.set(entry.entry.id, entry);
+      }
+    }
+    const repliesByParent = new Map<string, FeedEntryView[]>();
+    const roots: FeedEntryView[] = [];
+
+    for (const entry of entries) {
+      const replyTo = entry.entry.replyTo;
+      if (replyTo && byId.has(replyTo)) {
+        const replies = repliesByParent.get(replyTo) ?? [];
+        replies.push(entry);
+        repliesByParent.set(replyTo, replies);
+      } else {
+        roots.push(entry);
+      }
     }
 
-    try {
-      const entries = await this.feedService.pull(collection, refId);
-      const entryIds = entries.map(entry => entry.id).filter((id): id is string => !!id);
-      const userIds = [...new Set(entries.map(entry => entry.createdBy))];
-
-      const [users, userVotes] = await Promise.all([
-        Promise.all(userIds.map(userId => this.userService.getById(userId))),
-        this.feedService.pullUserVotes(this.auth.user()?.uid ?? null, entryIds).catch(() => new Map()),
-      ]);
-      const userMap = new Map(userIds.map((userId, index) => [userId, users[index]]));
-
-      this.feedEntries.set(
-        entries.map(entry => {
-          const user = userMap.get(entry.createdBy);
-          const displayName = user?.displayName ?? 'Angler';
-
-          return {
-            entry,
-            displayName,
-            photoUrl: user?.photoUrl,
-            initials: this.initialsFrom(displayName),
-            score: entry.score ?? 0,
-            userVote: entry.id ? (userVotes.get(entry.id) ?? null) : null,
-          };
-        })
-      );
-    } catch (err: unknown) {
-      this.feedEntries.set([]);
-      this.error.set(err instanceof Error ? err.message : 'Failed to load questions');
-    }
+    return roots.map(item => ({
+      item,
+      replies: (item.entry.id ? (repliesByParent.get(item.entry.id) ?? []) : []).sort((a, b) =>
+        a.entry.createdAt.localeCompare(b.entry.createdAt)
+      ),
+    }));
   }
 
   private initialsFrom(name: string) {

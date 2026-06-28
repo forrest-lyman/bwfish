@@ -22,18 +22,36 @@
     <p class="feed-error">{{ error() }}</p>
   }
 
-  @if (feedEntries().length) {
+  @if (feedThreads().length) {
     <div class="feed-entries">
-      @for (item of feedEntries(); track item.entry.id) {
-        <app-feed-entry
-          [item]="item"
-          [currentUserId]="auth.user()?.uid ?? null"
-          [voting]="votingEntryId() === item.entry.id"
-          [managing]="managingEntryId() === item.entry.id"
-          (vote)="vote(item, $event)"
-          (edit)="editEntry(item, $event)"
-          (delete)="deleteEntry(item)"
-        />
+      @for (thread of feedThreads(); track thread.item.entry.id) {
+        <div class="feed-thread">
+          <app-feed-entry
+            [item]="thread.item"
+            [currentUserId]="auth.user()?.uid ?? null"
+            [voting]="votingEntryId() === thread.item.entry.id"
+            [managing]="managingEntryId() === thread.item.entry.id"
+            (vote)="vote(thread.item, $event)"
+            (edit)="editEntry(thread.item, $event)"
+            (delete)="deleteEntry(thread.item)"
+          />
+          @if (thread.replies.length) {
+            <div class="feed-replies">
+              @for (reply of thread.replies; track reply.entry.id) {
+                <app-feed-entry
+                  [item]="reply"
+                  [reply]="true"
+                  [currentUserId]="auth.user()?.uid ?? null"
+                  [voting]="votingEntryId() === reply.entry.id"
+                  [managing]="managingEntryId() === reply.entry.id"
+                  (vote)="vote(reply, $event)"
+                  (edit)="editEntry(reply, $event)"
+                  (delete)="deleteEntry(reply)"
+                />
+              }
+            </div>
+          }
+        </div>
       }
     </div>
   }

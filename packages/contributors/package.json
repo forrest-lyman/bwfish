@@ -5,6 +5,25 @@
   "type": "module",
   "main": "./src/index.ts",
   "exports": {
-    ".": "./src/index.ts"
+    ".": "./src/index.ts",
+    "./clients": "./src/clients/index.ts",
+    "./clients/firebase-admin": "./src/clients/firebase-admin.ts",
+    "./clients/openai": "./src/clients/openai.ts"
+  },
+  "scripts": {
+    "test:agent": "tsx scripts/test-agent.ts",
+    "process:question": "tsx scripts/process-question.ts"
+  },
+  "dependencies": {
+    "@bwfish/core": "workspace:*",
+    "@inquirer/prompts": "^7.8.2",
+    "chalk": "^5.4.1",
+    "dotenv": "^17.4.2",
+    "firebase-admin": "^14.1.0",
+    "openai": "^6.25.0",
+    "ora": "^8.2.0"
+  },
+  "devDependencies": {
+    "tsx": "^4.20.3"
   }
 }

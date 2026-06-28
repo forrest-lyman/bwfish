@@ -12,9 +12,11 @@ import {
   getDocs,
   getDoc,
   limit,
+  onSnapshot,
   runTransaction,
   type QueryConstraint,
 } from '@angular/fire/firestore';
+import { Observable } from 'rxjs';
 import { Auth } from '@angular/fire/auth';
 import type { FeedEntry, FeedEntryType, FeedVoteValue, Collection } from '@bwfish/core';
 
@@ -59,6 +61,10 @@ export class FeedService {
       entry['payload'] = payload;
     }
 
+    if (type === 'question') {
+      entry['status'] = 'new';
+    }
+
     await addDoc(collection(this.fs, 'feed'), entry);
   }
 
@@ -90,6 +96,27 @@ export class FeedService {
     return getDocs(q).then(snap =>
       snap.docs.map(d => ({ id: d.id, ...d.data() } as FeedEntry))
     );
+  }
+
+  subscribe(refCollection: Collection, refId: string): Observable<FeedEntry[]> {
+    const q = query(
+      collection(this.fs, 'feed'),
+      where('collection', '==', refCollection),
+      where('refId', '==', refId),
+      orderBy('createdAt', 'desc')
+    );
+
+    return new Observable(subscriber => {
+      const unsubscribe = onSnapshot(
+        q,
+        snap => {
+          subscriber.next(snap.docs.map(d => ({ id: d.id, ...d.data() } as FeedEntry)));
+        },
+        err => subscriber.error(err)
+      );
+
+      return () => unsubscribe();
+    });
   }
 
   pullByUser(userId: string, range?: FeedDateRange): Promise<FeedEntry[]> {

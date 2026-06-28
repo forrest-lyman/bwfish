@@ -1,15 +1,33 @@
-<div class="feed-entry">
-  <div class="feed-avatar">
-    @if (item().photoUrl) {
-      <img [src]="item().photoUrl" [alt]="item().displayName" />
-    } @else {
-      <span class="initials">{{ item().initials }}</span>
-    }
-  </div>
+<div class="feed-entry" [class.reply]="reply()">
+  @if (!reply()) {
+    <div class="feed-avatar">
+      @if (item().photoUrl) {
+        <img [src]="item().photoUrl" [alt]="item().displayName" />
+      } @else {
+        <span class="initials">{{ item().initials }}</span>
+      }
+    </div>
+  }
   <div class="feed-body">
     <div class="feed-meta">
-      <span class="feed-author">{{ item().displayName }}</span>
-      <time [dateTime]="item().entry.createdAt">{{ formatDate(item().entry.createdAt) }}</time>
+      @if (reply() && agentTitle()) {
+        <span class="feed-agent">
+          <svg lucideSparkles class="agent-icon" aria-hidden="true"></svg>
+          {{ agentTitle() }}
+        </span>
+      } @else if (!reply()) {
+        <span class="feed-author">{{ item().displayName }}</span>
+        <time [dateTime]="item().entry.createdAt">{{ formatDate(item().entry.createdAt) }}</time>
+      } @else {
+        <span class="feed-author">{{ item().displayName }}</span>
+      }
+      @if (!editing() && canManage()) {
+        <span class="feed-actions inline">
+          <button type="button" class="action-btn" [disabled]="managing()" (click)="startEdit()">Edit</button>
+          <span class="action-sep">|</span>
+          <button type="button" class="action-btn" [disabled]="managing()" (click)="delete.emit()">Delete</button>
+        </span>
+      }
     </div>
     @if (editing()) {
       <textarea class="feed-edit-input" [formControl]="editForm" rows="3"></textarea>
@@ -26,13 +44,6 @@
       </div>
     } @else {
       <p class="feed-text">{{ item().entry.text }}</p>
-      @if (canManage()) {
-        <div class="feed-actions">
-          <button type="button" class="action-btn" [disabled]="managing()" (click)="startEdit()">Edit</button>
-          <span class="action-sep">|</span>
-          <button type="button" class="action-btn" [disabled]="managing()" (click)="delete.emit()">Delete</button>
-        </div>
-      }
     }
   </div>
   <div class="feed-votes">

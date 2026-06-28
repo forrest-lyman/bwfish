@@ -1,7 +1,7 @@
 import { Component, computed, input, output, signal } from '@angular/core';
 import { FormControl, ReactiveFormsModule, Validators } from '@angular/forms';
-import { LucideChevronDown, LucideChevronUp } from '@lucide/angular';
-import type { FeedEntry as FeedEntryRecord, FeedVoteValue } from '@bwfish/core';
+import { LucideChevronDown, LucideChevronUp, LucideSparkles } from '@lucide/angular';
+import { getAgent, type FeedEntry as FeedEntryRecord, type FeedVoteValue } from '@bwfish/core';
 
 export interface FeedEntryView {
   entry: FeedEntryRecord;
@@ -12,15 +12,21 @@ export interface FeedEntryView {
   userVote: FeedVoteValue | null;
 }
 
+export interface FeedThread {
+  item: FeedEntryView;
+  replies: FeedEntryView[];
+}
+
 @Component({
   selector: 'app-feed-entry',
   standalone: true,
-  imports: [ReactiveFormsModule, LucideChevronDown, LucideChevronUp],
+  imports: [ReactiveFormsModule, LucideChevronDown, LucideChevronUp, LucideSparkles],
   templateUrl: './feed-entry.html',
   styleUrl: './feed-entry.scss',
 })
 export class FeedEntry {
   item = input.required<FeedEntryView>();
+  reply = input(false);
   currentUserId = input<string | null>(null);
   voting = input(false);
   managing = input(false);
@@ -37,6 +43,11 @@ export class FeedEntry {
   canManage = computed(
     () => !!this.currentUserId() && this.currentUserId() === this.item().entry.createdBy
   );
+
+  agentTitle = computed(() => {
+    const agentId = this.item().entry.agentId;
+    return agentId ? (getAgent(agentId)?.title ?? null) : null;
+  });
 
   formatDate(iso: string) {
     return new Intl.DateTimeFormat(undefined, {
