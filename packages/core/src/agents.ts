@@ -5,6 +5,7 @@ export interface AgentInfo {
 
 export const agents: AgentInfo[] = [
   { id: "pbr", title: "Pacific Northwest Bar Reporter - USCG" },
+  { id: "bwfish-publisher", title: "BWFish Publisher" },
 ];
 
 export function getAgent(id: string): AgentInfo | undefined {

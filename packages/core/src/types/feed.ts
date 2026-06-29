@@ -27,4 +27,5 @@ export interface FeedEntry {
   status?: FeedEntryStatus;
   replyTo?: string;
   agentId?: string;
+  draftPath?: string;
 }

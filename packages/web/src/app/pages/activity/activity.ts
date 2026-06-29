@@ -1,6 +1,7 @@
 import { Component, effect, inject, signal } from '@angular/core';
 import { RouterLink } from '@angular/router';
 import type { Collection, FeedEntry } from '@bwfish/core';
+import { filterVisibleFeedEntries } from '../../components/feed-entry/feed-entry';
 import { Layout } from '../../components/layout/layout';
 import { AuthService } from '../../services/auth.service';
 import { FeedDateRange, FeedService } from '../../services/feed.service';
@@ -97,7 +98,7 @@ export class Activity {
     this.error.set(null);
 
     try {
-      const entries = await this.feedService.pullByUser(userId, this.buildDateRange());
+      const entries = filterVisibleFeedEntries(await this.feedService.pullByUser(userId, this.buildDateRange()));
       const items = await Promise.all(entries.map((entry) => this.toActivityItem(entry)));
       this.items.set(items);
     } catch (err: unknown) {

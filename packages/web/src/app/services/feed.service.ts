@@ -61,9 +61,7 @@ export class FeedService {
       entry['payload'] = payload;
     }
 
-    if (type === 'question') {
-      entry['status'] = 'new';
-    }
+    entry['status'] = 'new';
 
     await addDoc(collection(this.fs, 'feed'), entry);
   }
@@ -83,6 +81,14 @@ export class FeedService {
     if (!user) throw new Error('Must be signed in to delete');
 
     await deleteDoc(doc(this.fs, 'feed', entryId));
+  }
+
+  async getDraftBody(draftPath: string): Promise<string | null> {
+    const snap = await getDoc(doc(this.fs, draftPath));
+    if (!snap.exists()) return null;
+
+    const body = snap.data()['body'];
+    return typeof body === 'string' ? body : null;
   }
 
   pull(refCollection: Collection, refId: string): Promise<FeedEntry[]> {

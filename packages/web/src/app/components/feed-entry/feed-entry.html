@@ -1,31 +1,86 @@
 <div class="feed-entry" [class.reply]="reply()">
   @if (!reply()) {
-    <div class="feed-avatar">
-      @if (item().photoUrl) {
-        <img [src]="item().photoUrl" [alt]="item().displayName" />
-      } @else {
-        <span class="initials">{{ item().initials }}</span>
-      }
+    <div class="feed-avatar-col">
+      <div class="feed-avatar">
+        @if (item().photoUrl) {
+          <img [src]="item().photoUrl" [alt]="item().displayName" />
+        } @else {
+          <span class="initials">{{ item().initials }}</span>
+        }
+      </div>
+      <span class="feed-avatar-name">{{ item().displayName }}</span>
     </div>
   }
   <div class="feed-body">
     <div class="feed-meta">
-      @if (reply() && agentTitle()) {
+      @if (isAnswer() && agentTitle()) {
         <span class="feed-agent">
           <svg lucideSparkles class="agent-icon" aria-hidden="true"></svg>
           {{ agentTitle() }}
         </span>
-      } @else if (!reply()) {
-        <span class="feed-author">{{ item().displayName }}</span>
-        <time [dateTime]="item().entry.createdAt">{{ formatDate(item().entry.createdAt) }}</time>
       } @else {
-        <span class="feed-author">{{ item().displayName }}</span>
+        <span class="feed-type">{{ typeLabel() }}</span>
       }
-      @if (!editing() && canManage()) {
+      @if (!reply()) {
+        <time [dateTime]="item().entry.createdAt">{{ formatDate(item().entry.createdAt) }}</time>
+      }
+      @if (!editing() && (hasReviewableChanges() || canManage())) {
         <span class="feed-actions inline">
-          <button type="button" class="action-btn" [disabled]="managing()" (click)="startEdit()">Edit</button>
-          <span class="action-sep">|</span>
-          <button type="button" class="action-btn" [disabled]="managing()" (click)="delete.emit()">Delete</button>
+          @if (isCorrection() && hasReviewableChanges()) {
+            <button
+              type="button"
+              class="icon-btn"
+              [disabled]="managing()"
+              aria-label="Review changes"
+              (click)="reviewChanges.emit()"
+            >
+              <svg lucideGitCompare class="action-icon" aria-hidden="true"></svg>
+            </button>
+          }
+          @if (canManage()) {
+            <button
+              type="button"
+              class="icon-btn"
+              [disabled]="managing()"
+              aria-label="Edit"
+              (click)="startEdit()"
+            >
+              <svg lucidePencil class="action-icon" aria-hidden="true"></svg>
+            </button>
+            <button
+              type="button"
+              class="icon-btn"
+              [disabled]="managing()"
+              aria-label="Delete"
+              (click)="delete.emit()"
+            >
+              <svg lucideTrash2 class="action-icon" aria-hidden="true"></svg>
+            </button>
+          }
+        </span>
+      }
+      @if (!reply() && !editing()) {
+        <span class="feed-votes inline">
+          <button
+            type="button"
+            class="icon-btn"
+            [class.active]="item().userVote === 1"
+            [disabled]="voting() || managing()"
+            aria-label="Upvote"
+            (click)="vote.emit('up')"
+          >
+            <svg lucideThumbsUp class="action-icon" aria-hidden="true"></svg>
+          </button>
+          <button
+            type="button"
+            class="icon-btn"
+            [class.active]="item().userVote === -1"
+            [disabled]="voting() || managing()"
+            aria-label="Downvote"
+            (click)="vote.emit('down')"
+          >
+            <svg lucideThumbsDown class="action-icon" aria-hidden="true"></svg>
+          </button>
         </span>
       }
     </div>
@@ -42,31 +97,15 @@
           Save
         </button>
       </div>
+    } @else if (isAnswer()) {
+      <div class="feed-text-wrap">
+        <p class="feed-text" [class.collapsed]="!expanded()">{{ item().entry.text }}</p>
+        @if (!expanded()) {
+          <button type="button" class="more-btn" (click)="expanded.set(true)">more</button>
+        }
+      </div>
     } @else {
       <p class="feed-text">{{ item().entry.text }}</p>
     }
-  </div>
-  <div class="feed-votes">
-    <button
-      type="button"
-      class="vote-btn"
-      [class.active]="item().userVote === 1"
-      [disabled]="voting() || managing() || editing()"
-      (click)="vote.emit('up')"
-      aria-label="Upvote"
-    >
-      <svg lucideChevronUp class="vote-icon" aria-hidden="true"></svg>
-    </button>
-    <span class="vote-score">{{ item().score }}</span>
-    <button
-      type="button"
-      class="vote-btn"
-      [class.active]="item().userVote === -1"
-      [disabled]="voting() || managing() || editing()"
-      (click)="vote.emit('down')"
-      aria-label="Downvote"
-    >
-      <svg lucideChevronDown class="vote-icon" aria-hidden="true"></svg>
-    </button>
   </div>
 </div>

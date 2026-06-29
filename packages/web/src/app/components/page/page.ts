@@ -103,6 +103,7 @@ export class Page {
       const source = this.editForm.value;
       const explanation = this.submitExplanationForm.value.trim();
       await this.feedService.push('correction', explanation, item.collection, item.id, {
+        original: this.sourceBody(),
         text: source,
       });
       this.editing.set(false);

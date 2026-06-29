@@ -137,6 +137,16 @@ service cloud.firestore {
     match /pages/{id} {
       allow read: if true;
       allow write: if false;
+
+      match /drafts/{draftId} {
+        allow read: if true;
+        allow write: if false;
+      }
+
+      match /versions/{versionId} {
+        allow read: if true;
+        allow write: if false;
+      }
     }
 
     match /feed/{entryId} {

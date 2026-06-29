@@ -34,6 +34,7 @@
             (vote)="vote(thread.item, $event)"
             (edit)="editEntry(thread.item, $event)"
             (delete)="deleteEntry(thread.item)"
+            (reviewChanges)="openReview(thread.item)"
           />
           @if (thread.replies.length) {
             <div class="feed-replies">
@@ -56,3 +57,7 @@
     </div>
   }
 </div>
+
+<app-dialog [open]="reviewOpen()" title="Review changes" (closed)="closeReview()">
+  <app-markdown-diff [original]="reviewOriginal()" [modified]="reviewModified()" />
+</app-dialog>

@@ -1,0 +1,15 @@
+@if (open()) {
+  <div class="dialog-overlay" (click)="onBackdropClick($event)">
+    <div class="dialog-panel" role="dialog" aria-modal="true" [attr.aria-label]="title() || 'Dialog'">
+      @if (title()) {
+        <header class="dialog-header">
+          <h2 class="dialog-title">{{ title() }}</h2>
+          <button type="button" class="dialog-close" aria-label="Close" (click)="closed.emit()">×</button>
+        </header>
+      }
+      <div class="dialog-body">
+        <ng-content />
+      </div>
+    </div>
+  </div>
+}

@@ -27,10 +27,18 @@ export interface ContributorContext {
 	user: ContributorUser;
 }
 
+export interface CorrectionPayload {
+	text: string;
+}
+
 export interface AgentRunPayload {
 	message: string;
 	context: RefContext | null;
 	contributor?: ContributorContext;
+	correction?: CorrectionPayload;
+	entryType?: FeedEntryType;
+	payload?: unknown;
+	evaluationScore?: number;
 	feedId?: string;
 	userId?: string;
 }

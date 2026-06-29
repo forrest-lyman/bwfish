@@ -5,12 +5,14 @@ import type { Collection, FeedEntry as FeedEntryRecord } from '@bwfish/core';
 import { AuthService } from '../../services/auth.service';
 import { FeedService } from '../../services/feed.service';
 import { UserService } from '../../services/user.service';
-import { FeedEntry, type FeedEntryView, type FeedThread } from '../feed-entry/feed-entry';
+import { FeedEntry, extractCorrectionPayload, filterVisibleFeedEntries, type FeedEntryView, type FeedThread } from '../feed-entry/feed-entry';
+import { Dialog } from '../dialog/dialog';
+import { MarkdownDiff } from '../markdown-diff/markdown-diff';
 
 @Component({
   selector: 'app-feed',
   standalone: true,
-  imports: [ReactiveFormsModule, LucideSendHorizontal, FeedEntry],
+  imports: [ReactiveFormsModule, LucideSendHorizontal, FeedEntry, Dialog, MarkdownDiff],
   templateUrl: './feed.html',
   styleUrl: './feed.scss',
 })
@@ -29,6 +31,9 @@ export class Feed {
   votingEntryId = signal<string | null>(null);
   managingEntryId = signal<string | null>(null);
   error = signal<string | null>(null);
+  reviewOpen = signal(false);
+  reviewOriginal = signal('');
+  reviewModified = signal('');
   feedForm = new FormGroup({
     text: new FormControl('', [Validators.required, Validators.minLength(3)]),
   });
@@ -171,6 +176,19 @@ export class Feed {
   /** Kept for callers; live subscription refreshes the feed automatically. */
   async reload() {}
 
+  openReview(item: FeedEntryView) {
+    const payload = extractCorrectionPayload(item.entry.payload);
+    if (!payload) return;
+
+    this.reviewOriginal.set(payload.original);
+    this.reviewModified.set(payload.text);
+    this.reviewOpen.set(true);
+  }
+
+  closeReview() {
+    this.reviewOpen.set(false);
+  }
+
   private updateEntry(entryId: string, updater: (entry: FeedEntryView) => FeedEntryView) {
     this.feedThreads.update(threads =>
       threads.map(thread => ({
@@ -183,8 +201,9 @@ export class Feed {
   }
 
   private async applyEntries(entries: FeedEntryRecord[], userId: string | null) {
-    const entryIds = entries.map(entry => entry.id).filter((id): id is string => !!id);
-    const userIds = [...new Set(entries.map(entry => entry.createdBy))];
+    const visible = filterVisibleFeedEntries(entries);
+    const entryIds = visible.map(entry => entry.id).filter((id): id is string => !!id);
+    const userIds = [...new Set(visible.map(entry => entry.createdBy))];
 
     const [users, userVotes] = await Promise.all([
       Promise.all(userIds.map(userId => this.userService.getById(userId))),
@@ -192,7 +211,7 @@ export class Feed {
     ]);
     const userMap = new Map(userIds.map((id, index) => [id, users[index]]));
 
-    const views = entries.map(entry => {
+    const views = visible.map(entry => {
       const user = userMap.get(entry.createdBy);
       const displayName = user?.displayName ?? 'Angler';
 
@@ -225,7 +244,7 @@ export class Feed {
         const replies = repliesByParent.get(replyTo) ?? [];
         replies.push(entry);
         repliesByParent.set(replyTo, replies);
-      } else {
+      } else if (entry.entry.type !== 'answer') {
         roots.push(entry);
       }
     }
