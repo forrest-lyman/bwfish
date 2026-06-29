@@ -1,8 +1,9 @@
-import { Component, inject, OnInit, signal } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
+import { Component, inject } from '@angular/core';
+import { toSignal } from '@angular/core/rxjs-interop';
+import { Store } from '@ngrx/store';
 import { Layout } from '../../components/layout/layout';
-import { Page, type ContentPageItem } from '../../components/page/page';
-import { TechniqueService } from '../../services/technique.service';
+import { Page } from '../../components/page/page';
+import { selectCurrentTechniquePageItem } from '../../store';
 
 @Component({
   selector: 'app-technique',
@@ -11,15 +12,8 @@ import { TechniqueService } from '../../services/technique.service';
   templateUrl: './technique.html',
   styleUrl: './technique.scss',
 })
-export class Technique implements OnInit {
-  private route = inject(ActivatedRoute);
-  private techniqueService = inject(TechniqueService);
+export class Technique {
+  private store = inject(Store);
 
-  item = signal<ContentPageItem | null>(null);
-
-  async ngOnInit() {
-    const techniqueId = this.route.snapshot.paramMap.get('id')!;
-    const technique = await this.techniqueService.getById(techniqueId);
-    this.item.set(technique ? { ...technique, collection: 'techniques' } : null);
-  }
+  item = toSignal(this.store.select(selectCurrentTechniquePageItem), { initialValue: null });
 }

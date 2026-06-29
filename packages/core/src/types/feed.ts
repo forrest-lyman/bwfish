@@ -1,6 +1,6 @@
 import type { Collection } from "./page.js";
 
-export type FeedEntryType = "question" | "tip" | "correction" | "answer";
+export type FeedEntryType = "question" | "observation" | "correction" | "answer";
 
 export type FeedEntryStatus = "new" | "pending" | "answered" | "failed" | "warning" | "danger";
 
@@ -13,7 +13,7 @@ export interface FeedVote {
   createdAt: string;
 }
 
-export interface FeedTipPayload {
+export interface FeedObservationPayload {
   imageUrl?: string;
   date?: string;
 }
@@ -33,4 +33,15 @@ export interface FeedEntry {
   replyTo?: string;
   agentId?: string;
   draftPath?: string;
+}
+
+/** Normalize legacy Firestore feed entries that still use type `tip`. */
+export function normalizeFeedEntry(entry: unknown): FeedEntry {
+  const raw = entry as Omit<FeedEntry, "type"> & { type: FeedEntryType | "tip" };
+
+  if (raw.type === "tip") {
+    return { ...raw, type: "observation" };
+  }
+
+  return raw as FeedEntry;
 }

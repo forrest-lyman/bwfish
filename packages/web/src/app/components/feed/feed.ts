@@ -1,19 +1,21 @@
 import { FormControl, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { Component, computed, effect, ElementRef, HostListener, inject, input, signal, viewChild } from '@angular/core';
+import { toSignal } from '@angular/core/rxjs-interop';
 import { LucideMessageSquareQuote, LucideSearch, LucideSendHorizontal } from '@lucide/angular';
-import type { Collection, FeedEntry as FeedEntryRecord } from '@bwfish/core';
+import { Store } from '@ngrx/store';
+import type { Collection } from '@bwfish/core';
 import { AuthService } from '../../services/auth.service';
 import { FeedService } from '../../services/feed.service';
-import { UserService } from '../../services/user.service';
-import { FeedEntry, extractCorrectionPayload, filterVisibleFeedEntries, buildFeedTimeline, feedTimelineMatchesSearch, feedTimelineTrack, type FeedEntryView, type FeedThread, type FeedTimelineItem } from '../feed-entry/feed-entry';
-import { FeedTipActivity } from '../feed-tip-activity/feed-tip-activity';
+import { FeedActions, feedKey, selectActiveFeedError, selectActiveTimeline } from '../../store';
+import { FeedEntry, extractCorrectionPayload, feedTimelineMatchesSearch, feedTimelineTrack, type FeedEntryView, type FeedTimelineItem } from '../feed-entry/feed-entry';
+import { FeedObservationActivity } from '../feed-observation-activity/feed-observation-activity';
 import { Dialog } from '../dialog/dialog';
 import { MarkdownDiff } from '../markdown-diff/markdown-diff';
 
 @Component({
   selector: 'app-feed',
   standalone: true,
-  imports: [ReactiveFormsModule, LucideMessageSquareQuote, LucideSearch, LucideSendHorizontal, FeedEntry, FeedTipActivity, Dialog, MarkdownDiff],
+  imports: [ReactiveFormsModule, LucideMessageSquareQuote, LucideSearch, LucideSendHorizontal, FeedEntry, FeedObservationActivity, Dialog, MarkdownDiff],
   templateUrl: './feed.html',
   styleUrl: './feed.scss',
 })
@@ -22,13 +24,14 @@ export class Feed {
   collection = input<Collection | null>(null);
   refId = input<string | null>(null);
   layout = input<'inline' | 'sidebar'>('inline');
-  tipsEnabled = input(true);
+  observationsEnabled = input(true);
 
   auth = inject(AuthService);
+  private store = inject(Store);
   private feedService = inject(FeedService);
-  private userService = inject(UserService);
 
-  feedTimeline = signal<FeedTimelineItem[]>([]);
+  feedTimeline = toSignal(this.store.select(selectActiveTimeline), { initialValue: [] as FeedTimelineItem[] });
+  storeError = toSignal(this.store.select(selectActiveFeedError), { initialValue: null as string | null });
   searchQuery = signal('');
   filteredFeedTimeline = computed(() => {
     const query = this.searchQuery().trim().toLowerCase();
@@ -39,24 +42,25 @@ export class Feed {
   submitting = signal(false);
   votingEntryId = signal<string | null>(null);
   managingEntryId = signal<string | null>(null);
-  error = signal<string | null>(null);
+  error = computed(() => this.localError() ?? this.storeError());
+  private localError = signal<string | null>(null);
   reviewOpen = signal(false);
   reviewOriginal = signal('');
   reviewModified = signal('');
-  tipOpen = signal(false);
-  tipSubmitting = signal(false);
-  tipImageFile = signal<File | null>(null);
-  tipImagePreview = signal<string | null>(null);
+  observationOpen = signal(false);
+  observationSubmitting = signal(false);
+  observationImageFile = signal<File | null>(null);
+  observationImagePreview = signal<string | null>(null);
   feedForm = new FormGroup({
     text: new FormControl('', []),
   });
-  tipForm = new FormGroup({
+  observationForm = new FormGroup({
     text: new FormControl(''),
     date: new FormControl(this.todayIso(), { nonNullable: true }),
   });
   private textInput = viewChild<ElementRef<HTMLTextAreaElement>>('textInput');
-  private tipTextInput = viewChild<ElementRef<HTMLTextAreaElement>>('tipTextInput');
-  private tipFileInput = viewChild<ElementRef<HTMLInputElement>>('tipFileInput');
+  private observationTextInput = viewChild<ElementRef<HTMLTextAreaElement>>('observationTextInput');
+  private observationFileInput = viewChild<ElementRef<HTMLInputElement>>('observationFileInput');
 
   feedTimelineTrack = feedTimelineTrack;
 
@@ -64,30 +68,20 @@ export class Feed {
     effect(onCleanup => {
       const collection = this.collection();
       const refId = this.refId();
-      if (!this.auth.ready()) return;
+      if (!this.auth.ready() || !collection || !refId) return;
+
       const userId = this.auth.user()?.uid ?? null;
+      this.localError.set(null);
+      this.store.dispatch(FeedActions.subscribe({ collection, refId, userId }));
 
-      if (!collection || !refId) {
-        this.feedTimeline.set([]);
-        return;
-      }
-
-      this.error.set(null);
-
-      const sub = this.feedService.subscribe(collection, refId).subscribe({
-        next: entries => void this.applyEntries(entries, userId),
-        error: err => {
-          this.feedTimeline.set([]);
-          this.error.set(err instanceof Error ? err.message : 'Failed to load questions');
-        },
+      onCleanup(() => {
+        this.store.dispatch(FeedActions.unsubscribe({ collection, refId }));
       });
-
-      onCleanup(() => sub.unsubscribe());
     });
 
     effect(() => {
-      if (!this.tipOpen()) return;
-      queueMicrotask(() => this.tipTextInput()?.nativeElement.focus());
+      if (!this.observationOpen()) return;
+      queueMicrotask(() => this.observationTextInput()?.nativeElement.focus());
     });
   }
 
@@ -102,7 +96,7 @@ export class Feed {
 
   @HostListener('document:paste', ['$event'])
   onDocumentPaste(event: ClipboardEvent) {
-    if (!this.canAcceptTipImage()) return;
+    if (!this.canAcceptObservationImage()) return;
 
     const target = event.target;
     if (target instanceof Element && target.closest('app-markdown-editor, .edit-message')) {
@@ -113,123 +107,123 @@ export class Feed {
     if (!file) return;
 
     event.preventDefault();
-    this.handleTipImage(file);
+    this.handleObservationImage(file);
   }
 
   @HostListener('document:dragover', ['$event'])
   onDocumentDragOver(event: DragEvent) {
-    if (!this.canAcceptTipImage() || !this.isImageDrag(event)) return;
+    if (!this.canAcceptObservationImage() || !this.isImageDrag(event)) return;
 
     event.preventDefault();
   }
 
   @HostListener('document:drop', ['$event'])
   onDocumentDrop(event: DragEvent) {
-    if (!this.canAcceptTipImage()) return;
+    if (!this.canAcceptObservationImage()) return;
 
     const file = this.imageFromDataTransfer(event);
     if (!file) return;
 
     event.preventDefault();
-    this.handleTipImage(file);
+    this.handleObservationImage(file);
   }
 
-  onTipKeydown(event: KeyboardEvent) {
+  onObservationKeydown(event: KeyboardEvent) {
     if (event.key !== 'Enter' || event.shiftKey) return;
 
     event.preventDefault();
-    void this.submitTip();
+    void this.submitObservation();
   }
 
-  private canAcceptTipImage() {
-    return this.tipsEnabled() && !!this.collection() && !!this.refId();
+  private canAcceptObservationImage() {
+    return this.observationsEnabled() && !!this.collection() && !!this.refId();
   }
 
-  private handleTipImage(file: File) {
+  private handleObservationImage(file: File) {
     if (!this.auth.user()) {
-      this.error.set('Must be signed in to add a tip');
+      this.localError.set('Must be signed in to add an observation');
       return;
     }
 
-    if (this.tipOpen()) {
-      this.setTipImage(file);
+    if (this.observationOpen()) {
+      this.setObservationImage(file);
       return;
     }
 
-    this.openTipDialog(file);
+    this.openObservationDialog(file);
   }
 
-  openTipDialog(imageFile?: File) {
+  openObservationDialog(imageFile?: File) {
     if (!this.auth.user()) {
-      this.error.set('Must be signed in to add a tip');
+      this.localError.set('Must be signed in to add an observation');
       return;
     }
 
-    this.tipForm.reset({ text: '', date: this.todayIso() });
-    this.clearTipImage();
+    this.observationForm.reset({ text: '', date: this.todayIso() });
+    this.clearObservationImage();
     if (imageFile) {
-      this.setTipImage(imageFile);
+      this.setObservationImage(imageFile);
     }
-    this.tipOpen.set(true);
+    this.observationOpen.set(true);
   }
 
-  closeTipDialog() {
-    this.tipOpen.set(false);
-    this.tipSubmitting.set(false);
-    this.tipForm.reset({ text: '', date: this.todayIso() });
-    this.clearTipImage();
+  closeObservationDialog() {
+    this.observationOpen.set(false);
+    this.observationSubmitting.set(false);
+    this.observationForm.reset({ text: '', date: this.todayIso() });
+    this.clearObservationImage();
   }
 
-  onTipImageSelected(event: Event) {
+  onObservationImageSelected(event: Event) {
     const input = event.target as HTMLInputElement;
     const file = input.files?.[0];
     if (!file || !file.type.startsWith('image/')) return;
 
-    this.setTipImage(file);
+    this.setObservationImage(file);
     input.value = '';
   }
 
-  removeTipImage() {
-    this.clearTipImage();
+  removeObservationImage() {
+    this.clearObservationImage();
   }
 
-  canSubmitTip() {
-    const text = this.tipForm.value.text?.trim() ?? '';
-    return (text.length > 0 || !!this.tipImageFile()) && !this.tipSubmitting();
+  canSubmitObservation() {
+    const text = this.observationForm.value.text?.trim() ?? '';
+    return (text.length > 0 || !!this.observationImageFile()) && !this.observationSubmitting();
   }
 
-  async submitTip() {
+  async submitObservation() {
     const collection = this.collection();
     const refId = this.refId();
-    if (!collection || !refId || !this.canSubmitTip()) return;
+    if (!collection || !refId || !this.canSubmitObservation()) return;
 
-    const text = this.tipForm.value.text?.trim() ?? '';
-    const imageFile = this.tipImageFile();
-    const date = this.tipForm.value.date?.trim() ?? '';
+    const text = this.observationForm.value.text?.trim() ?? '';
+    const imageFile = this.observationImageFile();
+    const date = this.observationForm.value.date?.trim() ?? '';
 
-    this.closeTipDialog();
-    this.tipSubmitting.set(true);
-    this.error.set(null);
+    this.closeObservationDialog();
+    this.observationSubmitting.set(true);
+    this.localError.set(null);
 
     try {
       const payload: { imageUrl?: string; date?: string } = {};
       if (imageFile) {
-        payload.imageUrl = await this.feedService.uploadTipImage(imageFile);
+        payload.imageUrl = await this.feedService.uploadObservationImage(imageFile);
       }
       if (date) {
         payload.date = date;
       }
       await this.feedService.push(
-        'tip',
+        'observation',
         text,
         collection,
         refId,
         Object.keys(payload).length ? payload : undefined
       );
     } catch (err: unknown) {
-      this.error.set(err instanceof Error ? err.message : 'Tip submit failed');
+      this.localError.set(err instanceof Error ? err.message : 'Observation submit failed');
     } finally {
-      this.tipSubmitting.set(false);
+      this.observationSubmitting.set(false);
     }
   }
 
@@ -237,19 +231,19 @@ export class Feed {
     return new Date().toISOString().slice(0, 10);
   }
 
-  private setTipImage(file: File) {
-    this.clearTipImage();
-    this.tipImageFile.set(file);
-    this.tipImagePreview.set(URL.createObjectURL(file));
+  private setObservationImage(file: File) {
+    this.clearObservationImage();
+    this.observationImageFile.set(file);
+    this.observationImagePreview.set(URL.createObjectURL(file));
   }
 
-  private clearTipImage() {
-    const preview = this.tipImagePreview();
+  private clearObservationImage() {
+    const preview = this.observationImagePreview();
     if (preview) {
       URL.revokeObjectURL(preview);
     }
-    this.tipImageFile.set(null);
-    this.tipImagePreview.set(null);
+    this.observationImageFile.set(null);
+    this.observationImagePreview.set(null);
   }
 
   private imageFromClipboard(event: ClipboardEvent): File | null {
@@ -305,13 +299,13 @@ export class Feed {
 
     const text = this.feedForm.value.text!.trim();
     this.submitting.set(true);
-    this.error.set(null);
+    this.localError.set(null);
 
     try {
       await this.feedService.push('question', text, collection, refId);
       this.feedForm.reset();
     } catch (err: any) {
-      this.error.set(err?.message ?? 'Question submit failed');
+      this.localError.set(err?.message ?? 'Question submit failed');
     } finally {
       this.submitting.set(false);
       const textarea = this.textInput()?.nativeElement;
@@ -326,12 +320,12 @@ export class Feed {
     if (!entryId || this.votingEntryId() || this.managingEntryId()) return;
 
     if (!this.auth.user()) {
-      this.error.set('Must be signed in to vote');
+      this.localError.set('Must be signed in to vote');
       return;
     }
 
     this.votingEntryId.set(entryId);
-    this.error.set(null);
+    this.localError.set(null);
 
     try {
       const result = await this.feedService.vote(entryId, direction);
@@ -341,7 +335,7 @@ export class Feed {
         userVote: result.userVote,
       }));
     } catch (err: unknown) {
-      this.error.set(err instanceof Error ? err.message : 'Vote failed');
+      this.localError.set(err instanceof Error ? err.message : 'Vote failed');
     } finally {
       this.votingEntryId.set(null);
     }
@@ -352,7 +346,7 @@ export class Feed {
     if (!entryId || this.managingEntryId()) return;
 
     this.managingEntryId.set(entryId);
-    this.error.set(null);
+    this.localError.set(null);
 
     try {
       await this.feedService.update(entryId, text);
@@ -365,7 +359,7 @@ export class Feed {
         },
       }));
     } catch (err: unknown) {
-      this.error.set(err instanceof Error ? err.message : 'Edit failed');
+      this.localError.set(err instanceof Error ? err.message : 'Edit failed');
     } finally {
       this.managingEntryId.set(null);
     }
@@ -378,13 +372,13 @@ export class Feed {
     if (!confirm('Delete this post?')) return;
 
     this.managingEntryId.set(entryId);
-    this.error.set(null);
+    this.localError.set(null);
 
     try {
       await this.feedService.remove(entryId);
-      this.feedTimeline.update(timeline =>
+      this.patchTimeline(timeline =>
         timeline.flatMap((item): FeedTimelineItem[] => {
-          if (item.kind === 'tipActivity') {
+          if (item.kind === 'observationActivity') {
             return [item];
           }
 
@@ -404,7 +398,7 @@ export class Feed {
         })
       );
     } catch (err: unknown) {
-      this.error.set(err instanceof Error ? err.message : 'Delete failed');
+      this.localError.set(err instanceof Error ? err.message : 'Delete failed');
     } finally {
       this.managingEntryId.set(null);
     }
@@ -426,10 +420,23 @@ export class Feed {
     this.reviewOpen.set(false);
   }
 
+  private patchTimeline(updater: (timeline: FeedTimelineItem[]) => FeedTimelineItem[]) {
+    const collection = this.collection();
+    const refId = this.refId();
+    if (!collection || !refId) return;
+
+    this.store.dispatch(
+      FeedActions.setTimeline({
+        key: feedKey(collection, refId),
+        timeline: updater(this.feedTimeline()),
+      })
+    );
+  }
+
   private updateEntry(entryId: string, updater: (entry: FeedEntryView) => FeedEntryView) {
-    this.feedTimeline.update(timeline =>
+    this.patchTimeline(timeline =>
       timeline.map(item => {
-        if (item.kind === 'tipActivity') {
+        if (item.kind === 'observationActivity') {
           return item;
         }
 
@@ -446,78 +453,6 @@ export class Feed {
           },
         };
       })
-    );
-  }
-
-  private async applyEntries(entries: FeedEntryRecord[], userId: string | null) {
-    const visible = filterVisibleFeedEntries(entries);
-    const entryIds = visible.map(entry => entry.id).filter((id): id is string => !!id);
-    const userIds = [...new Set(visible.map(entry => entry.createdBy))];
-
-    const [users, userVotes] = await Promise.all([
-      Promise.all(userIds.map(userId => this.userService.getById(userId))),
-      this.feedService.pullUserVotes(userId, entryIds).catch(() => new Map()),
-    ]);
-    const userMap = new Map(userIds.map((id, index) => [id, users[index]]));
-
-    const views = visible.map(entry => {
-      const user = userMap.get(entry.createdBy);
-      const displayName = user?.displayName ?? 'Angler';
-
-      return {
-        entry,
-        displayName,
-        photoUrl: user?.photoUrl,
-        initials: this.initialsFrom(displayName),
-        score: entry.score ?? 0,
-        userVote: entry.id ? (userVotes.get(entry.id) ?? null) : null,
-      };
-    });
-
-    const tips = views.filter(view => view.entry.type === 'tip');
-    const threads = this.buildThreads(views.filter(view => view.entry.type !== 'tip'));
-
-    this.feedTimeline.set(buildFeedTimeline(threads, tips));
-  }
-
-  private buildThreads(entries: FeedEntryView[]): FeedThread[] {
-    const byId = new Map<string, FeedEntryView>();
-    for (const entry of entries) {
-      if (entry.entry.id) {
-        byId.set(entry.entry.id, entry);
-      }
-    }
-    const repliesByParent = new Map<string, FeedEntryView[]>();
-    const roots: FeedEntryView[] = [];
-
-    for (const entry of entries) {
-      const replyTo = entry.entry.replyTo;
-      if (replyTo && byId.has(replyTo)) {
-        const replies = repliesByParent.get(replyTo) ?? [];
-        replies.push(entry);
-        repliesByParent.set(replyTo, replies);
-      } else if (entry.entry.type !== 'answer' && entry.entry.type !== 'tip') {
-        roots.push(entry);
-      }
-    }
-
-    return roots.map(item => ({
-      item,
-      replies: (item.entry.id ? (repliesByParent.get(item.entry.id) ?? []) : []).sort((a, b) =>
-        a.entry.createdAt.localeCompare(b.entry.createdAt)
-      ),
-    }));
-  }
-
-  private initialsFrom(name: string) {
-    return (
-      name
-        .trim()
-        .split(/\s+/)
-        .map(word => word[0])
-        .slice(0, 2)
-        .join('')
-        .toUpperCase() || '?'
     );
   }
 }

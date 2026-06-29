@@ -17,21 +17,22 @@ export interface FeedThread {
   replies: FeedEntryView[];
 }
 
-export interface FeedTipActivity {
+export interface FeedObservationActivity {
   displayName: string;
   createdBy: string;
   count: number;
   latestAt: string;
+  dateLabel: string;
 }
 
 export type FeedTimelineItem =
   | { kind: 'thread'; thread: FeedThread }
-  | { kind: 'tipActivity'; activity: FeedTipActivity };
+  | { kind: 'observationActivity'; activity: FeedObservationActivity };
 
-export function buildFeedTimeline(threads: FeedThread[], tips: FeedEntryView[]): FeedTimelineItem[] {
+export function buildFeedTimeline(threads: FeedThread[], observations: FeedEntryView[]): FeedTimelineItem[] {
   type RawItem =
     | { kind: 'thread'; thread: FeedThread; at: string }
-    | { kind: 'tip'; view: FeedEntryView; at: string };
+    | { kind: 'observation'; view: FeedEntryView; at: string };
 
   const raw: RawItem[] = [
     ...threads.map(thread => ({
@@ -39,8 +40,8 @@ export function buildFeedTimeline(threads: FeedThread[], tips: FeedEntryView[]):
       thread,
       at: thread.item.entry.createdAt,
     })),
-    ...tips.map(view => ({
-      kind: 'tip' as const,
+    ...observations.map(view => ({
+      kind: 'observation' as const,
       view,
       at: view.entry.createdAt,
     })),
@@ -64,7 +65,7 @@ export function buildFeedTimeline(threads: FeedThread[], tips: FeedEntryView[]):
 
     while (i < raw.length) {
       const next = raw[i];
-      if (next.kind !== 'tip' || next.view.entry.createdBy !== createdBy) {
+      if (next.kind !== 'observation' || next.view.entry.createdBy !== createdBy) {
         break;
       }
       group.push(next.view);
@@ -73,12 +74,13 @@ export function buildFeedTimeline(threads: FeedThread[], tips: FeedEntryView[]):
     i--;
 
     timeline.push({
-      kind: 'tipActivity',
+      kind: 'observationActivity',
       activity: {
         displayName,
         createdBy,
         count: group.length,
         latestAt: group[0].entry.createdAt,
+        dateLabel: formatObservationDateLabel(group.map(observationDateIso)),
       },
     });
   }
@@ -91,12 +93,14 @@ export function feedTimelineTrack(item: FeedTimelineItem): string {
     return item.thread.item.entry.id ?? item.thread.item.entry.createdAt;
   }
 
-  return `tip-activity:${item.activity.createdBy}:${item.activity.latestAt}:${item.activity.count}`;
+  return `observation-activity:${item.activity.createdBy}:${item.activity.latestAt}:${item.activity.count}`;
 }
 
 export function feedTimelineMatchesSearch(item: FeedTimelineItem, query: string): boolean {
-  if (item.kind === 'tipActivity') {
-    const haystack = [item.activity.displayName, 'tip', 'submitted'].join(' ').toLowerCase();
+  if (item.kind === 'observationActivity') {
+    const haystack = [item.activity.displayName, item.activity.dateLabel, 'observation', 'submitted']
+      .join(' ')
+      .toLowerCase();
     return haystack.includes(query);
   }
 
@@ -168,8 +172,8 @@ export class FeedEntry {
     switch (this.item().entry.type) {
       case 'question':
         return 'Question';
-      case 'tip':
-        return 'Tip';
+      case 'observation':
+        return 'Observation';
       case 'correction':
         return 'Correction';
       case 'answer':
@@ -204,7 +208,28 @@ export class FeedEntry {
   }
 }
 
-export function extractTipPayload(payload: unknown): { imageUrl?: string; date?: string } | null {
+export function observationDateIso(view: FeedEntryView): string {
+  const payload = extractObservationPayload(view.entry.payload);
+  return payload?.date ?? view.entry.createdAt.slice(0, 10);
+}
+
+export function formatObservationDateLabel(isoDates: string[]): string {
+  const unique = [...new Set(isoDates)].sort();
+  if (unique.length === 0) return '';
+
+  const formatter = new Intl.DateTimeFormat(undefined, {
+    month: 'short',
+    day: 'numeric',
+    year: 'numeric',
+  });
+  const formatOne = (iso: string) => formatter.format(new Date(`${iso}T12:00:00`));
+
+  if (unique.length === 1) return formatOne(unique[0]);
+
+  return `${formatOne(unique[0])}–${formatOne(unique[unique.length - 1])}`;
+}
+
+export function extractObservationPayload(payload: unknown): { imageUrl?: string; date?: string } | null {
   if (!payload || typeof payload !== 'object') {
     return null;
   }

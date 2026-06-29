@@ -1,4 +1,5 @@
 import type { FeedEntry, FeedEntryType } from '@bwfish/core';
+import { normalizeFeedEntry } from '@bwfish/core';
 import chalk from 'chalk';
 import ora from 'ora';
 import type { DocumentReference } from 'firebase-admin/firestore';
@@ -8,13 +9,14 @@ import { run as runPipeline } from '../src/pipeline';
 
 loadEnv();
 
-const PROCESSABLE_TYPES: FeedEntryType[] = ['question', 'tip', 'correction'];
+const PROCESSABLE_TYPES: FeedEntryType[] = ['question', 'observation', 'correction'];
+const CLAIMABLE_TYPES = [...PROCESSABLE_TYPES, 'tip'] as const;
 
 async function claimNextFeedEntry(): Promise<FeedEntry | null> {
 	const db = getFirestoreDb();
 	const snap = await db
 		.collection('feed')
-		.where('type', 'in', PROCESSABLE_TYPES)
+		.where('type', 'in', [...CLAIMABLE_TYPES])
 		.where('status', '==', 'new')
 		.orderBy('createdAt', 'asc')
 		.limit(1)
@@ -43,7 +45,7 @@ async function claimNextFeedEntry(): Promise<FeedEntry | null> {
 		});
 	});
 
-	return { id: doc.id, ...(doc.data() as Omit<FeedEntry, 'id'>) };
+	return normalizeFeedEntry({ id: doc.id, ...(doc.data() as Omit<FeedEntry, 'id'>) });
 }
 
 async function setFeedEntryFailed(ref: DocumentReference): Promise<void> {

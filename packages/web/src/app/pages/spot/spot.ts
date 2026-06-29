@@ -1,8 +1,9 @@
-import { Component, inject, OnInit, signal } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
+import { Component, inject } from '@angular/core';
+import { toSignal } from '@angular/core/rxjs-interop';
+import { Store } from '@ngrx/store';
 import { Layout } from '../../components/layout/layout';
-import { Page, type ContentPageItem } from '../../components/page/page';
-import { SpotService } from '../../services/spot.service';
+import { Page } from '../../components/page/page';
+import { selectCurrentSpotPageItem } from '../../store';
 
 @Component({
   selector: 'app-spot',
@@ -11,15 +12,8 @@ import { SpotService } from '../../services/spot.service';
   templateUrl: './spot.html',
   styleUrl: './spot.scss',
 })
-export class Spot implements OnInit {
-  private route = inject(ActivatedRoute);
-  private spotService = inject(SpotService);
+export class Spot {
+  private store = inject(Store);
 
-  item = signal<ContentPageItem | null>(null);
-
-  async ngOnInit() {
-    const spotId = this.route.snapshot.paramMap.get('spot')!;
-    const spot = await this.spotService.getById(spotId);
-    this.item.set(spot ? { ...spot, collection: 'spots' } : null);
-  }
+  item = toSignal(this.store.select(selectCurrentSpotPageItem), { initialValue: null });
 }

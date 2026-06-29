@@ -1,8 +1,9 @@
-import { Component, inject, OnInit, signal } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
+import { Component, inject } from '@angular/core';
+import { toSignal } from '@angular/core/rxjs-interop';
+import { Store } from '@ngrx/store';
 import { Layout } from '../../components/layout/layout';
-import { Page, type ContentPageItem } from '../../components/page/page';
-import { PortService } from '../../services/port.service';
+import { Page } from '../../components/page/page';
+import { selectCurrentPortPageItem } from '../../store';
 
 @Component({
   selector: 'app-port',
@@ -11,15 +12,8 @@ import { PortService } from '../../services/port.service';
   templateUrl: './port.html',
   styleUrl: './port.scss',
 })
-export class Port implements OnInit {
-  private route = inject(ActivatedRoute);
-  private portService = inject(PortService);
+export class Port {
+  private store = inject(Store);
 
-  item = signal<ContentPageItem | null>(null);
-
-  async ngOnInit() {
-    const portId = this.route.snapshot.paramMap.get('port')!;
-    const port = await this.portService.getById(portId);
-    this.item.set(port ? { ...port, collection: 'ports' } : null);
-  }
+  item = toSignal(this.store.select(selectCurrentPortPageItem), { initialValue: null });
 }

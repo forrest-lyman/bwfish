@@ -1,8 +1,9 @@
-import { Component, inject, OnInit, signal } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
+import { Component, inject } from '@angular/core';
+import { toSignal } from '@angular/core/rxjs-interop';
+import { Store } from '@ngrx/store';
 import { Layout } from '../../components/layout/layout';
-import { Page, type ContentPageItem } from '../../components/page/page';
-import { FishService } from '../../services/fish.service';
+import { Page } from '../../components/page/page';
+import { selectCurrentFishPageItem } from '../../store';
 
 @Component({
   selector: 'app-fish',
@@ -11,15 +12,8 @@ import { FishService } from '../../services/fish.service';
   templateUrl: './fish.html',
   styleUrl: './fish.scss',
 })
-export class Fish implements OnInit {
-  private route = inject(ActivatedRoute);
-  private fishService = inject(FishService);
+export class Fish {
+  private store = inject(Store);
 
-  item = signal<ContentPageItem | null>(null);
-
-  async ngOnInit() {
-    const id = this.route.snapshot.paramMap.get('id')!;
-    const fish = await this.fishService.getById(id);
-    this.item.set(fish ? { ...fish, collection: 'fish' } : null);
-  }
+  item = toSignal(this.store.select(selectCurrentFishPageItem), { initialValue: null });
 }

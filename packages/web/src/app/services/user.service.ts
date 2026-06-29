@@ -1,4 +1,5 @@
-import { Injectable, inject, signal } from '@angular/core';
+import { Injectable, inject } from '@angular/core';
+import { toSignal } from '@angular/core/rxjs-interop';
 import {
   Firestore,
   deleteField,
@@ -14,7 +15,9 @@ import {
   getDownloadURL,
 } from '@angular/fire/storage';
 import { Auth, User } from '@angular/fire/auth';
+import { Store } from '@ngrx/store';
 import type { HomePort, UserProfile } from '@bwfish/core';
+import { UserActions, selectProfile } from '../store/user';
 
 type UserProfileUpdate = Partial<
   Pick<UserProfile, 'displayName' | 'photoUrl' | 'boat' | 'website'>
@@ -27,11 +30,12 @@ export class UserService {
   private fs = inject(Firestore);
   private storage = inject(Storage);
   private auth = inject(Auth);
+  private store = inject(Store);
 
-  profile = signal<UserProfile | null>(null);
+  profile = toSignal(this.store.select(selectProfile), { initialValue: null });
 
   clearProfile() {
-    this.profile.set(null);
+    // Session changes are handled by UserEffects.
   }
 
   async ensureProfile(firebaseUser: User): Promise<UserProfile> {
@@ -39,9 +43,7 @@ export class UserService {
     const snap = await getDoc(docRef);
 
     if (snap.exists()) {
-      const profile = snap.data() as UserProfile;
-      this.profile.set(profile);
-      return profile;
+      return snap.data() as UserProfile;
     }
 
     const profile: UserProfile = {
@@ -54,7 +56,6 @@ export class UserService {
     };
 
     await setDoc(docRef, profile);
-    this.profile.set(profile);
     return profile;
   }
 
@@ -81,7 +82,7 @@ export class UserService {
 
     const snap = await getDoc(docRef);
     const profile = snap.data() as UserProfile;
-    this.profile.set(profile);
+    this.store.dispatch(UserActions.profileUpdated({ profile }));
     return profile;
   }
 

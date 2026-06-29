@@ -1,39 +1,23 @@
-import { Injectable, inject, signal } from '@angular/core';
+import { Injectable, inject } from '@angular/core';
+import { toSignal } from '@angular/core/rxjs-interop';
 import {
   Auth,
   GoogleAuthProvider,
-  User,
   createUserWithEmailAndPassword,
-  onAuthStateChanged,
   signInWithEmailAndPassword,
   signInWithPopup,
   signOut,
 } from '@angular/fire/auth';
-import { UserService } from './user.service';
+import { Store } from '@ngrx/store';
+import { selectAuthUser, selectReady } from '../store/user';
 
 @Injectable({ providedIn: 'root' })
 export class AuthService {
   private auth = inject(Auth);
-  private userService = inject(UserService);
+  private store = inject(Store);
 
-  user = signal<User | null>(null);
-  ready = signal(false);
-
-  constructor() {
-    onAuthStateChanged(this.auth, async (user) => {
-      this.user.set(user);
-
-      try {
-        if (user) {
-          await this.userService.ensureProfile(user);
-        } else {
-          this.userService.clearProfile();
-        }
-      } finally {
-        this.ready.set(true);
-      }
-    });
-  }
+  user = toSignal(this.store.select(selectAuthUser), { initialValue: null });
+  ready = toSignal(this.store.select(selectReady), { initialValue: false });
 
   signInWithGoogle() {
     return signInWithPopup(this.auth, new GoogleAuthProvider());

@@ -30,7 +30,7 @@ const evaluateSchema = {
 function requireEntryType(payload: AgentRunPayload): FeedEntryType {
 	const entryType = payload.entryType ?? payload.contributor?.entry.type;
 	if (!entryType || entryType === 'answer') {
-		throw new Error('Evaluator requires a question, tip, or correction entry type');
+		throw new Error('Evaluator requires a question, observation, or correction entry type');
 	}
 
 	return entryType;

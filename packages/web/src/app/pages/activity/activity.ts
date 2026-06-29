@@ -74,8 +74,8 @@ export class Activity {
     switch (type) {
       case 'question':
         return 'Question';
-      case 'tip':
-        return 'Tip';
+      case 'observation':
+        return 'Observation';
       case 'correction':
         return 'Correction';
       case 'answer':

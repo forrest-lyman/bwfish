@@ -19,7 +19,7 @@ type ProcessableFeedEntryType = Exclude<FeedEntryType, "answer">;
 
 const handlers: Record<ProcessableFeedEntryType, FeedEntryHandler> = {
 	question: handleQuestion,
-	tip: handleTip,
+	observation: handleObservation,
 	correction: handleCorrection,
 };
 
@@ -291,9 +291,9 @@ async function handleQuestion(
 }
 
 /**
- * type: 'tip'
+ * type: 'observation'
  */
-async function handleTip(
+async function handleObservation(
 	feedEntry: FeedEntry,
 	context: RefContext,
 	contributor: ContributorContext,

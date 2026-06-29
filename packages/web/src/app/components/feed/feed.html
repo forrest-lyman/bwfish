@@ -13,9 +13,9 @@
       <button
         type="button"
         class="toolbar-btn"
-        aria-label="Add tip"
-        title="Add tip"
-        (click)="openTipDialog()"
+        aria-label="Add observation"
+        title="Add observation"
+        (click)="openObservationDialog()"
       >
         <svg lucideMessageSquareQuote class="toolbar-icon" aria-hidden="true"></svg>
       </button>
@@ -48,8 +48,8 @@
   @if (filteredFeedTimeline().length) {
     <div class="feed-entries">
       @for (item of filteredFeedTimeline(); track feedTimelineTrack(item)) {
-        @if (item.kind === 'tipActivity') {
-          <app-feed-tip-activity [activity]="item.activity" />
+        @if (item.kind === 'observationActivity') {
+          <app-feed-observation-activity [activity]="item.activity" />
         } @else {
           <div class="feed-thread">
             <app-feed-entry
@@ -89,46 +89,46 @@
   <app-markdown-diff [original]="reviewOriginal()" [modified]="reviewModified()" />
 </app-dialog>
 
-<app-dialog [open]="tipOpen()" title="Add tip" [width]="420" (closed)="closeTipDialog()">
-  <form class="tip-form" [formGroup]="tipForm" (ngSubmit)="submitTip()">
-    @if (tipImagePreview()) {
-      <figure class="tip-image-preview">
-        <img [src]="tipImagePreview()!" alt="Tip image preview" />
-        <button type="button" class="tip-image-remove" (click)="removeTipImage()">Remove</button>
+<app-dialog [open]="observationOpen()" title="Add observation" [width]="420" (closed)="closeObservationDialog()">
+  <form class="observation-form" [formGroup]="observationForm" (ngSubmit)="submitObservation()">
+    @if (observationImagePreview()) {
+      <figure class="observation-image-preview">
+        <img [src]="observationImagePreview()!" alt="Observation image preview" />
+        <button type="button" class="observation-image-remove" (click)="removeObservationImage()">Remove</button>
       </figure>
     }
 
-    <div class="tip-form-body">
+    <div class="observation-form-body">
       <textarea
-        #tipTextInput
+        #observationTextInput
         formControlName="text"
         rows="2"
-        placeholder="Share a tip (optional if you add an image)"
-        (keydown)="onTipKeydown($event)"
+        placeholder="Share an observation (optional if you add an image)"
+        (keydown)="onObservationKeydown($event)"
       ></textarea>
 
-      <div class="tip-form-footer">
-        <div class="tip-form-row">
-          <label class="tip-field">
-            <span class="tip-label">Date</span>
+      <div class="observation-form-footer">
+        <div class="observation-form-row">
+          <label class="observation-field">
+            <span class="observation-label">Date</span>
             <input type="date" formControlName="date" />
           </label>
           <input
-            #tipFileInput
+            #observationFileInput
             type="file"
             accept="image/*"
             hidden
-            (change)="onTipImageSelected($event)"
+            (change)="onObservationImageSelected($event)"
           />
-          <button type="button" class="tip-action-btn" (click)="tipFileInput.click()">
-            {{ tipImagePreview() ? 'Replace image' : 'Add image' }}
+          <button type="button" class="observation-action-btn" (click)="observationFileInput.click()">
+            {{ observationImagePreview() ? 'Replace image' : 'Add image' }}
           </button>
         </div>
-        <div class="tip-form-actions">
-          <button type="submit" class="tip-submit-btn" [disabled]="!canSubmitTip()">
-            {{ tipSubmitting() ? 'Submitting…' : 'Submit tip' }}
+        <div class="observation-form-actions">
+          <button type="submit" class="observation-submit-btn" [disabled]="!canSubmitObservation()">
+            {{ observationSubmitting() ? 'Submitting…' : 'Submit observation' }}
           </button>
-          <button type="button" class="tip-cancel-btn" (click)="closeTipDialog()">Cancel</button>
+          <button type="button" class="observation-cancel-btn" (click)="closeObservationDialog()">Cancel</button>
         </div>
       </div>
     </div>

@@ -1,8 +1,9 @@
-import { Component, inject, signal, OnInit } from '@angular/core';
+import { Component, inject, OnInit } from '@angular/core';
+import { toSignal } from '@angular/core/rxjs-interop';
 import { RouterLink } from '@angular/router';
+import { Store } from '@ngrx/store';
 import { Layout } from '../components/layout/layout';
-import { RegionService } from '../services/region.service';
-import type { Region } from '@bwfish/core';
+import { RegionActions, selectAllRegions } from '../store';
 
 @Component({
   selector: 'app-home',
@@ -28,10 +29,11 @@ import type { Region } from '@bwfish/core';
   `,
 })
 export class HomePage implements OnInit {
-  private regionService = inject(RegionService);
-  regions = signal<Region[]>([]);
+  private store = inject(Store);
 
-  async ngOnInit() {
-    this.regions.set(await this.regionService.getAll());
+  regions = toSignal(this.store.select(selectAllRegions), { initialValue: [] });
+
+  ngOnInit() {
+    this.store.dispatch(RegionActions.loadAll());
   }
 }

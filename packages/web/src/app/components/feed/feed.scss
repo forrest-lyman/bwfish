@@ -115,7 +115,7 @@
 	stroke-linejoin: round;
 }
 
-.tip-form {
+.observation-form {
 	display: flex;
 	flex-direction: column;
 	width: 100%;
@@ -124,19 +124,19 @@
 	padding: 0;
 }
 
-.tip-form-body {
+.observation-form-body {
 	display: flex;
 	flex-direction: column;
 	gap: 14px;
 	padding: 14px 18px 18px;
 
-	.tip-field {
+	.observation-field {
 		display: flex;
 		flex-direction: column;
 		gap: 6px;
 	}
 
-	.tip-label {
+	.observation-label {
 		font-family: var(--font-ui);
 		font-size: 0.75rem;
 		font-weight: 600;
@@ -192,7 +192,7 @@
 	}
 }
 
-.tip-image-preview {
+.observation-image-preview {
 	margin: 0;
 	display: block;
 	width: 100%;
@@ -213,7 +213,7 @@
 		object-fit: cover;
 	}
 
-	.tip-image-remove {
+	.observation-image-remove {
 		position: absolute;
 		top: 8px;
 		right: 8px;
@@ -234,30 +234,30 @@
 	}
 }
 
-.tip-form-footer {
+.observation-form-footer {
 	display: flex;
 	flex-direction: column;
 	gap: 12px;
 	min-width: 0;
 }
 
-.tip-form-row {
+.observation-form-row {
 	display: flex;
 	align-items: flex-end;
 	gap: 16px;
 	flex-wrap: wrap;
 }
 
-.tip-form-actions {
+.observation-form-actions {
 	display: flex;
 	align-items: center;
 	justify-content: flex-start;
 	gap: 12px;
 }
 
-.tip-cancel-btn,
-.tip-action-btn,
-.tip-submit-btn {
+.observation-cancel-btn,
+.observation-action-btn,
+.observation-submit-btn {
 	padding: 8px 14px;
 	border-radius: 8px;
 	font-family: var(--font-ui);
@@ -266,7 +266,7 @@
 	cursor: pointer;
 }
 
-.tip-cancel-btn {
+.observation-cancel-btn {
 	padding: 8px 0;
 	border: none;
 	background: none;
@@ -277,7 +277,7 @@
 	}
 }
 
-.tip-action-btn {
+.observation-action-btn {
 	border: 1px solid var(--border-color);
 	background: transparent;
 	color: var(--text-secondary);
@@ -288,7 +288,7 @@
 	}
 }
 
-.tip-submit-btn {
+.observation-submit-btn {
 	border: none;
 	background: var(--primary);
 	color: #0b1220;

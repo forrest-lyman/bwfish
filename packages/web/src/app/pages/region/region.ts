@@ -1,8 +1,9 @@
-import { Component, inject, OnInit, signal } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
+import { Component, inject } from '@angular/core';
+import { toSignal } from '@angular/core/rxjs-interop';
+import { Store } from '@ngrx/store';
 import { Layout } from '../../components/layout/layout';
-import { Page, type ContentPageItem } from '../../components/page/page';
-import { RegionService } from '../../services/region.service';
+import { Page } from '../../components/page/page';
+import { selectCurrentRegionPageItem } from '../../store';
 
 @Component({
   selector: 'app-region',
@@ -11,15 +12,8 @@ import { RegionService } from '../../services/region.service';
   templateUrl: './region.html',
   styleUrl: './region.scss',
 })
-export class Region implements OnInit {
-  private route = inject(ActivatedRoute);
-  private regionService = inject(RegionService);
+export class Region {
+  private store = inject(Store);
 
-  item = signal<ContentPageItem | null>(null);
-
-  async ngOnInit() {
-    const regionId = this.route.snapshot.paramMap.get('region')!;
-    const region = await this.regionService.getById(regionId);
-    this.item.set(region ? { ...region, collection: 'regions' } : null);
-  }
+  item = toSignal(this.store.select(selectCurrentRegionPageItem), { initialValue: null });
 }
