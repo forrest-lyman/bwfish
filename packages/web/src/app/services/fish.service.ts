@@ -14,7 +14,7 @@ export class FishService {
 
   async getById(id: string): Promise<Fish | null> {
     const snap = await getDoc(doc(this.fs, 'fish', id));
-    return snap.exists() ? (snap.data() as Fish) : null;
+    return snap.exists() ? ({ ...snap.data(), id: snap.id }) as Fish : null;
   }
 
   async getByRegion(regionId: string): Promise<Fish[]> {

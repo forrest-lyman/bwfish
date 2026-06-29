@@ -64,8 +64,31 @@
 			} @else {
 				<article class="page-layout">
 					<header class="page-header">
-						<h1>{{ current.title }}</h1>
-						<p class="summary">{{ current.summary }}</p>
+						<div class="page-header-main">
+							<h1>{{ current.title }}</h1>
+							<p class="summary">{{ current.summary }}</p>
+							@if (fishLabels().length) {
+								<ul class="fish-labels">
+									@for (fish of fishLabels(); track fish.id) {
+										<li>
+											<a [routerLink]="fish.link">{{ fish.title }}</a>
+										</li>
+									}
+								</ul>
+							}
+						</div>
+						@if (primaryChildren().length) {
+							<nav class="primary-children" [attr.aria-label]="primaryChildrenLabel()">
+								<h2 class="primary-children-title">{{ primaryChildrenLabel() }}</h2>
+								<ul>
+									@for (child of primaryChildren(); track child.id) {
+										<li>
+											<a [routerLink]="child.link">{{ child.title }}</a>
+										</li>
+									}
+								</ul>
+							</nav>
+						}
 					</header>
 					@if (related().length) {
 						<div class="related-section">

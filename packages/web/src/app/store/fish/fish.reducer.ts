@@ -31,7 +31,7 @@ export const fishFeature = createFeature({
       },
       error: null,
     })),
-    on(FishActions.loadManySuccess, (state, { fish }) => ({
+    on(FishActions.loadManySuccess, (state, { ids, fish }) => ({
       ...state,
       entities: {
         ...state.entities,
@@ -39,7 +39,7 @@ export const fishFeature = createFeature({
       },
       loading: {
         ...state.loading,
-        ...Object.fromEntries(fish.map(entry => [entry.id, false])),
+        ...Object.fromEntries(ids.map(id => [id, false])),
       },
       error: null,
     })),

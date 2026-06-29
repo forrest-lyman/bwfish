@@ -20,12 +20,12 @@ export class SpotService {
   async getByPort(portId: string): Promise<Spot[]> {
     const q = query(this.col, where('portIds', 'array-contains', portId));
     const snap = await getDocs(q);
-    return snap.docs.map(d => d.data() as Spot);
+    return snap.docs.map(d => ({ ...d.data(), id: d.id }) as Spot);
   }
 
   async getByRegion(regionId: string): Promise<Spot[]> {
     const q = query(this.col, where('regionId', '==', regionId));
     const snap = await getDocs(q);
-    return snap.docs.map(d => d.data() as Spot);
+    return snap.docs.map(d => ({ ...d.data(), id: d.id }) as Spot);
   }
 }

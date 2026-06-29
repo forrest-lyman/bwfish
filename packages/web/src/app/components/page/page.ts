@@ -1,10 +1,11 @@
-import { Component, DestroyRef, effect, inject, input, signal, viewChild } from '@angular/core';
-import { toSignal } from '@angular/core/rxjs-interop';
+import { Component, computed, DestroyRef, effect, inject, input, signal, viewChild } from '@angular/core';
+import { toObservable, toSignal } from '@angular/core/rxjs-interop';
 import { FormControl, ReactiveFormsModule, Validators } from '@angular/forms';
 import { marked } from 'marked';
 import { Store } from '@ngrx/store';
-import { firstValueFrom } from 'rxjs';
-import { filter, switchMap, take } from 'rxjs/operators';
+import { firstValueFrom, of } from 'rxjs';
+import { filter, map, switchMap, take } from 'rxjs/operators';
+import { RouterLink } from '@angular/router';
 import type { Collection } from '@bwfish/core';
 import { Breadcrumbs } from '../breadcrumbs/breadcrumbs';
 import { Feed } from '../feed/feed';
@@ -19,7 +20,6 @@ import {
   RegionActions,
   SpotActions,
   TechniqueActions,
-  listLoadingKey,
   entitiesLoaded,
   entitiesNotLoading,
   selectError,
@@ -33,10 +33,14 @@ import {
   selectRegionsState,
   selectSourceBody,
   selectSpotsByPort,
-  selectSpotsState,
   selectTechniquesByFish,
-  selectTechniquesState,
 } from '../../store';
+
+export interface PageChildLink {
+  id: string;
+  title: string;
+  link: string[];
+}
 
 export interface ContentPageItem {
   id: string;
@@ -52,7 +56,7 @@ export interface ContentPageItem {
 @Component({
   selector: 'app-page',
   standalone: true,
-  imports: [Breadcrumbs, Feed, MarkdownEditor, ReactiveFormsModule, RelatedContent],
+  imports: [Breadcrumbs, Feed, MarkdownEditor, ReactiveFormsModule, RelatedContent, RouterLink],
   templateUrl: './page.html',
   styleUrl: './page.scss',
 })
@@ -75,6 +79,85 @@ export class Page {
   previewHtml = signal('');
   submitting = signal(false);
   editError = signal<string | null>(null);
+  primaryChildren = toSignal(
+    toObservable(this.item).pipe(
+      switchMap(item => {
+        if (!item) return of([] as PageChildLink[]);
+
+        if (item.collection === 'regions') {
+          return this.store.select(selectPortsByRegion(item.id)).pipe(
+            map(ports =>
+              ports.map(port => ({
+                id: port.id,
+                title: port.title,
+                link: ['/', item.id, port.id],
+              })),
+            ),
+          );
+        }
+
+        if (item.collection === 'ports') {
+          return this.store.select(selectSpotsByPort(item.id)).pipe(
+            map(spots =>
+              spots.map(spot => ({
+                id: spot.id,
+                title: spot.title,
+                link: ['/', item.regionId ?? '', item.id, spot.id],
+              })),
+            ),
+          );
+        }
+
+        if (item.collection === 'fish') {
+          return this.store.select(selectTechniquesByFish(item.id)).pipe(
+            map(techniques =>
+              techniques.map(technique => ({
+                id: technique.id,
+                title: technique.title,
+                link: ['/techniques', technique.id],
+              })),
+            ),
+          );
+        }
+
+        return of([] as PageChildLink[]);
+      }),
+    ),
+    { initialValue: [] as PageChildLink[] },
+  );
+  fishLabels = toSignal(
+    toObservable(this.item).pipe(
+      switchMap(item => {
+        if (!item?.fishIds?.length) return of([] as PageChildLink[]);
+
+        return this.store.select(selectFishByIds(item.fishIds)).pipe(
+          map(fish =>
+            fish.map(entry => ({
+              id: entry.id,
+              title: entry.title,
+              link: ['/fish', entry.id],
+            })),
+          ),
+        );
+      }),
+    ),
+    { initialValue: [] as PageChildLink[] },
+  );
+  primaryChildrenLabel = computed(() => {
+    const item = this.item();
+    if (!item) return '';
+
+    switch (item.collection) {
+      case 'regions':
+        return 'Ports';
+      case 'ports':
+        return 'Spots';
+      case 'fish':
+        return 'Techniques';
+      default:
+        return '';
+    }
+  });
   related = signal<RelatedSection[]>([]);
   editForm = new FormControl('', { nonNullable: true });
   submitExplanationForm = new FormControl('', {
@@ -86,7 +169,10 @@ export class Page {
   constructor() {
     effect(() => {
       const item = this.item();
-      void this.load(item);
+      if (item) {
+        this.dispatchRelatedLoads(item);
+      }
+      void this.loadRelated(item);
     });
 
     effect(() => {
@@ -169,7 +255,7 @@ export class Page {
     this.body.set(source ? await marked(this.stripLeadingH1(source)) : '');
   }
 
-  private async load(item: ContentPageItem | null) {
+  private async loadRelated(item: ContentPageItem | null) {
     const serial = ++this.loadSerial;
 
     if (!item) {
@@ -185,55 +271,19 @@ export class Page {
     this.editView.set('editor');
     this.editError.set(null);
 
-    const groups = await this.loadRelated(item);
+    const related = await this.loadSecondaryRelated(item);
     if (serial !== this.loadSerial) return;
 
-    this.related.set(groups);
+    this.related.set(related);
   }
 
-  private stripLeadingH1(markdown: string): string {
-    return markdown.replace(/^\s*#\s+.+\n?/, '');
-  }
-
-  private async loadRelated(item: ContentPageItem): Promise<RelatedSection[]> {
-    const groups: RelatedSection[] = [];
-
+  private dispatchRelatedLoads(item: ContentPageItem) {
     if (item.collection === 'regions') {
       this.store.dispatch(PortActions.loadByRegion({ regionId: item.id }));
       if (item.fishIds?.length) {
         this.store.dispatch(FishActions.loadMany({ ids: item.fishIds }));
       }
-
-      await this.awaitListLoaded('ports', 'region', item.id);
-      const ports = await firstValueFrom(this.store.select(selectPortsByRegion(item.id)).pipe(take(1)));
-
-      if (ports.length) {
-        groups.push({
-          label: 'Ports',
-          items: ports.map(port => ({
-            id: port.id,
-            title: port.title,
-            summary: port.summary,
-            link: ['/', item.id, port.id],
-          })),
-        });
-      }
-
-      if (item.fishIds?.length) {
-        await this.awaitEntityLoads('fish', item.fishIds);
-        const fish = await firstValueFrom(this.store.select(selectFishByIds(item.fishIds)).pipe(take(1)));
-        if (fish.length) {
-          groups.push({
-            label: 'Fish',
-            items: fish.map(entry => ({
-              id: entry.id,
-              title: entry.title,
-              summary: entry.summary,
-              link: ['/fish', entry.id],
-            })),
-          });
-        }
-      }
+      return;
     }
 
     if (item.collection === 'ports') {
@@ -241,37 +291,7 @@ export class Page {
       if (item.fishIds?.length) {
         this.store.dispatch(FishActions.loadMany({ ids: item.fishIds }));
       }
-
-      await this.awaitListLoaded('spots', 'port', item.id);
-      const spots = await firstValueFrom(this.store.select(selectSpotsByPort(item.id)).pipe(take(1)));
-
-      if (spots.length) {
-        groups.push({
-          label: 'Spots',
-          items: spots.map(spot => ({
-            id: spot.id,
-            title: spot.title,
-            summary: spot.summary,
-            link: ['/', item.regionId ?? '', item.id, spot.id],
-          })),
-        });
-      }
-
-      if (item.fishIds?.length) {
-        await this.awaitEntityLoads('fish', item.fishIds);
-        const fish = await firstValueFrom(this.store.select(selectFishByIds(item.fishIds)).pipe(take(1)));
-        if (fish.length) {
-          groups.push({
-            label: 'Fish',
-            items: fish.map(entry => ({
-              id: entry.id,
-              title: entry.title,
-              summary: entry.summary,
-              link: ['/fish', entry.id],
-            })),
-          });
-        }
-      }
+      return;
     }
 
     if (item.collection === 'fish') {
@@ -279,41 +299,7 @@ export class Page {
         this.store.dispatch(RegionActions.load({ id: regionId, setCurrent: false }));
       }
       this.store.dispatch(TechniqueActions.loadByFish({ fishId: item.id }));
-
-      if (item.regionIds?.length) {
-        await this.awaitEntityLoads('regions', item.regionIds);
-        const regions = await Promise.all(
-          item.regionIds.map(regionId =>
-            firstValueFrom(this.store.select(selectRegionById(regionId)).pipe(take(1))),
-          ),
-        );
-        const validRegions = regions.filter((entry): entry is NonNullable<typeof entry> => entry !== null);
-        if (validRegions.length) {
-          groups.push({
-            label: 'Regions',
-            items: validRegions.map(entry => ({
-              id: entry.id,
-              title: entry.title,
-              summary: entry.summary,
-              link: ['/', entry.id],
-            })),
-          });
-        }
-      }
-
-      await this.awaitListLoaded('techniques', 'fish', item.id);
-      const techniques = await firstValueFrom(this.store.select(selectTechniquesByFish(item.id)).pipe(take(1)));
-      if (techniques.length) {
-        groups.push({
-          label: 'Techniques',
-          items: techniques.map(entry => ({
-            id: entry.id,
-            title: entry.title,
-            summary: entry.summary,
-            link: ['/techniques', entry.id],
-          })),
-        });
-      }
+      return;
     }
 
     if (item.collection === 'spots') {
@@ -326,49 +312,7 @@ export class Page {
       if (item.fishIds?.length) {
         this.store.dispatch(FishActions.loadMany({ ids: item.fishIds }));
       }
-
-      if (item.regionId) {
-        await this.awaitEntityLoads('regions', [item.regionId]);
-        const region = await firstValueFrom(this.store.select(selectRegionById(item.regionId)).pipe(take(1)));
-        if (region) {
-          groups.push({
-            label: 'Region',
-            items: [{ id: region.id, title: region.title, summary: region.summary, link: ['/', region.id] }],
-          });
-        }
-      }
-
-      if (item.portIds?.length) {
-        await this.awaitEntityLoads('ports', item.portIds);
-        const ports = await firstValueFrom(this.store.select(selectPortsByIds(item.portIds)).pipe(take(1)));
-        if (ports.length) {
-          groups.push({
-            label: 'Ports',
-            items: ports.map(entry => ({
-              id: entry.id,
-              title: entry.title,
-              summary: entry.summary,
-              link: ['/', entry.regionId, entry.id],
-            })),
-          });
-        }
-      }
-
-      if (item.fishIds?.length) {
-        await this.awaitEntityLoads('fish', item.fishIds);
-        const fish = await firstValueFrom(this.store.select(selectFishByIds(item.fishIds)).pipe(take(1)));
-        if (fish.length) {
-          groups.push({
-            label: 'Fish',
-            items: fish.map(entry => ({
-              id: entry.id,
-              title: entry.title,
-              summary: entry.summary,
-              link: ['/fish', entry.id],
-            })),
-          });
-        }
-      }
+      return;
     }
 
     if (item.collection === 'techniques') {
@@ -378,7 +322,17 @@ export class Page {
       if (item.fishIds?.length) {
         this.store.dispatch(FishActions.loadMany({ ids: item.fishIds }));
       }
+    }
+  }
 
+  private stripLeadingH1(markdown: string): string {
+    return markdown.replace(/^\s*#\s+.+\n?/, '');
+  }
+
+  private async loadSecondaryRelated(item: ContentPageItem): Promise<RelatedSection[]> {
+    const related: RelatedSection[] = [];
+
+    if (item.collection === 'fish') {
       if (item.regionIds?.length) {
         await this.awaitEntityLoads('regions', item.regionIds);
         const regions = await Promise.all(
@@ -388,7 +342,7 @@ export class Page {
         );
         const validRegions = regions.filter((entry): entry is NonNullable<typeof entry> => entry !== null);
         if (validRegions.length) {
-          groups.push({
+          related.push({
             label: 'Regions',
             items: validRegions.map(entry => ({
               id: entry.id,
@@ -399,60 +353,61 @@ export class Page {
           });
         }
       }
+    }
 
-      if (item.fishIds?.length) {
-        await this.awaitEntityLoads('fish', item.fishIds);
-        const fish = await firstValueFrom(this.store.select(selectFishByIds(item.fishIds)).pipe(take(1)));
-        if (fish.length) {
-          groups.push({
-            label: 'Fish',
-            items: fish.map(entry => ({
+    if (item.collection === 'spots') {
+      if (item.regionId) {
+        await this.awaitEntityLoads('regions', [item.regionId]);
+        const region = await firstValueFrom(this.store.select(selectRegionById(item.regionId)).pipe(take(1)));
+        if (region) {
+          related.push({
+            label: 'Region',
+            items: [{ id: region.id, title: region.title, summary: region.summary, link: ['/', region.id] }],
+          });
+        }
+      }
+
+      if (item.portIds?.length) {
+        await this.awaitEntityLoads('ports', item.portIds);
+        const ports = await firstValueFrom(this.store.select(selectPortsByIds(item.portIds)).pipe(take(1)));
+        if (ports.length) {
+          related.push({
+            label: 'Ports',
+            items: ports.map(entry => ({
               id: entry.id,
               title: entry.title,
               summary: entry.summary,
-              link: ['/fish', entry.id],
+              link: ['/', entry.regionId, entry.id],
             })),
           });
         }
       }
     }
 
-    return groups;
-  }
-
-  private awaitListLoaded(feature: 'ports' | 'spots' | 'techniques', scope: string, id: string) {
-    const key = listLoadingKey(scope, id);
-
-    if (feature === 'ports') {
-      const state$ = this.store.select(selectPortsState);
-      return firstValueFrom(
-        state$.pipe(
-          filter(state => state.loading[key] === true),
-          take(1),
-          switchMap(() => state$.pipe(filter(state => state.loading[key] === false), take(1))),
-        ),
-      );
+    if (item.collection === 'techniques') {
+      if (item.regionIds?.length) {
+        await this.awaitEntityLoads('regions', item.regionIds);
+        const regions = await Promise.all(
+          item.regionIds.map(regionId =>
+            firstValueFrom(this.store.select(selectRegionById(regionId)).pipe(take(1))),
+          ),
+        );
+        const validRegions = regions.filter((entry): entry is NonNullable<typeof entry> => entry !== null);
+        if (validRegions.length) {
+          related.push({
+            label: 'Regions',
+            items: validRegions.map(entry => ({
+              id: entry.id,
+              title: entry.title,
+              summary: entry.summary,
+              link: ['/', entry.id],
+            })),
+          });
+        }
+      }
     }
 
-    if (feature === 'spots') {
-      const state$ = this.store.select(selectSpotsState);
-      return firstValueFrom(
-        state$.pipe(
-          filter(state => state.loading[key] === true),
-          take(1),
-          switchMap(() => state$.pipe(filter(state => state.loading[key] === false), take(1))),
-        ),
-      );
-    }
-
-    const state$ = this.store.select(selectTechniquesState);
-    return firstValueFrom(
-      state$.pipe(
-        filter(state => state.loading[key] === true),
-        take(1),
-        switchMap(() => state$.pipe(filter(state => state.loading[key] === false), take(1))),
-      ),
-    );
+    return related;
   }
 
   private awaitEntityLoads(feature: 'regions' | 'ports' | 'fish', ids: string[]) {
