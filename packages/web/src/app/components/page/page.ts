@@ -1,10 +1,10 @@
-import { Component, effect, inject, input, signal, viewChild } from '@angular/core';
+import { Component, DestroyRef, effect, inject, input, signal, viewChild } from '@angular/core';
 import { toSignal } from '@angular/core/rxjs-interop';
 import { FormControl, ReactiveFormsModule, Validators } from '@angular/forms';
 import { marked } from 'marked';
 import { Store } from '@ngrx/store';
 import { firstValueFrom } from 'rxjs';
-import { filter, take } from 'rxjs/operators';
+import { filter, switchMap, take } from 'rxjs/operators';
 import type { Collection } from '@bwfish/core';
 import { Breadcrumbs } from '../breadcrumbs/breadcrumbs';
 import { Feed } from '../feed/feed';
@@ -12,6 +12,7 @@ import { MarkdownEditor } from '../markdown-editor/markdown-editor';
 import { RelatedContent, type RelatedSection } from '../related-content/related-content';
 import { AuthService } from '../../services/auth.service';
 import { FeedService } from '../../services/feed.service';
+import { LoadingService } from '../../services/loading.service';
 import {
   FishActions,
   PortActions,
@@ -19,6 +20,8 @@ import {
   SpotActions,
   TechniqueActions,
   listLoadingKey,
+  entitiesLoaded,
+  entitiesNotLoading,
   selectError,
   selectFishByIds,
   selectFishState,
@@ -59,6 +62,8 @@ export class Page {
   auth = inject(AuthService);
   private store = inject(Store);
   private feedService = inject(FeedService);
+  private loadingService = inject(LoadingService);
+  private destroyRef = inject(DestroyRef);
   private feed = viewChild<Feed>('feed');
 
   body = signal('');
@@ -76,6 +81,7 @@ export class Page {
     nonNullable: true,
     validators: [Validators.required, Validators.minLength(3)],
   });
+  private loadSerial = 0;
 
   constructor() {
     effect(() => {
@@ -87,6 +93,21 @@ export class Page {
       const source = this.sourceBody();
       void this.renderBody(source);
     });
+
+    effect(() => {
+      const item = this.item();
+      const pageLoading = this.loading();
+      const editing = this.editing();
+      const isLoading = !editing && (!item || pageLoading);
+
+      if (isLoading) {
+        this.loadingService.show('Loading page…');
+      } else {
+        this.loadingService.hide();
+      }
+    });
+
+    this.destroyRef.onDestroy(() => this.loadingService.hide());
   }
 
   startEdit() {
@@ -149,6 +170,8 @@ export class Page {
   }
 
   private async load(item: ContentPageItem | null) {
+    const serial = ++this.loadSerial;
+
     if (!item) {
       this.related.set([]);
       this.editing.set(false);
@@ -162,14 +185,17 @@ export class Page {
     this.editView.set('editor');
     this.editError.set(null);
 
-    await this.loadRelated(item);
+    const groups = await this.loadRelated(item);
+    if (serial !== this.loadSerial) return;
+
+    this.related.set(groups);
   }
 
   private stripLeadingH1(markdown: string): string {
     return markdown.replace(/^\s*#\s+.+\n?/, '');
   }
 
-  private async loadRelated(item: ContentPageItem) {
+  private async loadRelated(item: ContentPageItem): Promise<RelatedSection[]> {
     const groups: RelatedSection[] = [];
 
     if (item.collection === 'regions') {
@@ -391,34 +417,40 @@ export class Page {
       }
     }
 
-    this.related.set(groups);
+    return groups;
   }
 
   private awaitListLoaded(feature: 'ports' | 'spots' | 'techniques', scope: string, id: string) {
     const key = listLoadingKey(scope, id);
 
     if (feature === 'ports') {
+      const state$ = this.store.select(selectPortsState);
       return firstValueFrom(
-        this.store.select(selectPortsState).pipe(
-          filter(state => state.loading[key] === false),
+        state$.pipe(
+          filter(state => state.loading[key] === true),
           take(1),
+          switchMap(() => state$.pipe(filter(state => state.loading[key] === false), take(1))),
         ),
       );
     }
 
     if (feature === 'spots') {
+      const state$ = this.store.select(selectSpotsState);
       return firstValueFrom(
-        this.store.select(selectSpotsState).pipe(
-          filter(state => state.loading[key] === false),
+        state$.pipe(
+          filter(state => state.loading[key] === true),
           take(1),
+          switchMap(() => state$.pipe(filter(state => state.loading[key] === false), take(1))),
         ),
       );
     }
 
+    const state$ = this.store.select(selectTechniquesState);
     return firstValueFrom(
-      this.store.select(selectTechniquesState).pipe(
-        filter(state => state.loading[key] === false),
+      state$.pipe(
+        filter(state => state.loading[key] === true),
         take(1),
+        switchMap(() => state$.pipe(filter(state => state.loading[key] === false), take(1))),
       ),
     );
   }
@@ -429,7 +461,10 @@ export class Page {
     if (feature === 'regions') {
       return firstValueFrom(
         this.store.select(selectRegionsState).pipe(
-          filter(state => ids.every(id => !state.loading[id])),
+          filter(
+            state =>
+              entitiesLoaded(ids, state.entities, state.loading) && entitiesNotLoading(ids, state.loading),
+          ),
           take(1),
         ),
       );
@@ -438,7 +473,10 @@ export class Page {
     if (feature === 'ports') {
       return firstValueFrom(
         this.store.select(selectPortsState).pipe(
-          filter(state => ids.every(id => !state.loading[id])),
+          filter(
+            state =>
+              entitiesLoaded(ids, state.entities, state.loading) && entitiesNotLoading(ids, state.loading),
+          ),
           take(1),
         ),
       );
@@ -446,7 +484,9 @@ export class Page {
 
     return firstValueFrom(
       this.store.select(selectFishState).pipe(
-        filter(state => ids.every(id => !state.loading[id])),
+        filter(
+          state => entitiesLoaded(ids, state.entities, state.loading) && entitiesNotLoading(ids, state.loading),
+        ),
         take(1),
       ),
     );

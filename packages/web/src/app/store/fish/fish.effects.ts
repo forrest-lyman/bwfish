@@ -47,6 +47,7 @@ export class FishEffects {
           catchError((err: unknown) =>
             of(
               FishActions.loadManyFailure({
+                ids,
                 error: err instanceof Error ? err.message : 'Failed to load fish',
               }),
             ),

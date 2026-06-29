@@ -43,8 +43,12 @@ export const fishFeature = createFeature({
       },
       error: null,
     })),
-    on(FishActions.loadManyFailure, (state, { error }) => ({
+    on(FishActions.loadManyFailure, (state, { ids, error }) => ({
       ...state,
+      loading: {
+        ...state.loading,
+        ...Object.fromEntries(ids.map(id => [id, false])),
+      },
       error,
     })),
     on(FishActions.clearCurrent, state => ({

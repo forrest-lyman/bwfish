@@ -74,8 +74,6 @@
 					}
 					@if (body()) {
 						<div class="body" [innerHTML]="body()"></div>
-					} @else if (loading()) {
-						<div class="loading">Loading...</div>
 					}
 				</article>
 			}
@@ -91,6 +89,4 @@
 			/>
 		</aside>
 	</div>
-} @else {
-	<div class="loading">Loading...</div>
 }

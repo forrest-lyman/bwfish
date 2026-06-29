@@ -59,7 +59,7 @@ export * from './user';
 export * from './page';
 export * from './feed';
 export * from './router/router.selectors';
-export { listLoadingKey } from './shared/entity.util';
+export { listLoadingKey, entitiesLoaded, entitiesNotLoading } from './shared/entity.util';
 
 export { RegionActions } from './regions/regions.actions';
 export {

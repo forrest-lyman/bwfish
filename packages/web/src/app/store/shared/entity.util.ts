@@ -22,3 +22,11 @@ export function listLoadingKey(scope: string, id: string) {
 export function uncachedIds(ids: string[], entities: Record<string, unknown>, loading: Record<string, boolean>) {
   return ids.filter(id => !entities[id] && !loading[id]);
 }
+
+export function entitiesLoaded(ids: string[], entities: Record<string, unknown>, loading: Record<string, boolean>) {
+  return ids.every(id => entities[id] != null || loading[id] === false);
+}
+
+export function entitiesNotLoading(ids: string[], loading: Record<string, boolean>) {
+  return ids.every(id => loading[id] !== true);
+}
