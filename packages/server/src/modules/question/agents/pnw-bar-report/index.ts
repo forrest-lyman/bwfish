@@ -8,7 +8,6 @@ import {
 	ANSWER_INSTRUCTIONS,
 	ANSWER_MAX_LENGTH,
 	ANSWER_MODEL,
-	instructions,
 	PARSE_INSTRUCTIONS,
 	PARSE_MODEL,
 	use,
@@ -97,7 +96,7 @@ async function parseReports(xml: string): Promise<{ reports: BarReport[]; usage:
 	try {
 		const response = await openai.responses.create({
 			model: PARSE_MODEL,
-			instructions: instructions(PARSE_INSTRUCTIONS),
+			instructions: PARSE_INSTRUCTIONS,
 			input: xml,
 			text: {
 				format: {
@@ -129,7 +128,7 @@ async function answerQuestion(
 	try {
 		const response = await openai.responses.create({
 			model: ANSWER_MODEL,
-			instructions: instructions(ANSWER_INSTRUCTIONS),
+			instructions: ANSWER_INSTRUCTIONS,
 			input: JSON.stringify({
 				question: payload.message,
 				entry: payload.contributor?.entry ?? payload.context,
