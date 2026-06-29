@@ -12,7 +12,8 @@
   },
   "scripts": {
     "test:agent": "tsx scripts/test-agent.ts",
-    "process:feed": "tsx scripts/process-feed.ts",
+    "process:feed:v1": "tsx scripts/process-feed.ts",
+    "process:feed": "tsx src/v2/scripts/process-feed.ts",
     "process:question": "tsx scripts/process-question.ts"
   },
   "dependencies": {
