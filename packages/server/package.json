@@ -1,0 +1,29 @@
+{
+  "name": "@bwfish/server",
+  "version": "0.0.1",
+  "private": true,
+  "type": "module",
+  "bin": {
+    "bwfish-server": "./src/cli.ts"
+  },
+  "main": "./src/index.ts",
+  "exports": {
+    ".": "./src/index.ts"
+  },
+  "scripts": {
+    "dev": "tsx src/cli.ts"
+  },
+  "dependencies": {
+    "@bwfish/core": "workspace:*",
+    "@inquirer/prompts": "^7.8.2",
+    "chalk": "^5.4.1",
+    "commander": "^14.0.0",
+    "dotenv": "^17.4.2",
+    "firebase-admin": "^14.1.0",
+    "openai": "^6.25.0",
+    "ora": "^8.2.0"
+  },
+  "devDependencies": {
+    "tsx": "^4.20.3"
+  }
+}
