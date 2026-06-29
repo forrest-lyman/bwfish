@@ -1,4 +1,27 @@
 <div class="feed-card" [class.sidebar]="layout() === 'sidebar'">
+  <div class="feed-toolbar">
+    <label class="toolbar-search">
+      <svg lucideSearch class="toolbar-icon search-icon" aria-hidden="true"></svg>
+      <input
+        type="search"
+        placeholder="Search"
+        [value]="searchQuery()"
+        (input)="searchQuery.set($any($event.target).value)"
+      />
+    </label>
+    <div class="toolbar-actions">
+      <button
+        type="button"
+        class="toolbar-btn"
+        aria-label="Add tip"
+        title="Add tip"
+        (click)="openTipDialog()"
+      >
+        <svg lucideMessageSquareQuote class="toolbar-icon" aria-hidden="true"></svg>
+      </button>
+    </div>
+  </div>
+
   <form class="feed-form" [formGroup]="feedForm" (ngSubmit)="submit()">
     <div class="feed-composer">
       <textarea
@@ -8,7 +31,7 @@
         [placeholder]="prompt()"
         (input)="resizeTextarea(textInput)"
       ></textarea>
-      <button type="submit" class="submit-btn" [disabled]="feedForm.invalid || submitting()" aria-label="Send question">
+      <button type="submit" class="submit-btn" [disabled]="!canSubmitQuestion()" aria-label="Send question">
         @if (submitting()) {
           <span class="submit-label">...</span>
         } @else {
@@ -22,37 +45,41 @@
     <p class="feed-error">{{ error() }}</p>
   }
 
-  @if (feedThreads().length) {
+  @if (filteredFeedTimeline().length) {
     <div class="feed-entries">
-      @for (thread of feedThreads(); track thread.item.entry.id) {
-        <div class="feed-thread">
-          <app-feed-entry
-            [item]="thread.item"
-            [currentUserId]="auth.user()?.uid ?? null"
-            [voting]="votingEntryId() === thread.item.entry.id"
-            [managing]="managingEntryId() === thread.item.entry.id"
-            (vote)="vote(thread.item, $event)"
-            (edit)="editEntry(thread.item, $event)"
-            (delete)="deleteEntry(thread.item)"
-            (reviewChanges)="openReview(thread.item)"
-          />
-          @if (thread.replies.length) {
-            <div class="feed-replies">
-              @for (reply of thread.replies; track reply.entry.id) {
-                <app-feed-entry
-                  [item]="reply"
-                  [reply]="true"
-                  [currentUserId]="auth.user()?.uid ?? null"
-                  [voting]="votingEntryId() === reply.entry.id"
-                  [managing]="managingEntryId() === reply.entry.id"
-                  (vote)="vote(reply, $event)"
-                  (edit)="editEntry(reply, $event)"
-                  (delete)="deleteEntry(reply)"
-                />
-              }
-            </div>
-          }
-        </div>
+      @for (item of filteredFeedTimeline(); track feedTimelineTrack(item)) {
+        @if (item.kind === 'tipActivity') {
+          <app-feed-tip-activity [activity]="item.activity" />
+        } @else {
+          <div class="feed-thread">
+            <app-feed-entry
+              [item]="item.thread.item"
+              [currentUserId]="auth.user()?.uid ?? null"
+              [voting]="votingEntryId() === item.thread.item.entry.id"
+              [managing]="managingEntryId() === item.thread.item.entry.id"
+              (vote)="vote(item.thread.item, $event)"
+              (edit)="editEntry(item.thread.item, $event)"
+              (delete)="deleteEntry(item.thread.item)"
+              (reviewChanges)="openReview(item.thread.item)"
+            />
+            @if (item.thread.replies.length) {
+              <div class="feed-replies">
+                @for (reply of item.thread.replies; track reply.entry.id) {
+                  <app-feed-entry
+                    [item]="reply"
+                    [reply]="true"
+                    [currentUserId]="auth.user()?.uid ?? null"
+                    [voting]="votingEntryId() === reply.entry.id"
+                    [managing]="managingEntryId() === reply.entry.id"
+                    (vote)="vote(reply, $event)"
+                    (edit)="editEntry(reply, $event)"
+                    (delete)="deleteEntry(reply)"
+                  />
+                }
+              </div>
+            }
+          </div>
+        }
       }
     </div>
   }
@@ -60,4 +87,50 @@
 
 <app-dialog [open]="reviewOpen()" title="Review changes" (closed)="closeReview()">
   <app-markdown-diff [original]="reviewOriginal()" [modified]="reviewModified()" />
+</app-dialog>
+
+<app-dialog [open]="tipOpen()" title="Add tip" [width]="420" (closed)="closeTipDialog()">
+  <form class="tip-form" [formGroup]="tipForm" (ngSubmit)="submitTip()">
+    @if (tipImagePreview()) {
+      <figure class="tip-image-preview">
+        <img [src]="tipImagePreview()!" alt="Tip image preview" />
+        <button type="button" class="tip-image-remove" (click)="removeTipImage()">Remove</button>
+      </figure>
+    }
+
+    <div class="tip-form-body">
+      <textarea
+        #tipTextInput
+        formControlName="text"
+        rows="2"
+        placeholder="Share a tip (optional if you add an image)"
+        (keydown)="onTipKeydown($event)"
+      ></textarea>
+
+      <div class="tip-form-footer">
+        <div class="tip-form-row">
+          <label class="tip-field">
+            <span class="tip-label">Date</span>
+            <input type="date" formControlName="date" />
+          </label>
+          <input
+            #tipFileInput
+            type="file"
+            accept="image/*"
+            hidden
+            (change)="onTipImageSelected($event)"
+          />
+          <button type="button" class="tip-action-btn" (click)="tipFileInput.click()">
+            {{ tipImagePreview() ? 'Replace image' : 'Add image' }}
+          </button>
+        </div>
+        <div class="tip-form-actions">
+          <button type="submit" class="tip-submit-btn" [disabled]="!canSubmitTip()">
+            {{ tipSubmitting() ? 'Submitting…' : 'Submit tip' }}
+          </button>
+          <button type="button" class="tip-cancel-btn" (click)="closeTipDialog()">Cancel</button>
+        </div>
+      </div>
+    </div>
+  </form>
 </app-dialog>

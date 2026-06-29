@@ -18,6 +18,7 @@ import {
 } from '@angular/fire/firestore';
 import { Observable } from 'rxjs';
 import { Auth } from '@angular/fire/auth';
+import { Storage, ref, uploadBytes, getDownloadURL } from '@angular/fire/storage';
 import type { FeedEntry, FeedEntryType, FeedVoteValue, Collection } from '@bwfish/core';
 
 export interface FeedDateRange {
@@ -34,6 +35,19 @@ export interface FeedVoteResult {
 export class FeedService {
   private fs = inject(Firestore);
   private auth = inject(Auth);
+  private storage = inject(Storage);
+
+  async uploadTipImage(file: File): Promise<string> {
+    const user = this.auth.currentUser;
+    if (!user) throw new Error('Must be signed in to upload an image');
+
+    const ext = file.name.split('.').pop()?.toLowerCase() || 'jpg';
+    const fileName = `${Date.now()}-${Math.random().toString(36).slice(2, 8)}.${ext}`;
+    const storageRef = ref(this.storage, `tips/${user.uid}/${fileName}`);
+
+    await uploadBytes(storageRef, file, { contentType: file.type });
+    return getDownloadURL(storageRef);
+  }
 
   async push(
     type: FeedEntryType,

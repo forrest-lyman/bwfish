@@ -10,6 +10,7 @@ import { Component, HostListener, input, output } from '@angular/core';
 export class Dialog {
   open = input(false);
   title = input('');
+  width = input<number | null>(null);
   closed = output<void>();
 
   @HostListener('document:keydown.escape')

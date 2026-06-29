@@ -1,6 +1,12 @@
 @if (open()) {
   <div class="dialog-overlay" (click)="onBackdropClick($event)">
-    <div class="dialog-panel" role="dialog" aria-modal="true" [attr.aria-label]="title() || 'Dialog'">
+    <div
+      class="dialog-panel"
+      role="dialog"
+      aria-modal="true"
+      [attr.aria-label]="title() || 'Dialog'"
+      [style.max-width.px]="width()"
+    >
       @if (title()) {
         <header class="dialog-header">
           <h2 class="dialog-title">{{ title() }}</h2>

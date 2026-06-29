@@ -5,7 +5,7 @@ export type { Region } from "./types/region.js";
 export type { Port } from "./types/port.js";
 export type { Spot, SpotType } from "./types/spot.js";
 export type { Page, Collection } from "./types/page.js";
-export type { FeedEntry, FeedEntryStatus, FeedEntryType, FeedVote, FeedVoteValue } from "./types/feed.js";
+export type { FeedEntry, FeedEntryStatus, FeedEntryType, FeedTipPayload, FeedVote, FeedVoteValue } from "./types/feed.js";
 export type { UserProfile, HomePort } from "./types/user.js";
 export type { AgentInfo } from "./agents.js";
 export { agents, getAgent } from "./agents.js";

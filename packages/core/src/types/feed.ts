@@ -13,6 +13,11 @@ export interface FeedVote {
   createdAt: string;
 }
 
+export interface FeedTipPayload {
+  imageUrl?: string;
+  date?: string;
+}
+
 export interface FeedEntry {
   id?: string;
   type: FeedEntryType;

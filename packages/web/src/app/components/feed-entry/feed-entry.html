@@ -105,7 +105,9 @@
         }
       </div>
     } @else {
-      <p class="feed-text">{{ item().entry.text }}</p>
+      @if (item().entry.text) {
+        <p class="feed-text">{{ item().entry.text }}</p>
+      }
     }
   </div>
 </div>

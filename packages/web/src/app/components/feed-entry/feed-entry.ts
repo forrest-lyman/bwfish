@@ -17,6 +17,105 @@ export interface FeedThread {
   replies: FeedEntryView[];
 }
 
+export interface FeedTipActivity {
+  displayName: string;
+  createdBy: string;
+  count: number;
+  latestAt: string;
+}
+
+export type FeedTimelineItem =
+  | { kind: 'thread'; thread: FeedThread }
+  | { kind: 'tipActivity'; activity: FeedTipActivity };
+
+export function buildFeedTimeline(threads: FeedThread[], tips: FeedEntryView[]): FeedTimelineItem[] {
+  type RawItem =
+    | { kind: 'thread'; thread: FeedThread; at: string }
+    | { kind: 'tip'; view: FeedEntryView; at: string };
+
+  const raw: RawItem[] = [
+    ...threads.map(thread => ({
+      kind: 'thread' as const,
+      thread,
+      at: thread.item.entry.createdAt,
+    })),
+    ...tips.map(view => ({
+      kind: 'tip' as const,
+      view,
+      at: view.entry.createdAt,
+    })),
+  ];
+
+  raw.sort((a, b) => b.at.localeCompare(a.at));
+
+  const timeline: FeedTimelineItem[] = [];
+
+  for (let i = 0; i < raw.length; i++) {
+    const current = raw[i];
+    if (current.kind === 'thread') {
+      timeline.push({ kind: 'thread', thread: current.thread });
+      continue;
+    }
+
+    const createdBy = current.view.entry.createdBy;
+    const displayName = current.view.displayName;
+    const group = [current.view];
+    i++;
+
+    while (i < raw.length) {
+      const next = raw[i];
+      if (next.kind !== 'tip' || next.view.entry.createdBy !== createdBy) {
+        break;
+      }
+      group.push(next.view);
+      i++;
+    }
+    i--;
+
+    timeline.push({
+      kind: 'tipActivity',
+      activity: {
+        displayName,
+        createdBy,
+        count: group.length,
+        latestAt: group[0].entry.createdAt,
+      },
+    });
+  }
+
+  return timeline;
+}
+
+export function feedTimelineTrack(item: FeedTimelineItem): string {
+  if (item.kind === 'thread') {
+    return item.thread.item.entry.id ?? item.thread.item.entry.createdAt;
+  }
+
+  return `tip-activity:${item.activity.createdBy}:${item.activity.latestAt}:${item.activity.count}`;
+}
+
+export function feedTimelineMatchesSearch(item: FeedTimelineItem, query: string): boolean {
+  if (item.kind === 'tipActivity') {
+    const haystack = [item.activity.displayName, 'tip', 'submitted'].join(' ').toLowerCase();
+    return haystack.includes(query);
+  }
+
+  const thread = item.thread;
+  const haystack = [
+    thread.item.entry.text,
+    thread.item.displayName,
+    thread.item.entry.type,
+  ]
+    .join(' ')
+    .toLowerCase();
+
+  if (haystack.includes(query)) return true;
+
+  return thread.replies.some(reply =>
+    [reply.entry.text, reply.displayName, reply.entry.type].join(' ').toLowerCase().includes(query)
+  );
+}
+
 @Component({
   selector: 'app-feed-entry',
   standalone: true,
@@ -103,6 +202,20 @@ export class FeedEntry {
     this.edit.emit(this.editForm.value.trim());
     this.editing.set(false);
   }
+}
+
+export function extractTipPayload(payload: unknown): { imageUrl?: string; date?: string } | null {
+  if (!payload || typeof payload !== 'object') {
+    return null;
+  }
+
+  const imageUrl = readPayloadString(payload, 'imageUrl') ?? undefined;
+  const date = readPayloadString(payload, 'date') ?? undefined;
+  if (!imageUrl && !date) {
+    return null;
+  }
+
+  return { imageUrl, date };
 }
 
 export function extractCorrectionPayload(
