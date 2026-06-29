@@ -6,6 +6,7 @@ export interface AgentInfo {
 export const agents: AgentInfo[] = [
   { id: "pbr", title: "Pacific Northwest Bar Reporter - USCG" },
   { id: "nmw", title: "Marine Weather - NOAA" },
+  { id: "ntd", title: "NOAA Tides" },
   { id: "bwfish-publisher", title: "BWFish Publisher" },
 ];
 
