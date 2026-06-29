@@ -2,7 +2,7 @@ import { getOpenAIClient } from '../../../lib/clients/openai';
 import { toLogUsage, type LogUsage } from '../../../lib/services/log';
 import type { AgentRunPayload } from '../types';
 import { agents, getAgent, type Agent } from '../agents';
-import { instructions, ORCHESTRATOR_INSTRUCTIONS, ORCHESTRATOR_MODEL } from './prompts';
+import { ORCHESTRATOR_INSTRUCTIONS, ORCHESTRATOR_MODEL } from './prompts';
 
 const selectAgentsSchema = {
 	type: 'object',
@@ -25,6 +25,16 @@ function extractAgentUsage(result: unknown): LogUsage[] {
 	}
 
 	return [];
+}
+
+export interface AgentCompleteEvent {
+	agent: Agent;
+	result: unknown;
+	usage: LogUsage[];
+}
+
+export interface OrchestratorOptions {
+	onAgentComplete?: (event: AgentCompleteEvent) => Promise<void> | void;
 }
 
 export interface OrchestratorRunResult {
@@ -54,7 +64,7 @@ export async function selectAgents(
 	const openai = getOpenAIClient();
 	const response = await openai.responses.create({
 		model: ORCHESTRATOR_MODEL,
-		instructions: instructions(ORCHESTRATOR_INSTRUCTIONS),
+		instructions: ORCHESTRATOR_INSTRUCTIONS,
 		input: JSON.stringify({
 			question: payload.message,
 			context: payload.context,
@@ -83,17 +93,24 @@ export async function selectAgents(
 	};
 }
 
-export async function orchestrate(payload: AgentRunPayload): Promise<OrchestratorRunResult> {
+export async function orchestrate(
+	payload: AgentRunPayload,
+	options: OrchestratorOptions = {},
+): Promise<OrchestratorRunResult> {
 	const results: Record<string, unknown> = {};
 	const agentUsage: Record<string, LogUsage[]> = {};
 
 	const { agents: selected, usage: orchestrationUsage } = await selectAgents(payload);
 
-	for (const agent of selected) {
-		const result = await agent.run(payload);
-		results[agent.id] = result;
-		agentUsage[agent.id] = extractAgentUsage(result);
-	}
+	await Promise.all(
+		selected.map(async (agent) => {
+			const result = await agent.run(payload);
+			const usage = extractAgentUsage(result);
+			results[agent.id] = result;
+			agentUsage[agent.id] = usage;
+			await options.onAgentComplete?.({ agent, result, usage });
+		}),
+	);
 
 	return {
 		agentIds: selected.map((agent) => agent.id),

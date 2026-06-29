@@ -4,10 +4,15 @@
   "extends": "./tsconfig.json",
   "compilerOptions": {
     "outDir": "./out-tsc/app",
-    "types": []
+    "types": [],
+    "paths": {
+      "@bwfish/core": ["../core/src/index.ts"],
+      "@bwfish/core/*": ["../core/src/*"]
+    }
   },
   "include": [
-    "src/**/*.ts"
+    "src/**/*.ts",
+    "../core/src/**/*.ts"
   ],
   "exclude": [
     "src/**/*.spec.ts"

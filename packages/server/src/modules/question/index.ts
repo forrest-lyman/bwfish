@@ -29,13 +29,22 @@ export async function run(feedEntry: FeedEntry): Promise<void> {
 	const { context, contributor } = await loadContributor(feedEntry);
 	await evaluateEntry(feedEntry, context, contributor);
 
-	const result = await orchestrate({
-		message: feedEntry.text,
-		context,
-		contributor,
-		feedId,
-		userId: feedEntry.createdBy,
-	});
+	const result = await orchestrate(
+		{
+			message: feedEntry.text,
+			context,
+			contributor,
+			feedId,
+			userId: feedEntry.createdBy,
+		},
+		{
+			async onAgentComplete({ agent, result: agentResult, usage }) {
+				const answer = extractAnswer(agentResult);
+				await logStep(feedEntry, answer, usage, ['agent', agent.id]);
+				await saveAnswer(feedId, feedEntry.collection, feedEntry.refId, agent.id, answer);
+			},
+		},
+	);
 
 	await logStep(
 		feedEntry,
@@ -43,13 +52,6 @@ export async function run(feedEntry: FeedEntry): Promise<void> {
 		result.usage.orchestration,
 		['orchestration'],
 	);
-
-	for (const agentId of result.agentIds) {
-		const answer = extractAnswer(result.results[agentId]);
-
-		await logStep(feedEntry, answer, result.usage.agents[agentId] ?? [], ['agent', agentId]);
-		await saveAnswer(feedId, feedEntry.collection, feedEntry.refId, agentId, answer);
-	}
 
 	await markAnswered(feedId);
 }

@@ -5,7 +5,7 @@ import type { ContributorContext } from '../contributor';
 import type { RefContext } from '../../lib/types';
 import { updateFeedScore } from '../feed';
 import { logStep } from '../log';
-import { EVALUATE_INSTRUCTIONS, EVALUATOR_MODEL, instructions } from './prompts';
+import { EVALUATE_INSTRUCTIONS, EVALUATOR_MODEL } from './prompts';
 
 export const id = 'bwfish-evaluator';
 
@@ -38,7 +38,7 @@ export async function evaluate(payload: EvaluatePayload): Promise<EvaluatorRunRe
 
 	const response = await openai.responses.create({
 		model: EVALUATOR_MODEL,
-		instructions: instructions(EVALUATE_INSTRUCTIONS),
+		instructions: EVALUATE_INSTRUCTIONS,
 		input: JSON.stringify({
 			type: 'observation',
 			text: payload.message,

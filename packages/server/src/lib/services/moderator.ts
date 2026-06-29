@@ -1,4 +1,5 @@
 import type { RefContext } from '../types';
+import { blocks } from '../prompts';
 import { toLogUsage, type LogUsage } from './log';
 import { getOpenAIClient } from '../clients/openai';
 import { addFlag } from './flags';
@@ -47,20 +48,19 @@ The input includes the post text and optional page context describing where it w
 Use page context to judge relevance for info-level flags.
 `.trim();
 
-const MODERATE_INSTRUCTIONS = `
+const MODERATE_ROLE = `
 You moderate user posts on a fishing community site.
 Classify the post into exactly one level.
-
-${OK_CRITERIA}
-
-${INFO_CRITERIA}
-
-${WARNING_CRITERIA}
-
-${DANGER_CRITERIA}
-
-${MODERATE_OUTPUT}
 `.trim();
+
+const MODERATE_INSTRUCTIONS = blocks(
+	MODERATE_ROLE,
+	OK_CRITERIA,
+	INFO_CRITERIA,
+	WARNING_CRITERIA,
+	DANGER_CRITERIA,
+	MODERATE_OUTPUT,
+);
 
 const moderateSchema = {
 	type: 'object',

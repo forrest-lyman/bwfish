@@ -5,7 +5,6 @@ import { getOpenAIClient } from '../../../lib/clients/openai';
 import type { AgentRunPayload } from '../types';
 import { toLogUsage, type LogUsage } from '../../../lib/services/log';
 import {
-	instructions,
 	PUBLISHER_MODEL,
 	REPLY_INSTRUCTIONS,
 	REPLY_MAX_LENGTH,
@@ -94,7 +93,7 @@ async function reviewCorrection(
 	try {
 		const response = await openai.responses.create({
 			model: PUBLISHER_MODEL,
-			instructions: instructions(REVIEW_INSTRUCTIONS),
+			instructions: REVIEW_INSTRUCTIONS,
 			input: JSON.stringify({
 				originalBody: input.originalBody,
 				proposedBody: input.proposedBody,
@@ -169,7 +168,7 @@ async function publishPage(collection: string, refId: string, body: string): Pro
 async function craftReply(
 	input: CorrectionInput,
 	summary: string,
-	replyInstructions: readonly string[],
+	replyInstructions: string,
 ): Promise<{ reply: string; usage: LogUsage[] }> {
 	const spinner = ora('Writing reply').start();
 	const openai = getOpenAIClient();
@@ -177,7 +176,7 @@ async function craftReply(
 	try {
 		const response = await openai.responses.create({
 			model: REPLY_MODEL,
-			instructions: instructions(replyInstructions),
+			instructions: replyInstructions,
 			input: JSON.stringify({
 				explanation: input.explanation,
 				summary,

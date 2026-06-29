@@ -2,7 +2,7 @@ import type { FeedEntry } from '@bwfish/core';
 import { getOpenAIClient } from '../../../lib/clients/openai';
 import { toLogUsage, type LogUsage } from '../../../lib/services/log';
 import type { AgentRunPayload, ContributorContext, RefContext } from '../types';
-import { EVALUATE_INSTRUCTIONS, EVALUATOR_MODEL, instructions } from './prompts';
+import { EVALUATE_INSTRUCTIONS, EVALUATOR_MODEL } from './prompts';
 import { logStep } from '../log';
 import { updateFeedScore } from '../feed';
 
@@ -29,7 +29,7 @@ export async function evaluate(payload: AgentRunPayload): Promise<EvaluatorRunRe
 
 	const response = await openai.responses.create({
 		model: EVALUATOR_MODEL,
-		instructions: instructions(EVALUATE_INSTRUCTIONS),
+		instructions: EVALUATE_INSTRUCTIONS,
 		input: JSON.stringify({
 			type: 'question',
 			text: payload.message,
