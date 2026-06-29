@@ -23,7 +23,9 @@ importers:
         specifier: ^4.0.3
         version: 4.0.3
 
-  packages/contributors:
+  packages/core: {}
+
+  packages/server:
     dependencies:
       '@bwfish/core':
         specifier: workspace:*
@@ -34,6 +36,9 @@ importers:
       chalk:
         specifier: ^5.4.1
         version: 5.6.2
+      commander:
+        specifier: ^14.0.0
+        version: 14.0.3
       dotenv:
         specifier: ^17.4.2
         version: 17.4.2
@@ -50,8 +55,6 @@ importers:
       tsx:
         specifier: ^4.20.3
         version: 4.22.4
-
-  packages/core: {}
 
   packages/web:
     dependencies:
@@ -2228,6 +2231,10 @@ packages:
   combined-stream@1.0.8:
     resolution: {integrity: sha512-FQN4MRfuJeHf7cBbBMJFXhKSDq+2kAArBlmRBvcvFE5BB1HZKXtSFASDhdlz9zOYwxh8lDdnvmMOe/+5cdoEdg==}
     engines: {node: '>= 0.8'}
+
+  commander@14.0.3:
+    resolution: {integrity: sha512-H+y0Jo/T1RZ9qPP4Eh1pkcQcLRglraJaSLoyOtHxu6AapkjWVCy2Sit1QQ4x3Dng8qDlSsZEet7g5Pq06MvTgw==}
+    engines: {node: '>=20'}
 
   concat-map@0.0.1:
     resolution: {integrity: sha512-/Srv4dswyQNBfohGpz9o6Yb3Gz3SrUDqBH5rTuhGR7ahtlbYKnVxw2bCFMRljaA7EXHaXZ8wsHdodFvbkhKmqg==}
@@ -6299,6 +6306,8 @@ snapshots:
     dependencies:
       delayed-stream: 1.0.0
     optional: true
+
+  commander@14.0.3: {}
 
   concat-map@0.0.1: {}
 
